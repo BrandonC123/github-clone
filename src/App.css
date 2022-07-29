@@ -8,6 +8,7 @@
 
 :root {
     --default-text-color: rgb(167, 167, 167);
+    --main-color: rgb(13, 17, 23);
 }
 
 * {
@@ -37,14 +38,22 @@ input {
     flex-direction: column;
 }
 
+.justify-center {
+    justify-content: center;
+}
+
+.align-center {
+    align-items: center;
+}
+
 .container {
     width: 90%;
     /* max-width: 1400px; */
 }
 
 .active-btn {
-    color: green;
-    border: 1px solid green;
+    color: rgb(35, 134, 54);
+    border: 1px solid rgb(35, 134, 54);
     background-color: transparent;
 }
 
@@ -102,7 +111,7 @@ input {
 
 .signup-input {
     font-family: "SF Mono Regular", sans-serif;
-    padding: .25em;
+    padding: 0.25em;
     background-color: rgb(23, 46, 82);
     border: none;
 }
@@ -121,10 +130,64 @@ input {
     gap: 10px;
 }
 
-.input-container + .input-container {
-    margin-top: 0.5em;
-}
-
 .input {
     width: 100%;
+}
+
+.signin-page {
+    padding: 2em;
+    background-color: var(--main-color);
+    color: rgb(211, 211, 211);
+    height: 100vh;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 300;
+}
+
+.signin-page-container {
+    border: 1px solid rgb(41, 50, 63);
+    border-radius: 0.5em;
+    width: clamp(275px, 20%, 350px);
+    margin: 0 auto;
+}
+
+.signin-form {
+    padding: 1em;
+    background-color: rgb(22, 27, 34);
+}
+
+.signin-input {
+    background-color: var(--main-color);
+    border: 1px solid rgb(41, 50, 63);
+    border-radius: 0.25em;
+    padding: 0.25em;
+    width: 100%;
+}
+
+.signin-btn {
+    background-color: rgb(35, 134, 54);
+    color: white;
+    border: none;
+    border-radius: 0.25em;
+    width: 100%;
+}
+
+.create-account-container {
+    padding: 1em 0;
+    text-align: center;
+}
+
+.external-links > a,
+.signin-page-label > a,
+.create-account-container > a {
+    color: #438eda;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+
+.external-links {
+    gap: 0.5em;
 }
