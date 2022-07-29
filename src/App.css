@@ -1,38 +1,130 @@
-.App {
-  text-align: center;
+@font-face {
+    font-family: "SF Mono Regular";
+    font-style: normal;
+    font-weight: normal;
+    src: local("SF Mono Regular"),
+        url("/public/fonts/SFMonoRegular.woff") format("woff");
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+:root {
+    --default-text-color: rgb(167, 167, 167);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+* {
+    box-sizing: border-box;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+html,
+body {
+    margin: 0;
+    padding: 0;
 }
 
-.App-link {
-  color: #61dafb;
+img {
+    max-width: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input {
+    color: white;
+}
+
+.row {
+    display: flex;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 90%;
+    /* max-width: 1400px; */
+}
+
+.active-btn {
+    color: green;
+    border: 1px solid green;
+    background-color: transparent;
+}
+
+.inactive-btn {
+    color: var(--default-text-color);
+    border: 1px solid var(--default-text-color);
+    background-color: transparent;
+    pointer-events: none;
+}
+
+.btn {
+    cursor: pointer;
+    border-radius: 0.5em;
+    padding: 0.75em 1.5em;
+}
+
+.hide {
+    display: none;
+    visibility: hidden;
+}
+
+.signup-page {
+    background: url("/public/img/bg1.gif") no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    color: var(--default-text-color);
+}
+
+.signup-header-content {
+    justify-content: space-between;
+    width: 95%;
+    margin: 0 auto;
+    color: var(--default-text-color);
+    font-weight: 450;
+}
+
+.signin-link {
+    color: rgb(211, 211, 211);
+}
+
+.signup-content-container {
+    font-weight: 450;
+    font-family: "SF Mono Regular", sans-serif;
+    background-color: rgb(20, 42, 75);
+    width: 35%;
+    margin: 0 auto;
+    padding: 1em;
+    border: 1px solid rgb(29, 59, 105);
+    border-radius: 0.5em;
+}
+
+.signup-form {
+    gap: 10px;
+}
+
+.signup-input {
+    font-family: "SF Mono Regular", sans-serif;
+    padding: .25em;
+    background-color: rgb(23, 46, 82);
+    border: none;
+}
+
+.invalid-input {
+    border: 1px solid red;
+}
+
+.signup-accent-text {
+    color: rgb(28, 224, 224);
+}
+
+.input-container {
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.input-container + .input-container {
+    margin-top: 0.5em;
+}
+
+.input {
+    width: 100%;
 }
