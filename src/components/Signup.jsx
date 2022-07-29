@@ -1,4 +1,10 @@
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile,
+} from "firebase/auth";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
     const [email, setEmail] = useState("");
@@ -52,20 +58,37 @@ const Signup = () => {
             return "Please enter a valid email address. ex: brandon@gmail.com\n";
         }
         if (input.validity.patternMismatch) {
-            return "Please follow the required format."
+            return "Please follow the required format.";
         }
     }
     useEffect(() => {
         console.log(errorText);
     }, [errorText]);
     function checkError() {
+        let valid = true;
         const formInputs = document.querySelectorAll(".signup-input");
         const errorSpan = document.querySelectorAll(".signup-input-error");
         formInputs.forEach((input, index) => {
             if (!input.validity.valid) {
                 errorSpan[index].textContent = showError(input);
+                valid = false;
             }
         });
+        return valid;
+    }
+    function createUser() {
+        const auth = getAuth();
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                updateProfile(userCredential.user, {
+                    displayName: username,
+                }).catch((error) => {
+                    console.log(error);
+                });
+            })
+            .catch((error) => {
+                console.log(error.message);
+            });
     }
     return (
         <div className="signup-page">
@@ -74,9 +97,9 @@ const Signup = () => {
                     <img src="/img/gh-logo.svg" alt="Github logo" />
                     <p>
                         Already have an account?{" "}
-                        <a className="signin-link" href="#">
+                        <Link to={"/signin"} className="signin-link">
                             Sign in
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </header>
@@ -87,7 +110,9 @@ const Signup = () => {
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        checkError();
+                        if (checkError()) {
+                            createUser();
+                        }
                     }}
                     noValidate
                     className="signup-form column"
