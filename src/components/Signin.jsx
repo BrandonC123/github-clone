@@ -1,23 +1,25 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
     const [email, setEmail] = useState("");
     const [password, setPassowrd] = useState("");
+    const navigate = useNavigate();
 
     function signInUser() {
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log(userCredential.user);
+                navigate("/");
             })
             .catch((error) => {
                 console.error(error.message);
             });
     }
     return (
-        <div className="signin-page">
+        <div className="signin-page page">
             <div className="logo-container column align-center">
                 <img
                     className="signin-logo"
@@ -25,7 +27,7 @@ const Signin = () => {
                     alt="Github logo"
                     width={"55px"}
                 />{" "}
-                <h1 className="title">Sign in to Github</h1>
+                <h1 className="title">Sign in to GitHub</h1>
             </div>
             <form
                 onSubmit={(e) => {
