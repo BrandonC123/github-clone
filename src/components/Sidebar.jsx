@@ -13,29 +13,35 @@ const Sidebar = () => {
         let tempList = [];
         listAll(listRef)
             .then((res) => {
-                // console.log(res);
-                res.prefixes.forEach((folderRef) => {
-                    tempList.push(folderRef.name);
-                });
-                setRepoList(tempList);
+                if (res.prefixes.length !== repoList.length) {
+                    res.prefixes.forEach((folderRef) => {
+                        tempList.push(folderRef.name);
+                    });
+                    setRepoList(tempList);
+                }
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, []);
+    }, [user]);
     function displayRepoList() {
         return repoList.map((repo) => {
             return (
-                <li className="repo-item">
-                    <Link to={`/${user.displayName}/${repo}`}>{repo}</Link>
+                <li>
+                    <Link
+                        to={`/${user.displayName}/${repo}`}
+                        className="repo-item"
+                    >
+                        {user.displayName}/{repo}
+                    </Link>
                 </li>
             );
         });
     }
     return (
         <aside className="sidebar-container">
-            <p>BrandonC123</p>
-            <div className="sidebar-repo-container">
+            <p className="border-divider">{user.displayName}</p>
+            <div className="sidebar-repo-container border-divider">
                 <p>
                     Recent Repositories{" "}
                     <button
@@ -46,7 +52,7 @@ const Sidebar = () => {
                     >
                         <img
                             src="/img/repo-icon.svg"
-                            width={"20px"}
+                            width={"15px"}
                             alt="Repository icon"
                         />
                         New
@@ -55,7 +61,7 @@ const Sidebar = () => {
                 <ul className="sidebar-repo-list">{displayRepoList()}</ul>
             </div>
             <h5>Recent Activity</h5>
-            <span>
+            <span className="secondary-text">
                 When you take actions across GitHub, we’ll provide links to that
                 activity here.
             </span>

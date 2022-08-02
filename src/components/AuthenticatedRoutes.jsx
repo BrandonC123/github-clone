@@ -1,19 +1,34 @@
+import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { AuthenticateUser } from "./AuthenticateUser";
 import CreateRepository from "./CreateRepository";
 import Home from "./Home";
 import MainHeader from "./MainHeader";
 import { UserContext } from "./UserContext";
+import ViewRepository from "./ViewRepository";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const AuthenticateRoutes = () => {
-    const user = AuthenticateUser();
+    const auth = getAuth();
+    const [user, setUser] = useState("");
+    auth.onAuthStateChanged((tempUser) => {
+        if (!tempUser) {
+            //navigate
+        }
+        setUser(tempUser);
+    });
+
     return (
         <>
             <UserContext.Provider value={user}>
-                <MainHeader userName={user.displayName} />
+                <MainHeader username={user.displayName} />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/new" element={<CreateRepository />} />
+                    <Route
+                        path="/:username/:repoName"
+                        element={<ViewRepository />}
+                    />
                 </Routes>
             </UserContext.Provider>
         </>
