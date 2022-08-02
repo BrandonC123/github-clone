@@ -38,7 +38,16 @@ const CreateRepository = () => {
                 action=""
                 className="create-repo-form column"
             >
-                <div className="repo-info-container ">
+                <div className="border-divider">
+                    <h1 className="title">Create a new repository</h1>
+                    <span className="secondary-text">
+                        A repository contains all project files, including the
+                        revision history. Already have a project repository
+                        elsewhere? <br />
+                    </span>
+                    <a href="#">Import a repository.</a>
+                </div>
+                <div className="repo-info-container border-divider">
                     <div className="row">
                         <li className="create-repo-input">
                             <label htmlFor="repo-name">Owner*</label>
@@ -69,12 +78,13 @@ const CreateRepository = () => {
                         ></textarea>
                     </li>
                 </div>
-                <div className="repo-visibility-container">
+                <div className="repo-visibility-container border-divider">
                     <li className="create-repo-input row">
                         <input type="radio" name="repo-visibility" />
+                        <img src="/img/repo-icon.svg" alt="Repository icon" />
                         <p>
                             Public <br />{" "}
-                            <span>
+                            <span className="secondary-text">
                                 Anyone on the internet can see this repository.
                                 You choose who can commit.
                             </span>
@@ -82,19 +92,20 @@ const CreateRepository = () => {
                     </li>
                     <li className="create-repo-input row">
                         <input type="radio" name="repo-visibility" />
+                        <img src="/img/lock-icon.svg" alt="Lock icon" />
                         <p>
                             Private <br />{" "}
-                            <span>
+                            <span className="secondary-text">
                                 You choose who can see and commit to this
                                 repository.
                             </span>
                         </p>
                     </li>
                 </div>
-                <div className="repo-intialization-container">
+                <div className="repo-intialization-container border-divider">
                     <p>
                         Initialize this repositroy with: <br />
-                        <span>
+                        <span className="secondary-text">
                             Skip this step if you're importing an existing
                             repository
                         </span>
@@ -104,7 +115,7 @@ const CreateRepository = () => {
                         <p>
                             Add a README file
                             <br />{" "}
-                            <span>
+                            <span className="secondary-text">
                                 This is where you can write a long description
                                 for your project. Learn more.
                             </span>
@@ -114,7 +125,7 @@ const CreateRepository = () => {
                         <p>
                             Add .gitignore
                             <br />{" "}
-                            <span>
+                            <span className="secondary-text">
                                 This is where you can write a long description
                                 for your project. Learn more.
                             </span>
@@ -127,7 +138,7 @@ const CreateRepository = () => {
                         <p>
                             Choose a license
                             <br />{" "}
-                            <span>
+                            <span className="secondary-text">
                                 This is where you can write a long description
                                 for your project. Learn more.
                             </span>

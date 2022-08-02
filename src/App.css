@@ -8,7 +8,8 @@
 
 :root {
     --default-text-color: rgb(167, 167, 167);
-    --main-color: rgb(13, 17, 23);
+    --main-color: rgb(1, 4, 9);
+    --accent-green: rgb(35, 134, 5);
 }
 
 * {
@@ -19,6 +20,8 @@ html,
 body {
     margin: 0;
     padding: 0;
+    color: lightgray;
+    background-color: rgb(13, 17, 23);
 }
 
 img {
@@ -47,13 +50,13 @@ input {
 }
 
 .container {
-    width: 90%;
-    /* max-width: 1400px; */
+    width: 95%;
+    max-width: 2000px;
 }
 
 .active-btn {
-    color: rgb(35, 134, 54);
-    border: 1px solid rgb(35, 134, 54);
+    color: var(--accent-green);
+    border: 1px solid var(--accent-green);
     background-color: transparent;
 }
 
@@ -68,11 +71,49 @@ input {
     cursor: pointer;
     border-radius: 0.5em;
     padding: 0.75em 1.5em;
+    font-weight: 500;
+}
+
+.border-divider {
+    padding-bottom: 1em;
+    border-bottom: 1px solid rgb(29, 34, 41);
+}
+
+.secondary-text {
+    font-size: smaller;
+    color: var(--default-text-color);
 }
 
 .hide {
     display: none;
     visibility: hidden;
+}
+
+.header {
+    background-color: rgb(22, 27, 34);
+    color: white;
+    padding: 1em 0;
+}
+
+.header-container {
+    justify-content: space-between;
+    margin: 0 auto;
+}
+
+.header-nav {
+    list-style: none;
+}
+
+.header-link {
+    color: lightgray;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.dropdown {
+    position: absolute;
+    border: 1px solid rgb(29, 34, 41);
+    background-color: rgb(22, 27, 34);
 }
 
 .signup-page {
@@ -138,7 +179,7 @@ input {
     padding: 2em;
     background-color: var(--main-color);
     color: rgb(211, 211, 211);
-    height: 100vh;
+    /* height: 100vh; */
 }
 
 .title {
@@ -168,8 +209,8 @@ input {
 }
 
 .signin-btn {
-    background-color: rgb(35, 134, 54);
-    color: white;
+    background-color: var(--accent-green);
+    color: lightgray;
     border: none;
     border-radius: 0.25em;
     width: 100%;
@@ -190,4 +231,73 @@ input {
 
 .external-links {
     gap: 0.5em;
+}
+
+.home-page {
+    background-color: var(--main-color);
+    /* height: 100%; */
+}
+
+.sidebar-container {
+    position: sticky;
+    background-color: rgb(13, 17, 23);
+    color: lightgray;
+    height: calc(100vh - 70px);
+    width: clamp(250px, 20%, 300px);
+    width: 20%;
+    padding: 1em;
+    border-right: 1px solid rgb(29, 34, 41);
+}
+
+.sidebar-repo-list {
+    list-style: none;
+}
+
+.repo-item {
+    text-decoration: none;
+    color: rgb(167, 167, 167);
+}
+
+.repo-item:hover {
+    text-decoration: underline;
+}
+
+.home-page-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    width: 100%;
+}
+
+.create-repo-btn {
+    background-color: var(--accent-green);
+    color: white;
+    border: none;
+}
+
+.create-repo-form {
+    width: 60%;
+    margin: 0 auto;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.create-repo-input > p {
+    margin: 0;
+}
+
+.repo-info-container {
+    list-style: none;
+    width: 100%;
+}
+
+#repo-description {
+    width: 100%;
+}
+
+.create-repo-input > input,
+.create-repo-input > textarea {
+    border: 1px solid rgb(29, 34, 41);
+    background-color: rgb(1, 4, 9);
+    padding: 0.5em;
+    resize: none;
 }
