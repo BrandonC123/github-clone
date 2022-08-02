@@ -1,6 +1,26 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const MainHeader = () => {
+const MainHeader = ({ username }) => {
+    let dropdownRef = null;
+    function toggleDropdown(dropdown) {
+        if (dropdown.classList.contains("hide")) {
+            console.log("add");
+            document.addEventListener("click", removeDrop);
+        } else {
+            console.log("remove");
+            document.removeEventListener("click", removeDrop);
+        }
+        dropdown.classList.toggle("hide");
+        dropdownRef = dropdown;
+    }
+    function removeDrop(e) {
+        if (e.target.tagName.toLowerCase() !== "button") {
+            dropdownRef.classList.add("hide");
+            document.removeEventListener("click", removeDrop);
+        }
+    }
+
     return (
         <header className="header">
             <div className="header-container container row">
@@ -37,9 +57,24 @@ const MainHeader = () => {
                         </li>
                     </nav>
                 </div>
-                <div className="header-right-column align-center">
-                    {/*Profile content*/}
+                <div className="header-right-column align-center row">
                     <img src="/img/bell-icon.svg" alt="" width={"25px"} />+
+                    <div className="header-user-dropdown-container">
+                        {username}
+                        <button
+                            onClick={(e) => {
+                                const dropdown = e.target.nextSibling;
+                                toggleDropdown(dropdown);
+                            }}
+                        >
+                            Dropdown
+                        </button>
+                        <div className="dropdown hide">
+                            <p>entry</p>
+                            <p>entry</p>
+                            <p>entry</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
