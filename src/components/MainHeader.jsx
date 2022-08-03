@@ -1,7 +1,22 @@
 import { useEffect, useState } from "react";
+import { getAuth, signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
 
 const MainHeader = ({ username }) => {
+    const dropdownItemList = [
+        { title: "Your Profile", url: `/${username}` },
+        { title: "Your Repositories", url: `/${username}-repositories` },
+    ];
+    function fillDropdown() {
+        return dropdownItemList.map((item) => {
+            return (
+                <Link to={`${item.url}`} className="dropdown-item">
+                    <li>{item.title}</li>
+                </Link>
+            );
+        });
+    }
+    const auth = getAuth();
     let dropdownRef = null;
     function toggleDropdown(dropdown) {
         if (dropdown.classList.contains("hide")) {
@@ -15,7 +30,7 @@ const MainHeader = ({ username }) => {
         dropdownRef = dropdown;
     }
     function removeDrop(e) {
-        if (e.target.tagName.toLowerCase() !== "button") {
+        if (e.target.className.toLowerCase() !== "dropdown-btn") {
             dropdownRef.classList.add("hide");
             document.removeEventListener("click", removeDrop);
         }
@@ -60,20 +75,29 @@ const MainHeader = ({ username }) => {
                 <div className="header-right-column align-center row">
                     <img src="/img/bell-icon.svg" alt="" width={"25px"} />+
                     <div className="header-user-dropdown-container">
-                        {username}
                         <button
                             onClick={(e) => {
                                 const dropdown = e.target.nextSibling;
                                 toggleDropdown(dropdown);
                             }}
+                            className="dropdown-btn"
+                            to={`/${username}`}
                         >
-                            Dropdown
+                            {username}
                         </button>
-                        <div className="dropdown hide">
-                            <p>entry</p>
-                            <p>entry</p>
-                            <p>entry</p>
-                        </div>
+                        <ul className="dropdown hide">
+                            Signed in as {username}
+                            {fillDropdown()}
+                            <Link
+                                onClick={() => {
+                                    auth.signOut();
+                                }}
+                                to={"/signin"}
+                                className="dropdown-item"
+                            >
+                                <li>Sign out</li>
+                            </Link>
+                        </ul>
                     </div>
                 </div>
             </div>

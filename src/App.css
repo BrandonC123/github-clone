@@ -102,6 +102,8 @@ input {
 
 .header-nav {
     list-style: none;
+    gap: 0.5em;
+    margin-left: 0.5em;
 }
 
 .header-link {
@@ -114,6 +116,23 @@ input {
     position: absolute;
     border: 1px solid rgb(29, 34, 41);
     background-color: rgb(22, 27, 34);
+    list-style: none;
+    padding: 0.5em;
+}
+
+.dropdown-item {
+    display: block;
+    color: var(--default-text-color);
+    text-decoration: none;
+    padding: 0.25em 0;
+}
+
+.dropdown-btn {
+    background-color: transparent;
+    color: var(--default-text-color);
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
 }
 
 .signup-page {
@@ -258,7 +277,9 @@ input {
     color: rgb(167, 167, 167);
 }
 
-.repo-item:hover {
+.repo-item:hover,
+.dropdown-item:hover,
+.profile-repo-link:hover {
     text-decoration: underline;
 }
 
@@ -300,4 +321,37 @@ input {
     background-color: rgb(1, 4, 9);
     padding: 0.5em;
     resize: none;
+}
+
+.page {
+    margin: 0 auto;
+}
+
+.view-repo-content-container {
+    border: 1px solid rgb(29, 34, 41);
+    border-radius: 0.5em;
+}
+
+.view-repo-folder,
+.view-repo-item {
+    justify-content: space-between;
+    padding: 0.5em;
+    border-bottom: 1px solid rgb(29, 34, 41);
+}
+
+.profile-page {
+    display: grid;
+    grid-template-columns: 30% 50%;
+    justify-content: center;
+}
+
+.profile-repo-container {
+    justify-content: space-between;
+}
+
+.profile-repo-link {
+    color: rgb(88, 166, 255);
+    font-weight: bold;
+    font-size: 1.125rem;
+    text-decoration: none;
 }
