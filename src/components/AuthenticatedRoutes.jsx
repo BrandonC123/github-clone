@@ -7,6 +7,8 @@ import MainHeader from "./MainHeader";
 import { UserContext } from "./UserContext";
 import ViewRepository from "./ViewRepository";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import ViewProfile from "./ViewProfile";
+import ViewRepositoryList from "./ViewRepositoryList";
 
 const AuthenticateRoutes = () => {
     const auth = getAuth();
@@ -24,6 +26,11 @@ const AuthenticateRoutes = () => {
                 <MainHeader username={user.displayName} />
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/:username" element={<ViewProfile />} />
+                    <Route
+                        path="/:username/repositories"
+                        element={<ViewRepositoryList />}
+                    />
                     <Route path="/new" element={<CreateRepository />} />
                     <Route
                         path="/:username/:repoName"
