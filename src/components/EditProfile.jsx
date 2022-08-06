@@ -1,20 +1,33 @@
 import { getDatabase, ref, set } from "firebase/database";
-import { useContext, useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
+import db from "..";
 
-const EditProfile = ({ display, toggleForm }) => {
-    const [name, setName] = useState("");
+const EditProfile = ({ display, toggleForm, userDetails, setUserDetails }) => {
+    const [name, setName] = useState();
     const [bio, setBio] = useState("");
     const [company, setCompany] = useState("");
     const [location, setLocation] = useState("");
     const [email, setEmail] = useState("");
     const [website, setWebsite] = useState("");
     const [twitterUsername, setTwitterUsername] = useState("");
+    useEffect(() => {
+        console.log(userDetails);
+        if (userDetails) {
+            setName(userDetails.name);
+            setBio(userDetails.bio);
+            setCompany(userDetails.company);
+            setLocation(userDetails.location);
+            setEmail(userDetails.email);
+            setWebsite(userDetails.website);
+            setTwitterUsername(userDetails.twitterUsername);
+        }
+    }, [userDetails]);
 
     const user = useContext(UserContext);
-    const db = getDatabase();
-    function writeUserData() {
-        set(ref(db, "users/" + user.uid), {
+    async function writeUserData() {
+        const updatedUserObject = {
             name: name,
             bio: bio,
             company: company,
@@ -22,9 +35,10 @@ const EditProfile = ({ display, toggleForm }) => {
             email: email,
             website: website,
             twitterUsername: twitterUsername,
-        });
+        };
+        setUserDetails(updatedUserObject);
+        await setDoc(doc(db, "users", user.uid), updatedUserObject);
     }
-
     return (
         display && (
             <form className="edit-profile-form column">
@@ -34,7 +48,7 @@ const EditProfile = ({ display, toggleForm }) => {
                         onChange={(e) => {
                             setName(e.target.value);
                         }}
-                        value={name}
+                        defaultValue={name}
                         type="text"
                         placeholder="Name"
                         id="full-name"
@@ -46,7 +60,7 @@ const EditProfile = ({ display, toggleForm }) => {
                         onChange={(e) => {
                             setBio(e.target.value);
                         }}
-                        value={bio}
+                        defaultValue={bio}
                         name=""
                         cols="30"
                         rows="5"
@@ -59,7 +73,7 @@ const EditProfile = ({ display, toggleForm }) => {
                         onChange={(e) => {
                             setCompany(e.target.value);
                         }}
-                        value={company}
+                        defaultValue={company}
                         type="text"
                         placeholder="Company"
                         id="company"
@@ -70,7 +84,7 @@ const EditProfile = ({ display, toggleForm }) => {
                         onChange={(e) => {
                             setLocation(e.target.value);
                         }}
-                        value={location}
+                        defaultValue={location}
                         type="text"
                         placeholder="Location"
                         id="location"
@@ -81,7 +95,7 @@ const EditProfile = ({ display, toggleForm }) => {
                         onChange={(e) => {
                             setEmail(e.target.value);
                         }}
-                        value={email}
+                        defaultValue={email}
                         type="email"
                         placeholder="Email"
                         id="email"
@@ -92,7 +106,7 @@ const EditProfile = ({ display, toggleForm }) => {
                         onChange={(e) => {
                             setWebsite(e.target.value);
                         }}
-                        value={website}
+                        defaultValue={website}
                         type="url"
                         placeholder="Website"
                         id="website"
@@ -103,7 +117,7 @@ const EditProfile = ({ display, toggleForm }) => {
                         onChange={(e) => {
                             setTwitterUsername(e.target.value);
                         }}
-                        value={twitterUsername}
+                        defaultValue={twitterUsername}
                         type="text"
                         placeholder="Twitter username"
                         id="twitter-username"
