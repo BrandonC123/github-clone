@@ -9,7 +9,8 @@
 :root {
     --default-text-color: rgb(167, 167, 167);
     --main-color: rgb(1, 4, 9);
-    --accent-green: rgb(35, 134, 5);
+    --accent-green: rgb(35, 134, 54);
+    --accent-blue: rgb(88, 166, 255);
 }
 
 * {
@@ -198,7 +199,6 @@ input {
     padding: 2em;
     background-color: var(--main-color);
     color: rgb(211, 211, 211);
-    /* height: 100vh; */
 }
 
 .title {
@@ -279,7 +279,7 @@ input {
 
 .repo-item:hover,
 .dropdown-item:hover,
-.profile-repo-link:hover {
+.repo-list-link:hover {
     text-decoration: underline;
 }
 
@@ -289,10 +289,14 @@ input {
     width: 100%;
 }
 
-.create-repo-btn {
+.green-action-btn {
     background-color: var(--accent-green);
     color: white;
     border: none;
+}
+
+.green-action-btn:hover {
+    background-color: rgb(56, 167, 71);
 }
 
 .create-repo-form {
@@ -339,19 +343,62 @@ input {
     border-bottom: 1px solid rgb(29, 34, 41);
 }
 
+.repo-list-page,
 .profile-page {
     display: grid;
-    grid-template-columns: 30% 50%;
+    grid-template-columns: 15% 50%;
     justify-content: center;
+    gap: 2em;
 }
 
-.profile-repo-container {
+.repo-list-container {
     justify-content: space-between;
 }
 
-.profile-repo-link {
-    color: rgb(88, 166, 255);
+.repo-list-link {
+    color: var(--accent-blue);
     font-weight: bold;
     font-size: 1.125rem;
     text-decoration: none;
+}
+
+.profile-information > p {
+    margin: 0;
+}
+
+.edit-profile-form {
+    list-style: none;
+    gap: 0.5em;
+}
+
+.edit-profile-btn {
+    width: 100%;
+    background-color: rgb(33, 38, 45);
+    border: 1px solid rgb(54, 59, 66);
+    color: white;
+    font-weight: 550;
+}
+
+.edit-profile-input > input,
+.edit-profile-input > textarea {
+    background-color: transparent;
+    padding: 0.25em;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 0.25em;
+    width: 100%;
+    color: white;
+    resize: vertical;
+}
+
+.view-six-repo {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.5em;
+}
+
+.repo-card {
+    padding: 0.5em;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 0.25em;
 }
