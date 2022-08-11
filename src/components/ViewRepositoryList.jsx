@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getStorage, ref, listAll } from "firebase/storage";
 import { UserContext } from "./UserContext";
+import ProfileInformation from "./ProfileInformation";
+import ProfileNav from "./ProfileNav";
 
 const ViewRepositoryList = () => {
     const user = useContext(UserContext);
@@ -25,34 +27,35 @@ const ViewRepositoryList = () => {
             });
     }, [user, storage]);
     function displayRepoList() {
-        return repoList.map((repo) => {
-            return (
-                <div className="profile-repo-container border-divider row">
-                    <div className="profile-repo-info column">
-                        <Link
-                            to={`/${user.displayName}/${repo}`}
-                            className="profile-repo-link"
-                        >
-                            {repo}
-                        </Link>
-                        <span>Updated today</span>
+        return repoList
+            .map((repo) => {
+                return (
+                    <div className="repo-list-container border-divider row">
+                        <div className="profile-repo-info column">
+                            <Link
+                                to={`/${user.displayName}/${repo}`}
+                                className="repo-list-link"
+                            >
+                                {repo}
+                            </Link>
+                            {/* Save last updated in metadata? */}
+                            <span>Updated today</span>
+                        </div>
+                        <div className="profile-repo-actions">
+                            <button>Star</button>
+                        </div>
                     </div>
-                    <div className="profile-repo-actions">
-                        <button>Star</button>
-                    </div>
-                </div>
-            );
-        });
+                );
+            })
+            .reverse();
     }
     return (
         <div className="profile-page page">
-            <div className="profile-information-column">
-                <img src="/img/default-profile-pic.png" alt="" />
-                <h1></h1>
-                <h2>{user.displayName}</h2>
-                <button>Edit profile</button>
-            </div>
-            <main className="profile-repo-list">{displayRepoList()}</main>
+            <ProfileInformation />
+            <main className="profile-repo-list">
+                <ProfileNav username={user.displayName} />
+                {displayRepoList()}
+            </main>
         </div>
     );
 };
