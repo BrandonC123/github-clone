@@ -283,9 +283,11 @@ input {
     text-decoration: underline;
 }
 
-.home-page-section {
+.two-column {
     display: grid;
     grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 1em;
     width: 100%;
 }
 
@@ -297,6 +299,12 @@ input {
 
 .green-action-btn:hover {
     background-color: rgb(56, 167, 71);
+}
+
+.secondary-gray-btn {
+    background-color: rgb(33, 38, 45);
+    color: lightgray;
+    border: 1px solid rgb(54, 59, 66);
 }
 
 .create-repo-form {
@@ -328,12 +336,29 @@ input {
 }
 
 .page {
-    margin: 0 auto;
+    margin: 2em auto;
 }
 
 .view-repo-content-container {
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1em;
+    margin: 0 auto;
+    max-width: 1500px;
+}
+
+.left-repo-column {
+    width: 65%;
+}
+
+.right-repo-column {
+    width: 20%;
+}
+
+.view-repo-content {
     border: 1px solid rgb(29, 34, 41);
     border-radius: 0.5em;
+    /* width: 70%; */
 }
 
 .view-repo-folder,
@@ -395,10 +420,26 @@ input {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 0.5em;
+    margin-top: 2em;
 }
 
 .repo-card {
     padding: 0.5em;
     border: 1px solid rgb(48, 54, 61);
     border-radius: 0.25em;
+}
+
+.secondary-nav {
+    border-bottom: 1px solid rgb(48, 54, 61);
+    padding-bottom: 0.75em;
+}
+
+.secondary-nav > a {
+    color: lightgray;
+    text-decoration: none;
+    padding: 0.25em;
+}
+
+.secondary-nav > a:hover {
+    background-color: rgb(48, 54, 63);
 }
