@@ -7,10 +7,10 @@ import RepositoryService from "../services/RepositoryService";
 
 const ViewProfile = () => {
     const user = useContext(UserContext);
-    const [repos, setRepos] = useState([]);
+    const [repoList, setRepoList] = useState([]);
 
     function displayRepos() {
-        return repos.map((repo) => {
+        return repoList.map((repo) => {
             return (
                 <div key={repo} className="repo-card">
                     <div className="repo-content row">
@@ -29,10 +29,12 @@ const ViewProfile = () => {
     }
 
     useEffect(() => {
-        RepositoryService.getRepos().then((data) => {
-            setRepos(data);
+        RepositoryService.getRepoList(user.uid).then((list) => {
+            if (list) {
+                setRepoList(list);
+            }
         });
-    }, []);
+    }, [user]);
     return (
         <div className="profile-page page">
             <ProfileInformation />

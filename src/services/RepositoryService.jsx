@@ -1,15 +1,15 @@
+import { doc, getDoc } from "firebase/firestore";
 import { getStorage, ref, listAll, list } from "firebase/storage";
+import db from "..";
 
 class RepositoryService {
-    async getRepos(count) {
-        const storage = getStorage();
-        const repoRef = ref(storage, `RqMP96M7PuQwDp0JSM20etBzNKs2/repos`);
-        const repos = await list(repoRef, { maxResults: count });
-        let tempArray = [];
-        repos.prefixes.forEach((ref) => {
-            tempArray.push(ref.name);
-        });
-        return tempArray;
+    async getRepoList(uid) {
+        if (uid) {
+            const response = await getDoc(doc(db, "users", `${uid}`));
+            if (response) {
+                return response.data().repoList;
+            }
+        }
     }
 }
 

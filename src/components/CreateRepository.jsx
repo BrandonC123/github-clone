@@ -1,22 +1,39 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
 import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import db from "..";
+import { useNavigate } from "react-router-dom";
+import RepositoryService from "../services/RepositoryService";
 
 const CreateRepository = () => {
+    const navigate = useNavigate();
     const storage = getStorage();
     const user = useContext(UserContext);
     const [name, setName] = useState("");
+    const [repoList, setRepoList] = useState([]);
     const [description, setDescription] = useState("");
     const [readMeStatus, setReadMeStatus] = useState(false);
 
+    useEffect(() => {
+        RepositoryService.getRepoList(user.uid).then((list) => {
+            if (list) {
+                setRepoList(list);
+            }
+        });
+    }, [user]);
     function createRepo() {
         console.log(user);
         const testRef = ref(storage, ".git");
         const testFolderRef = ref(storage, `/${user.uid}/repos/${name}/.git`);
 
         uploadBytes(testFolderRef, testRef)
-            .then((snapshot) => {
+            .then(async function () {
                 console.log("uploaded");
+                await updateDoc(doc(db, "users", `${user.uid}`), {
+                    repoList: [...repoList, name],
+                });
+                navigate(`/${user.uid}/${name}`);
             })
             .catch((error) => {
                 console.log(error);
@@ -33,7 +50,11 @@ const CreateRepository = () => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    createRepo();
+                    if (repoList.includes(name)) {
+                        console.log("dupe");
+                    } else {
+                        createRepo();
+                    }
                 }}
                 action=""
                 className="create-repo-form column"
@@ -148,7 +169,7 @@ const CreateRepository = () => {
                         </select>
                     </li>
                 </div>
-                <button className="create-repo-btn btn">
+                <button className="green-action-btn btn">
                     Create repository
                 </button>
             </form>
