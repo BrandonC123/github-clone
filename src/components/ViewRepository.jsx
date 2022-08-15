@@ -3,40 +3,24 @@ import { Link, useParams } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { getStorage, ref, listAll } from "firebase/storage";
 import RepositoryNav from "./RepositoryNav";
+import RepositoryService from "../services/RepositoryService";
 
 const ViewRepository = () => {
     const user = useContext(UserContext);
     const { repoName } = useParams();
     const [repoFolders, setRepoFolders] = useState([]);
     const [repoItems, setRepoItems] = useState([]);
-    const storage = getStorage();
 
-    function getRepoContent() {
-        const listRef = ref(storage, `/${user.uid}/repos/${repoName}`);
-        let tempFolderList = [];
-        let tempItemList = [];
-        listAll(listRef)
-            .then((res) => {
-                if (res.prefixes.length !== repoFolders.length) {
-                    res.prefixes.forEach((folderRef) => {
-                        tempFolderList.push(folderRef.name);
-                    });
-                    setRepoFolders(tempFolderList);
-                }
-                if (res.items.length !== repoItems.length) {
-                    res.items.forEach((item) => {
-                        tempItemList.push(item.name);
-                    });
-                    setRepoItems(tempItemList);
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-        console.log(repoFolders);
-    }
     useEffect(() => {
-        getRepoContent();
+        RepositoryService.getRepoContent(user.uid, repoName).then((res) => {
+            // Only update if data differs
+            if (repoFolders.length !== res.tempFolderList.length) {
+                setRepoFolders(res.tempFolderList);
+            }
+            if (repoItems.length !== res.tempItemList.length) {
+                setRepoItems(res.tempItemList);
+            }
+        });
     }, [user]);
     function displayFolders() {
         return repoFolders.map((folder) => {

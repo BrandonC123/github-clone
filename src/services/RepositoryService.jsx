@@ -11,6 +11,27 @@ class RepositoryService {
             }
         }
     }
+    getRepoContent(uid, repoName) {
+        const storage = getStorage();
+        const listRef = ref(storage, `/${uid}/repos/${repoName}`);
+        let tempFolderList = [];
+        let tempItemList = [];
+        let content = listAll(listRef)
+            .then((res) => {
+                res.prefixes.forEach((folderRef) => {
+                    tempFolderList.push(folderRef.name);
+                });
+                res.items.forEach((item) => {
+                    tempItemList.push(item.name);
+                });
+                return { tempFolderList, tempItemList };
+            })
+            .catch((error) => {
+                console.error(error);
+                return {};
+            });
+        return content;
+    }
 }
 
 export default new RepositoryService();
