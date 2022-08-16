@@ -121,8 +121,21 @@ input {
     padding: 0.5em;
 }
 
+.default-dropdown {
+    position: absolute;
+    border: 1px solid rgb(139, 148, 158);
+    background-color: rgb(22, 27, 34);
+    border-radius: 0.5em;
+    list-style: none;
+    padding: 0.5em;
+    box-shadow: 0 0 10px black;
+    min-width: 130px;
+    margin-top: .5em;
+}
+
 .dropdown-item {
     display: block;
+    font-size: 0.85rem;
     color: var(--default-text-color);
     text-decoration: none;
     padding: 0.25em 0;
@@ -131,7 +144,6 @@ input {
 .dropdown-btn {
     background-color: transparent;
     color: var(--default-text-color);
-    font-size: 1rem;
     border: none;
     cursor: pointer;
 }
