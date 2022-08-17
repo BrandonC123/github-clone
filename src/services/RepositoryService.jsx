@@ -1,5 +1,5 @@
 import { doc, getDoc } from "firebase/firestore";
-import { getStorage, ref, listAll, list } from "firebase/storage";
+import { getStorage, ref, listAll, list, uploadBytes } from "firebase/storage";
 import db from "..";
 
 class RepositoryService {
@@ -31,6 +31,22 @@ class RepositoryService {
                 return {};
             });
         return content;
+    }
+    uploadFileToRepo(uid, repoName, files) {
+        Array.from(files).forEach((file) => {
+            const storage = getStorage();
+            const testFolderRef = ref(
+                storage,
+                `/${uid}/repos/${repoName}/${file.name}`
+            );
+            uploadBytes(testFolderRef, file)
+                .then((snapshot) => {
+                    console.log(snapshot);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        });
     }
 }
 
