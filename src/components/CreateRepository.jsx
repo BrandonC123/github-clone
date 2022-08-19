@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getStorage, ref, updateMetadata, uploadBytes } from "firebase/storage";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import db from "..";
 import { useNavigate } from "react-router-dom";
@@ -22,23 +22,7 @@ const CreateRepository = () => {
             }
         });
     }, [user]);
-    function createRepo() {
-        console.log(user);
-        const testRef = ref(storage, ".git");
-        const testFolderRef = ref(storage, `/${user.uid}/repos/${name}/.git`);
 
-        uploadBytes(testFolderRef, testRef)
-            .then(async function () {
-                console.log("uploaded");
-                await updateDoc(doc(db, "users", `${user.uid}`), {
-                    repoList: [...repoList, name],
-                });
-                navigate(`/${user.uid}/${name}`);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
     function addReadme() {}
     const repoObj = {
         name: name,
@@ -53,7 +37,7 @@ const CreateRepository = () => {
                     if (repoList.includes(name)) {
                         console.log("dupe");
                     } else {
-                        createRepo();
+                        RepositoryService.createRepo(user.uid, name, repoList);
                     }
                 }}
                 action=""
