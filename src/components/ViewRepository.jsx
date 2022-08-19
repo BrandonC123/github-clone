@@ -4,6 +4,7 @@ import { UserContext } from "./UserContext";
 import { getStorage, ref, listAll } from "firebase/storage";
 import RepositoryNav from "./RepositoryNav";
 import RepositoryService from "../services/RepositoryService";
+import Dropdown from "./Dropdown";
 
 const ViewRepository = () => {
     const user = useContext(UserContext);
@@ -24,47 +25,61 @@ const ViewRepository = () => {
     }, [user]);
     function displayFolders() {
         return repoFolders.map((folder) => {
-            return <div className="view-repo-folder">{folder}</div>;
+            return (
+                <div className="view-repo-folder">
+                    <img src="/img/folder-icon.svg" alt="" />
+                    {folder}
+                </div>
+            );
         });
     }
     function displayItems() {
         return repoItems.map((item) => {
-            return <div className="view-repo-item">{item}</div>;
+            return (
+                <div className="view-repo-item">
+                    <img src="/img/file-icon.svg" alt="" />
+                    {item}
+                </div>
+            );
         });
     }
 
     return (
         <div className="view-repo-page page container">
-            <div className="view-repo-head">
-                <div className="view-repo-title row align-center">
-                    <h1>
-                        <Link to={`/${user.displayName}`}>
-                            {user.displayName}
-                        </Link>
-                        /{repoName}
-                    </h1>
-                    <button className="secondary-gray-btn btn">Unpin</button>
-                    <button className="secondary-gray-btn btn">Unwatch</button>
-                    <button className="secondary-gray-btn btn">Fork</button>
-                    <button className="secondary-gray-btn btn">Star</button>
-                </div>
-                <RepositoryNav />
-            </div>
+            <RepositoryNav username={user.displayName} repoName={repoName} />
             <div className="view-repo-content-container row">
                 <section className="left-repo-column">
-                    <div className="row align-center">
-                        <button className="secondary-gray-btn btn">main</button>
-                        <p>2 branches</p>
-                        <p>0 tags</p>
-                        <button className="secondary-gray-btn btn">
-                            Go to file
-                        </button>
-                        <button className="secondary-gray-btn btn">
-                            Add file
-                        </button>
-                        <button className="green-action-btn btn">Code</button>
+                    <div className="row align-center space-between">
+                        <div className="divider row">
+                            <Dropdown
+                                btnName="main ▾"
+                                dropdownContent={[{ url: "/", title: "test" }]}
+                            />
+                            <p>2 branches</p>
+                            <p>0 tags</p>
+                        </div>
+                        <div className="divider row">
+                            <button className="secondary-gray-btn btn">
+                                Go to file
+                            </button>
+                            <Dropdown
+                                btnName={"Add File ▾"}
+                                dropdownContent={[
+                                    {
+                                        url: `/${user.displayName}/${repoName}/upload`,
+                                        title: "Upload Files",
+                                    },
+                                ]}
+                            />
+                            <button className="green-action-btn btn">
+                                Code
+                            </button>
+                        </div>
                     </div>
                     <div className="view-repo-content">
+                        <div className="border-divider">
+                            {user.displayName} Update Readme
+                        </div>
                         {displayFolders()}
                         {displayItems()}
                     </div>

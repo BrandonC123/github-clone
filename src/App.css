@@ -33,6 +33,10 @@ input {
     color: white;
 }
 
+h1 {
+    margin: 0;
+}
+
 .row {
     display: flex;
 }
@@ -48,6 +52,10 @@ input {
 
 .align-center {
     align-items: center;
+}
+
+.space-between {
+    justify-content: space-between;
 }
 
 .container {
@@ -73,6 +81,12 @@ input {
     border-radius: 0.5em;
     padding: 0.75em 1.5em;
     font-weight: 500;
+}
+
+.vertical-center {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
 }
 
 .border-divider {
@@ -127,10 +141,22 @@ input {
     background-color: rgb(22, 27, 34);
     border-radius: 0.5em;
     list-style: none;
-    padding: 0.5em;
+    padding: 0.25em 0;
     box-shadow: 0 0 10px black;
     min-width: 130px;
-    margin-top: .5em;
+    margin-top: 0.5em;
+}
+
+.default-dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25em;
+    text-decoration: none;
+    color: lightgray;
+}
+
+.default-dropdown-item:hover {
+    background-color: #2f56d6;
 }
 
 .dropdown-item {
@@ -266,7 +292,6 @@ input {
 
 .home-page {
     background-color: var(--main-color);
-    /* height: 100%; */
 }
 
 .sidebar-container {
@@ -443,6 +468,7 @@ input {
 
 .secondary-nav {
     border-bottom: 1px solid rgb(48, 54, 61);
+    margin-bottom: 1em;
     padding-bottom: 0.75em;
 }
 
@@ -454,4 +480,9 @@ input {
 
 .secondary-nav > a:hover {
     background-color: rgb(48, 54, 63);
+}
+
+.upload-file-container {
+    border: 1px solid rgb(48, 54, 61);
+    margin: 0 auto;
 }
