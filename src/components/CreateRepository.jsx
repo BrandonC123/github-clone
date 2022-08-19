@@ -23,7 +23,6 @@ const CreateRepository = () => {
         });
     }, [user]);
 
-    function addReadme() {}
     const repoObj = {
         name: name,
         description: description,
@@ -37,7 +36,8 @@ const CreateRepository = () => {
                     if (repoList.includes(name)) {
                         console.log("dupe");
                     } else {
-                        RepositoryService.createRepo(user.uid, name, repoList);
+                        RepositoryService.createRepo(user.uid, name, repoList, readMeStatus);
+                        // navigate(`/${uid}/${repoName}`);
                     }
                 }}
                 action=""
@@ -116,7 +116,13 @@ const CreateRepository = () => {
                         </span>
                     </p>
                     <li className="create-repo-input row">
-                        <input type="checkbox" name="add-readme" />
+                        <input
+                            onChange={(e) => {
+                                setReadMeStatus(e.target.checked);
+                            }}
+                            type="checkbox"
+                            name="add-readme"
+                        />
                         <p>
                             Add a README file
                             <br />{" "}

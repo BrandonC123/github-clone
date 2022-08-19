@@ -2,33 +2,59 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, listAll, list, uploadBytes } from "firebase/storage";
 import db from "..";
 
+const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
+
 class RepositoryService {
-    createRepo(uid, repoName, repoList) {
+    createRepo(uid, repoName, repoList, readMeStatus) {
         const storage = getStorage();
         const fileRef = ref(storage, ".git");
         const folderRef = ref(storage, `/${uid}/repos/${repoName}/.git`);
 
         uploadBytes(folderRef, fileRef)
-            .then(async function () {
+            .then(() => {
                 console.log("uploaded");
-                let today = new Date()
-                await updateDoc(doc(db, "users", `${uid}`), {
-                    repoList: [
-                        ...repoList,
-                        {
-                            repoName: repoName,
-                            lastUpdated: new Date()
-                                .toISOString()
-                                .slice(0, 10)
-                                .replace(/-/g, ""),
-                        },
-                    ],
-                });
-                // navigate(`/${uid}/${repoName}`);
+                if (readMeStatus) {
+                    // Create README if checked
+                    const readmeRef = ref(storage, "README.md");
+                    const readmeFolderRef = ref(
+                        storage,
+                        `/${uid}/repos/${repoName}/README.md`
+                    );
+                    uploadBytes(readmeFolderRef, readmeRef);
+                }
+                this.addRepoToFirestore(uid, repoName, repoList);
             })
             .catch((error) => {
                 console.log(error);
             });
+    }
+    // Add repository details to firestore database to store name and misc data
+    async addRepoToFirestore(uid, repoName, repoList) {
+        const date = new Date();
+        const month = months[date.getMonth()];
+        const day = date.getDate();
+        await updateDoc(doc(db, "users", `${uid}`), {
+            repoList: [
+                ...repoList,
+                {
+                    repoName: repoName,
+                    lastUpdated: `${month} ${day}`,
+                },
+            ],
+        });
     }
     async getRepoList(uid) {
         if (uid) {
