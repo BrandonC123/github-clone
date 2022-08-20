@@ -1,46 +1,43 @@
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { AuthenticateUser } from "./AuthenticateUser";
 import Sidebar from "./Sidebar";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 const Home = () => {
-    const storage = getStorage();
-    const navigate = useNavigate();
-    const user = AuthenticateUser();
-    useEffect(() => {
-        // if (!user) {
-        //     navigate("/signin");
-        // }
-    });
-    function createRepo() {
-        const testRef = ref(storage, "text.txt");
-        const testFolderRef = ref(storage, "/uid1/repos/");
-
-        uploadBytes(testFolderRef, testRef)
-            .then((snapshot) => {
-                console.log("uploaded");
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
     return (
-        // user && (
-        <div className="home-page page">
+        <div className="home-page row">
             <Sidebar />
-            <section className="home-page-section">
-                <div className="home-page-content">
-                    {" "}
-                    <Link to={"/signin"}>Sign in</Link>
-                    <Link to={"/signup"}>Sign up</Link>
-                    logged in
+            <section className="home-page-section two-column">
+                <div className="home-page-content">Following</div>
+                <div className="home-page-misc">
+                    <div className="home-misc-text column">
+                        <h4>Adding web cookies for enterprise users</h4>
+                        <small>
+                            In order to better reach and improve the web
+                            experience for enterprise users, we are adding
+                            non-essential web cookies to certain subdomains that
+                            specifically market our products to businesses. This
+                            change is only on subdomains that reach enterprise
+                            customers, and all other GitHub subdomains will
+                            continue to operate as-is.
+                        </small>
+                        <button className="secondary-gray-btn btn">
+                            Learn More
+                        </button>
+                    </div>
+                    <div className="home-misc-text column">
+                        <h4>Welcome to GitHub Global Campus!</h4>
+                        <small>
+                            Prepare for a career in tech by joining GitHub
+                            Global Campus. Global Campus will help you get the
+                            practical industry knowledge you need by giving you
+                            access to industry tools, events, learning resources
+                            and a growing student community.
+                        </small>
+                        <button className="secondary-gray-btn btn">
+                            Go to Global Campus
+                        </button>
+                    </div>
                 </div>
-                <div className="home-page-misc"></div>
             </section>
         </div>
-        // )
     );
 };
 

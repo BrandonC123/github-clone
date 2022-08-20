@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
-import { AuthenticateUser } from "./AuthenticateUser";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import CreateRepository from "./CreateRepository";
 import Home from "./Home";
 import MainHeader from "./MainHeader";
@@ -10,15 +9,19 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ViewProfile from "./ViewProfile";
 import ViewRepositoryList from "./ViewRepositoryList";
 import UploadFile from "./UploadFile";
+import { useEffect } from "react";
 
 const AuthenticateRoutes = () => {
     const auth = getAuth();
     const [user, setUser] = useState("");
-    auth.onAuthStateChanged((tempUser) => {
-        if (!tempUser) {
-            //navigate
-        }
-        setUser(tempUser);
+    const navigate = useNavigate();
+    useEffect(() => {
+        auth.onAuthStateChanged((tempUser) => {
+            if (!tempUser) {
+                navigate("/signin");
+            }
+            setUser(tempUser);
+        });
     });
 
     return (
@@ -27,10 +30,7 @@ const AuthenticateRoutes = () => {
                 <MainHeader username={user.displayName} />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route
-                        path={"/:username"}
-                        element={<ViewProfile />}
-                    />
+                    <Route path={"/:username"} element={<ViewProfile />} />
                     <Route
                         path="/:username/repositories"
                         element={<ViewRepositoryList />}
