@@ -1,31 +1,24 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getStorage, ref, listAll } from "firebase/storage";
 import { UserContext } from "./UserContext";
 import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
+import RepositoryService from "../services/RepositoryService";
 
 const ViewRepositoryList = () => {
     const user = useContext(UserContext);
+    const { username } = useParams();
     const [repoList, setRepoList] = useState([]);
     const storage = getStorage();
     useEffect(() => {
-        const listRef = ref(storage, `/${user.uid}/repos`);
-        let tempList = [];
-        listAll(listRef)
-            .then((res) => {
-                if (res.prefixes.length !== repoList.length) {
-                    res.prefixes.forEach((folderRef) => {
-                        tempList.push(folderRef.name);
-                        console.log(folderRef);
-                    });
-                    setRepoList(tempList);
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }, [user, storage]);
+        // Need to use username from Params to allow for viewing other user's repos
+        RepositoryService.getRepoList(username).then((data) => {
+            if (data) {
+                setRepoList(data);
+            }
+        });
+    }, [user]);
     function displayRepoList() {
         return repoList
             .map((repo) => {
@@ -33,16 +26,17 @@ const ViewRepositoryList = () => {
                     <div className="repo-list-container border-divider row">
                         <div className="profile-repo-info column">
                             <Link
-                                to={`/${user.displayName}/${repo}`}
+                                to={`/${user.displayName}/${repo.repoName}`}
                                 className="repo-list-link"
                             >
-                                {repo}
+                                {repo.repoName}
                             </Link>
-                            {/* Save last updated in metadata? */}
-                            <span>Updated today</span>
+                            <span>Updated on {repo.lastUpdated}</span>
                         </div>
                         <div className="profile-repo-actions">
-                            <button>Star</button>
+                            <button className="secondary-gray-btn btn">
+                                Star
+                            </button>
                         </div>
                     </div>
                 );

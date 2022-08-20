@@ -16,7 +16,7 @@ const CreateRepository = () => {
     const [readMeStatus, setReadMeStatus] = useState(false);
 
     useEffect(() => {
-        RepositoryService.getRepoList(user.uid).then((list) => {
+        RepositoryService.getRepoList(user.displayName).then((list) => {
             if (list) {
                 setRepoList(list);
             }
@@ -36,7 +36,12 @@ const CreateRepository = () => {
                     if (repoList.includes(name)) {
                         console.log("dupe");
                     } else {
-                        RepositoryService.createRepo(user.uid, name, repoList, readMeStatus);
+                        RepositoryService.createRepo(
+                            user.displayName,
+                            name,
+                            repoList,
+                            readMeStatus
+                        );
                         // navigate(`/${uid}/${repoName}`);
                     }
                 }}

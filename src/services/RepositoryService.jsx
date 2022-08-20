@@ -18,10 +18,10 @@ const months = [
 ];
 
 class RepositoryService {
-    createRepo(uid, repoName, repoList, readMeStatus) {
+    createRepo(username, repoName, repoList, readMeStatus) {
         const storage = getStorage();
         const fileRef = ref(storage, ".git");
-        const folderRef = ref(storage, `/${uid}/repos/${repoName}/.git`);
+        const folderRef = ref(storage, `/${username}/repos/${repoName}/.git`);
 
         uploadBytes(folderRef, fileRef)
             .then(() => {
@@ -31,22 +31,22 @@ class RepositoryService {
                     const readmeRef = ref(storage, "README.md");
                     const readmeFolderRef = ref(
                         storage,
-                        `/${uid}/repos/${repoName}/README.md`
+                        `/${username}/repos/${repoName}/README.md`
                     );
                     uploadBytes(readmeFolderRef, readmeRef);
                 }
-                this.addRepoToFirestore(uid, repoName, repoList);
+                this.addRepoToFirestore(username, repoName, repoList);
             })
             .catch((error) => {
                 console.log(error);
             });
     }
     // Add repository details to firestore database to store name and misc data
-    async addRepoToFirestore(uid, repoName, repoList) {
+    async addRepoToFirestore(username, repoName, repoList) {
         const date = new Date();
         const month = months[date.getMonth()];
         const day = date.getDate();
-        await updateDoc(doc(db, "users", `${uid}`), {
+        await updateDoc(doc(db, "users", `${username}`), {
             repoList: [
                 ...repoList,
                 {
@@ -56,17 +56,17 @@ class RepositoryService {
             ],
         });
     }
-    async getRepoList(uid) {
-        if (uid) {
-            const response = await getDoc(doc(db, "users", `${uid}`));
+    async getRepoList(username) {
+        if (username) {
+            const response = await getDoc(doc(db, "users", `${username}`));
             if (response) {
                 return response.data().repoList;
             }
         }
     }
-    getRepoContent(uid, repoName) {
+    getRepoContent(username, repoName) {
         const storage = getStorage();
-        const listRef = ref(storage, `/${uid}/repos/${repoName}`);
+        const listRef = ref(storage, `/${username}/repos/${repoName}`);
         let tempFolderList = [];
         let tempItemList = [];
         let content = listAll(listRef)
@@ -85,12 +85,12 @@ class RepositoryService {
             });
         return content;
     }
-    uploadFileToRepo(uid, repoName, files) {
+    uploadFileToRepo(username, repoName, files) {
         Array.from(files).forEach((file) => {
             const storage = getStorage();
             const testFolderRef = ref(
                 storage,
-                `/${uid}/repos/${repoName}/${file.name}`
+                `/${username}/repos/${repoName}/${file.name}`
             );
             uploadBytes(testFolderRef, file)
                 .then((snapshot) => {
