@@ -26,7 +26,7 @@ const ViewRepositoryList = () => {
                     <div className="repo-list-container border-divider row">
                         <div className="profile-repo-info column">
                             <Link
-                                to={`/${user.displayName}/${repo.repoName}`}
+                                to={`/${username}/${repo.repoName}`}
                                 className="repo-list-link"
                             >
                                 {repo.repoName}
@@ -45,9 +45,9 @@ const ViewRepositoryList = () => {
     }
     return (
         <div className="profile-page page">
-            <ProfileInformation />
+            <ProfileInformation username={username} />
             <main className="profile-repo-list">
-                <ProfileNav username={user.displayName} />
+                <ProfileNav username={username} />
                 {displayRepoList()}
             </main>
         </div>

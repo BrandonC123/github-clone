@@ -1,25 +1,32 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence,
+} from "firebase/auth";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
     const [email, setEmail] = useState("");
     const [password, setPassowrd] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
+    const auth = getAuth();
 
     function signInUser() {
         const auth = getAuth();
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                console.log(userCredential.user);
                 navigate("/");
             })
             .catch((error) => {
                 console.error(error.message);
+                setErrorMessage("Wrong email or password.");
             });
     }
     return (
-        <div className="signin-page page">
+        <div className="signin-page">
             <div className="logo-container column align-center">
                 <img
                     className="signin-logo"
@@ -68,6 +75,7 @@ const Signin = () => {
                         className="signin-input"
                     />
                 </div>
+                <span>{errorMessage}</span>
                 <button className="signin-btn btn">Sign in</button>
             </form>
             <div className="create-account-container signin-page-container">

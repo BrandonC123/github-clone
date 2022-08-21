@@ -9,7 +9,7 @@ const Sidebar = () => {
     const user = useContext(UserContext);
     const storage = getStorage();
     useEffect(() => {
-        const listRef = ref(storage, `/${user.uid}/repos`);
+        const listRef = ref(storage, `/${user.displayName}/repos`);
         let tempList = [];
         listAll(listRef)
             .then((res) => {
@@ -42,13 +42,13 @@ const Sidebar = () => {
         <aside className="sidebar-container">
             <p className="border-divider">{user.displayName}</p>
             <div className="sidebar-repo-container border-divider">
-                <p>
+                <p className="row">
                     Recent Repositories{" "}
                     <button
                         onClick={() => {
                             navigate("/new");
                         }}
-                        className="create-repo-btn btn"
+                        className="green-action-btn btn vertical-center"
                     >
                         <img
                             src="/img/repo-icon.svg"
