@@ -1,24 +1,26 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
 import RepositoryService from "../services/RepositoryService";
 
 const ViewProfile = () => {
+    // !!! Check if user exists if viewing another person's profile
     const user = useContext(UserContext);
+    const { username } = useParams();
     const [repoList, setRepoList] = useState([]);
 
     function displayRepos() {
         return repoList.map((repo) => {
             return (
-                <div key={repo} className="repo-card">
+                <div key={repo.repoName} className="repo-card">
                     <div className="repo-content row">
                         <Link
-                            to={`/${user.displayName}/${repo}`}
+                            to={`/${username}/${repo.repoName}`}
                             className="repo-list-link"
                         >
-                            {repo}
+                            {repo.repoName}
                         </Link>
                         <button>drag</button>
                     </div>
@@ -29,7 +31,7 @@ const ViewProfile = () => {
     }
 
     useEffect(() => {
-        RepositoryService.getRepoList(user.uid).then((list) => {
+        RepositoryService.getRepoList(username).then((list) => {
             if (list) {
                 setRepoList(list);
             }
@@ -37,11 +39,11 @@ const ViewProfile = () => {
     }, [user]);
     return (
         <div className="profile-page page">
-            <ProfileInformation />
+            <ProfileInformation username={username} />
             <main className="profile-repo-content">
-                <ProfileNav username={user.displayName} />
+                <ProfileNav username={username} />
                 <div className="view-six-repo">{displayRepos()}</div>
-                <div className="contributions-container">t</div>
+                <div className="contributions-container"></div>
             </main>
         </div>
     );

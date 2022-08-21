@@ -3,11 +3,14 @@ import EditProfile from "./EditProfile";
 import { UserContext } from "./UserContext";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import db from "..";
+import UserService from "../services/UserService";
 
 const ProfileInformation = ({ username }) => {
     const user = useContext(UserContext);
     const [userDetails, setUserDetails] = useState("");
+    const [followList, setFollowList] = useState([]);
     const [btnText, setBtnText] = useState("");
+
     async function getUserDetail() {
         if (user) {
             // If user has not made changes to profile previously
@@ -26,6 +29,7 @@ const ProfileInformation = ({ username }) => {
                     website: "",
                     twitterUsername: "",
                     repoList: [],
+                    followList: [],
                 };
                 setUserDetails(emptyUser);
                 await setDoc(doc(db, "users", `${username}`), emptyUser);
@@ -33,21 +37,50 @@ const ProfileInformation = ({ username }) => {
         }
     }
     function displayEditOrFollow() {
-        if (user.displayName === username) {
-            <EditProfile
-                display={display}
-                toggleForm={toggleForm}
-                userDetails={userDetails}
-                setUserDetails={setUserDetails}
-            />;
-            setBtnText("Edit Profile");
-        } else {
-            setBtnText("Unfollow");
+        if (user && user.displayName === username) {
+            return (
+                <>
+                    <button
+                        onClick={() => {
+                            toggleForm();
+                        }}
+                        className="edit-profile-btn btn"
+                    >
+                        Edit Profile
+                    </button>
+                    <EditProfile
+                        display={display}
+                        toggleForm={toggleForm}
+                        userDetails={userDetails}
+                        setUserDetails={setUserDetails}
+                    />
+                </>
+            );
+        } else if (user) {
+            UserService.getFollowList(user.displayName).then((data) => {
+                if (data.length !== followList.length) {
+                    setFollowList(data);
+                }
+            });
+            return (
+                <>
+                    <button
+                        onClick={() => {
+                            UserService.followOrUnfollowUser(
+                                username,
+                                followList
+                            );
+                        }}
+                        className="btn"
+                    >
+                        {followList.includes(username) ? "Unfollow" : "Follow"}
+                    </button>
+                </>
+            );
         }
     }
     useEffect(() => {
         getUserDetail();
-        displayEditOrFollow();
     }, [user]);
 
     const [display, setDisplay] = useState(false);
@@ -56,20 +89,14 @@ const ProfileInformation = ({ username }) => {
         document.querySelector(".profile-information").classList.toggle("hide");
         setDisplay(!display);
     }
+
     return (
         <div className="profile-information-column">
             <img src="/img/default-profile-pic.png" alt="" />
-            <button
-                onClick={() => {
-                    toggleForm();
-                }}
-                className="edit-profile-btn btn"
-            >
-                {btnText}
-            </button>
+            {displayEditOrFollow()}
             <div className="profile-information">
                 <h1>{userDetails.name}</h1>
-                <h2>{user.displayName}</h2>
+                <h2>{username}</h2>
                 <p>{userDetails.bio}</p>
                 <p>{userDetails.company}</p>
                 <p>{userDetails.location}</p>
