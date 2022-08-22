@@ -65,11 +65,24 @@ const ProfileInformation = ({ username }) => {
             return (
                 <>
                     <button
-                        onClick={() => {
-                            UserService.followOrUnfollowUser(
-                                username,
-                                followList
-                            );
+                        onClick={(e) => {
+                            if (
+                                e.target.textContent.toLowerCase() === "follow"
+                            ) {
+                                UserService.followUser(
+                                    user.displayName,
+                                    username,
+                                    followList
+                                );
+                                e.target.textContent = "Unfollow";
+                            } else {
+                                UserService.unfollowUser(
+                                    user.displayName,
+                                    username,
+                                    followList
+                                );
+                                e.target.textContent = "Follow";
+                            }
                         }}
                         className="btn"
                     >
