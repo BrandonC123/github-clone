@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useContext } from "react";
 import RepositoryService from "../services/RepositoryService";
 import UserService from "../services/UserService";
+import RepositoryCard from "./RepositoryCard";
 import Sidebar from "./Sidebar";
 import { UserContext } from "./UserContext";
 
@@ -33,7 +34,7 @@ const Home = ({ loading }) => {
                 if (
                     differenceInCalendarDays(
                         currentDate,
-                        new Date(repo.lastUpdated.seconds * 1000)
+                        new Date(repo.created.seconds * 1000)
                     ) <= 10
                 ) {
                     tempDisplayList.push({ ...repo, username });
@@ -44,11 +45,7 @@ const Home = ({ loading }) => {
     }
     function displayFollowedRepos() {
         return repoDisplayList.map((repo) => {
-            return (
-                <p>
-                    {repo.username} {repo.repoName}
-                </p>
-            );
+            return <RepositoryCard repoDetails={repo} />;
         });
     }
     function displayHome() {

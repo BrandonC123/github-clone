@@ -33,7 +33,10 @@ input {
     color: white;
 }
 
-h1 {
+h1,
+h2,
+h3,
+h4 {
     margin: 0;
 }
 
@@ -95,7 +98,6 @@ h1 {
 }
 
 .secondary-text {
-    font-size: smaller;
     color: var(--default-text-color);
 }
 
@@ -237,6 +239,7 @@ h1 {
     padding: 2em;
     background-color: var(--main-color);
     color: rgb(211, 211, 211);
+    height: 100vh;
 }
 
 .title {
@@ -278,6 +281,11 @@ h1 {
     text-align: center;
 }
 
+.blue-accent-text {
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
 .external-links > a,
 .signin-page-label > a,
 .create-account-container > a {
@@ -292,6 +300,28 @@ h1 {
 
 .home-page {
     background-color: var(--main-color);
+}
+
+.home-page-section {
+    padding: 2em;
+}
+
+.home-repo-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1em;
+    border-radius: 0.5em;
+    background-color: rgb(13, 17, 23);
+    border: 1px solid rgb(48, 54, 61);
+}
+
+.home-misc-text {
+    padding: 0.5em;
+    background-color: rgb(13, 17, 23);
+    border: 1px solid rgb(33, 38, 45);
+    border-radius: 0.25em;
+    color: var(--default-text-color);
 }
 
 .sidebar-container {
@@ -322,7 +352,7 @@ h1 {
 
 .two-column {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 65% 20%;
     grid-template-rows: auto 1fr;
     gap: 1em;
     width: 100%;
@@ -460,7 +490,7 @@ h1 {
     margin-top: 2em;
 }
 
-.repo-card {
+.profile-repo-card {
     padding: 0.5em;
     border: 1px solid rgb(48, 54, 61);
     border-radius: 0.25em;
