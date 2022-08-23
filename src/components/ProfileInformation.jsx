@@ -11,31 +11,13 @@ const ProfileInformation = ({ username }) => {
     const [followList, setFollowList] = useState([]);
     const [btnText, setBtnText] = useState("");
 
-    async function getUserDetail() {
+    useEffect(() => {
         if (user) {
-            // If user has not made changes to profile previously
-            // user details would not be in database
-            const ref = doc(db, "users", `${username}`);
-            const userDetailDb = await getDoc(ref);
-            if (userDetailDb.exists()) {
-                setUserDetails(userDetailDb.data());
-            } else {
-                const emptyUser = {
-                    name: "",
-                    bio: "",
-                    company: "",
-                    location: "",
-                    email: "",
-                    website: "",
-                    twitterUsername: "",
-                    repoList: [],
-                    followList: [],
-                };
-                setUserDetails(emptyUser);
-                await setDoc(doc(db, "users", `${username}`), emptyUser);
-            }
+            UserService.getUserDetails(username).then((detail) => {
+                setUserDetails(detail);
+            });
         }
-    }
+    }, [user]);
     function displayEditOrFollow() {
         if (user && user.displayName === username) {
             return (
@@ -92,9 +74,6 @@ const ProfileInformation = ({ username }) => {
             );
         }
     }
-    useEffect(() => {
-        getUserDetail();
-    }, [user]);
 
     const [display, setDisplay] = useState(false);
     function toggleForm() {
