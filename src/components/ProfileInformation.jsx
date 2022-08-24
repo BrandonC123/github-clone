@@ -9,14 +9,11 @@ const ProfileInformation = ({ username }) => {
     const user = useContext(UserContext);
     const [userDetails, setUserDetails] = useState("");
     const [followList, setFollowList] = useState([]);
-    const [btnText, setBtnText] = useState("");
 
     useEffect(() => {
-        if (user) {
-            UserService.getUserDetails(username).then((detail) => {
-                setUserDetails(detail);
-            });
-        }
+        UserService.getUserDetails(user, username).then((detail) => {
+            setUserDetails(detail);
+        });
     }, [user]);
     function displayEditOrFollow() {
         if (user && user.displayName === username) {

@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useEffect, useState } from "react";
 import UserService from "../services/UserService";
+import AccountSettingsSidebar from "./AccountSettingsSidebar";
 import ProfileImageEditor from "./ProfileImageEditor";
 import { UserContext } from "./UserContext";
 
@@ -31,11 +32,24 @@ const ProfileSettings = ({}) => {
     }, [user]);
     return (
         <div className="profile-settings-page row">
-            <div className="profile-settings-sidebar">sidebar</div>
+            <AccountSettingsSidebar />
             <section className="profile-settings-content">
                 <div>
                     <h1>Public Profile</h1>
-                    <form className="column" action="">
+                    <form
+                        onSubmit={() => {
+                            UserService.updateUserProfile(user.displayName, {
+                                name: name,
+                                bio: bio,
+                                company: company,
+                                location: location,
+                                email: email,
+                                website: website,
+                                twitterUsername: twitterUsername,
+                            });
+                        }}
+                        className="column"
+                    >
                         <div className="form-group">
                             <label htmlFor="name">Name</label>
                             <input
@@ -140,15 +154,23 @@ const ProfileSettings = ({}) => {
                             statement to learn more about how we use this
                             information.
                         </small>
-                        <button className="green-action-btn btn">
+                        <button type="submit" className="green-action-btn btn">
                             Update Profile
                         </button>
                     </form>
                 </div>
-                <ProfileImageEditor
-                    display={display}
-                    setProfileImage={setProfileImage}
-                />
+                <div>
+                    <ProfileImageEditor
+                        display={display}
+                        profileImage={profileImage}
+                    />
+                    <input
+                        onChange={(e) => {
+                            setProfileImage(e.target.files[0]);
+                        }}
+                        type="file"
+                    />
+                </div>
             </section>
         </div>
     );

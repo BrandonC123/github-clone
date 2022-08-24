@@ -2,14 +2,17 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import db from "..";
 
 class UserService {
-    async getUserDetails(username) {
+    async getUserDetails(user, username) {
         const ref = doc(db, "users", `${username}`);
         const userDetailDb = await getDoc(ref);
         if (userDetailDb.exists()) {
             return userDetailDb.data();
-        } else {
-            // If user does not currently exist in database create a new
-            // user with empty fields
+
+            /* Only run else if when a user is viewing their own profile and is
+            logged in which allows other profiles to be viewed when not logged in. */
+        } else if (user && user.displayName === username) {
+            /* If user does not currently exist in database create a new
+             user with empty fields */
             const emptyUser = {
                 name: "",
                 bio: "",
@@ -24,6 +27,7 @@ class UserService {
             await setDoc(doc(db, "users", `${username}`), emptyUser);
             return emptyUser;
         }
+        return {};
     }
     async updateUserProfile(username, updatedUserObject) {
         await updateDoc(doc(db, "users", username), updatedUserObject);
