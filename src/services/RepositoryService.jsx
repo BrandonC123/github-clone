@@ -2,21 +2,6 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getStorage, ref, listAll, list, uploadBytes } from "firebase/storage";
 import db from "..";
 
-const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
-
 class RepositoryService {
     createRepo(username, repoName, repoList, readMeStatus) {
         const storage = getStorage();
@@ -44,24 +29,24 @@ class RepositoryService {
     // Add repository details to firestore database to store name and misc data
     async addRepoToFirestore(username, repoName, repoList) {
         const date = new Date();
-        const month = months[date.getMonth()];
-        const day = date.getDate();
         await updateDoc(doc(db, "users", `${username}`), {
             repoList: [
                 ...repoList,
                 {
                     repoName: repoName,
-                    lastUpdated: `${month} ${day}`,
+                    lastUpdated: date,
+                    created: date,
+                    starred: false,
                 },
             ],
         });
     }
     async getRepoList(username) {
-        if (username) {
-            const response = await getDoc(doc(db, "users", `${username}`));
-            if (response) {
-                return response.data().repoList;
-            }
+        const response = await getDoc(doc(db, "users", `${username}`));
+        if (response.exists()) {
+            return response.data().repoList;
+        } else {
+            return [];
         }
     }
     getRepoContent(username, repoName) {
@@ -95,12 +80,44 @@ class RepositoryService {
             uploadBytes(testFolderRef, file)
                 .then((snapshot) => {
                     console.log(snapshot);
+                    this.updateLastUpdated(username, repoName);
                 })
                 .catch((error) => {
                     console.log(error);
                 });
         });
     }
+    // Update when the repository was last updated
+    async updateLastUpdated(username, repoName) {
+        const repoList = await this.getRepoList(username);
+        const index = repoList.map((repo) => repo.repoName).indexOf(repoName);
+        let tempRepoList = Array.from(repoList);
+        tempRepoList[index].lastUpdated = new Date();
+        await updateDoc(doc(db, "users", `${username}`), {
+            repoList: tempRepoList,
+        });
+    }
+    async starRepo(username, repoName, repoList) {
+        console.log(repoList);
+        const index = repoList.map((repo) => repo.repoName).indexOf(repoName);
+        let tempRepoList = Array.from(repoList);
+        tempRepoList[index].starred = !tempRepoList[index].starred;
+        console.log(tempRepoList);
+        await updateDoc(doc(db, "users", `${username}`), {
+            repoList: tempRepoList,
+        });
+    }
+    async getStarredRepoList(username) {
+        const repoList = await this.getRepoList(username);
+        let tempList = [];
+        repoList.forEach((repo) => {
+            if (repo.starred) {
+                tempList.push(repo);
+            }
+        });
+        return tempList;
+    }
+    // TODO: sorting algs for repoList
 }
 
 export default new RepositoryService();
