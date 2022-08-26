@@ -4,6 +4,7 @@ import { UserContext } from "./UserContext";
 import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
 import RepositoryService from "../services/RepositoryService";
+import ViewRepositoryListDropdown from "./ViewRepositoryListDropdown";
 
 const ViewRepositoryList = () => {
     // TODO: Add functionality to star repos
@@ -59,6 +60,22 @@ const ViewRepositoryList = () => {
             btn.firstChild.src = "/img/star-icon.svg";
         }
     }
+    // Update repo list to display current sort by selection
+    function toggleRepoList(sortType) {
+        switch (sortType.toLowerCase()) {
+            case "last updated":
+                setRepoList(lastUpdatedList);
+                break;
+            case "name":
+                setRepoList(nameSortList);
+                break;
+            case "stars":
+                setRepoList(starSortList);
+                break;
+            default:
+                return;
+        }
+    }
     // TODO: Sort by last updated default. Add Sort by button and header
     function displayRepoList() {
         return repoList.map((repo) => {
@@ -112,33 +129,6 @@ const ViewRepositoryList = () => {
             );
         });
     }
-    function sortDropDown() {
-        return (
-            <div className="dropdown">
-                <p
-                    onClick={() => {
-                        setRepoList(lastUpdatedList);
-                    }}
-                >
-                    Last updated
-                </p>
-                <p
-                    onClick={() => {
-                        setRepoList(nameSortList);
-                    }}
-                >
-                    Name
-                </p>
-                <p
-                    onClick={() => {
-                        setRepoList(starSortList);
-                    }}
-                >
-                    Stars
-                </p>
-            </div>
-        );
-    }
     return (
         <div className="profile-page page">
             <ProfileInformation username={username} />
@@ -151,12 +141,9 @@ const ViewRepositoryList = () => {
                         className="search-bar"
                     />
                     <div className="divider row">
-                        <button>Type</button>
-                        <button>Language</button>
-                        <div>
-                            <button>Sort</button>
-                            {sortDropDown()}
-                        </div>
+                        <ViewRepositoryListDropdown
+                            toggleRepoList={toggleRepoList}
+                        />
                     </div>
                     <button
                         onClick={() => {
