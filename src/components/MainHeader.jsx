@@ -3,18 +3,99 @@ import { getAuth, signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
 
 const MainHeader = ({ username }) => {
-    const dropdownItemList = [
+    // TODO: Finish styling dropdown. Add component for "Your Stars" link
+    const dropdownItemList1 = [
         { title: "Your Profile", url: `/${username}` },
-        { title: "Your Repositories", url: `/${username}-repositories` },
+        { title: "Your Repositories", url: `/${username}/repositories` },
+        { title: "Your codespaces", url: "/settings/profile" },
+        { title: "Your organizations", url: "/settings/profile" },
+        { title: "Your projects", url: "/settings/profile" },
+        { title: "Your Stars", url: `/${username}/stars` },
+        { title: "Your gists", url: "/settings/profile" },
+    ];
+    const dropdownItemList2 = [
+        { title: "Upgrade", url: "/settings/profile" },
+        { title: "Feature preview", url: "/settings/profile" },
+        { title: "Help", url: "/settings/profile" },
+        { title: "Settings", url: "/settings/profile" },
     ];
     function fillDropdown() {
-        return dropdownItemList.map((item) => {
+        return (
+            <>
+                <div className="border-divider">
+                    {dropdownItemList1.map((item) => {
+                        return (
+                            <Link
+                                key={item.title}
+                                to={`${item.url}`}
+                                className="default-dropdown-item"
+                            >
+                                {item.title}
+                            </Link>
+                        );
+                    })}
+                </div>
+                <div className="border-divider">
+                    {dropdownItemList2.map((item) => {
+                        return (
+                            <Link
+                                key={item.title}
+                                to={`${item.url}`}
+                                className="default-dropdown-item"
+                            >
+                                {item.title}
+                            </Link>
+                        );
+                    })}
+                </div>
+            </>
+        );
+    }
+    function displaySignOrUser() {
+        if (username) {
             return (
-                <Link to={`${item.url}`} className="dropdown-item">
-                    <li>{item.title}</li>
-                </Link>
+                <div className="header-right-column align-center row">
+                    <img
+                        src="/img/bell-icon.svg"
+                        alt="Notification bell icon"
+                        width={"25px"}
+                    />
+                    +
+                    <div className="header-user-dropdown-container">
+                        <button
+                            onClick={(e) => {
+                                const dropdown = e.target.nextSibling;
+                                toggleDropdown(dropdown);
+                            }}
+                            className="dropdown-btn"
+                            to={`/${username}`}
+                        >
+                            {username}
+                        </button>
+                        <div className="header-dropdown">
+                            Signed in as {username}
+                            {fillDropdown()}
+                            <Link
+                                onClick={() => {
+                                    auth.signOut();
+                                }}
+                                to={"/signin"}
+                                className="header-dropdown-item"
+                            >
+                                Sign out
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             );
-        });
+        } else {
+            return (
+                <div>
+                    <Link to={"/signin"}>Sign in</Link>
+                    <Link to={"/signup"}>Sign up</Link>
+                </div>
+            );
+        }
     }
     const auth = getAuth();
     let dropdownRef = null;
@@ -72,34 +153,7 @@ const MainHeader = ({ username }) => {
                         </li>
                     </nav>
                 </div>
-                <div className="header-right-column align-center row">
-                    <img src="/img/bell-icon.svg" alt="" width={"25px"} />+
-                    <div className="header-user-dropdown-container">
-                        <button
-                            onClick={(e) => {
-                                const dropdown = e.target.nextSibling;
-                                toggleDropdown(dropdown);
-                            }}
-                            className="dropdown-btn"
-                            to={`/${username}`}
-                        >
-                            {username}
-                        </button>
-                        <ul className="dropdown hide">
-                            Signed in as {username}
-                            {fillDropdown()}
-                            <Link
-                                onClick={() => {
-                                    auth.signOut();
-                                }}
-                                to={"/signin"}
-                                className="dropdown-item"
-                            >
-                                <li>Sign out</li>
-                            </Link>
-                        </ul>
-                    </div>
-                </div>
+                {displaySignOrUser()}
             </div>
         </header>
     );

@@ -1,19 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { UserContext } from "./UserContext";
-import { getStorage, ref, listAll } from "firebase/storage";
+import { getStorage, ref, listAll, getMetadata } from "firebase/storage";
 import RepositoryNav from "./RepositoryNav";
 import RepositoryService from "../services/RepositoryService";
 import Dropdown from "./Dropdown";
 
 const ViewRepository = () => {
     const user = useContext(UserContext);
+    const { username } = useParams();
     const { repoName } = useParams();
     const [repoFolders, setRepoFolders] = useState([]);
     const [repoItems, setRepoItems] = useState([]);
 
     useEffect(() => {
-        RepositoryService.getRepoContent(user.uid, repoName).then((res) => {
+        RepositoryService.getRepoContent(username, repoName).then((res) => {
             // Only update if data differs
             if (repoFolders.length !== res.tempFolderList.length) {
                 setRepoFolders(res.tempFolderList);
@@ -77,7 +78,10 @@ const ViewRepository = () => {
                         </div>
                     </div>
                     <div className="view-repo-content">
-                        <div className="border-divider">
+                        <div
+                            className="border-divider"
+                            style={{ backgroundColor: "rgb(22,27,34)" }}
+                        >
                             {user.displayName} Update Readme
                         </div>
                         {displayFolders()}

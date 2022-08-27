@@ -27,10 +27,7 @@ const RepositoryCard = ({ repoDetails }) => {
     return (
         <div className="repo-card-container border-divider">
             <p>
-                <Link to={`/${username}`}>{username}</Link> created a repository{" "}
-                <Link to={`/${username}/${repoName}`}>
-                    {username}/{repoName}
-                </Link>
+                {username} created a repository {username}/{repoName}
                 <small className="secondary-text"> {differnce} days ago</small>
             </p>
             <div className="home-repo-card">

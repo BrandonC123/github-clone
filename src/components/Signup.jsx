@@ -4,7 +4,7 @@ import {
     updateProfile,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const [email, setEmail] = useState("");
@@ -12,6 +12,7 @@ const Signup = () => {
     const [username, setUsername] = useState("");
     const [choice, setChoice] = useState("");
     const [errorText, setErrorText] = useState("");
+    const navigate = useNavigate();
     function toggleContinueButton(e) {
         const button = e.target.parentElement.parentElement.lastElementChild;
         if (e.target.checkValidity()) {
@@ -82,9 +83,8 @@ const Signup = () => {
             .then((userCredential) => {
                 updateProfile(userCredential.user, {
                     displayName: username,
-                }).catch((error) => {
-                    console.log(error);
                 });
+                navigate(`/${username}`)
             })
             .catch((error) => {
                 console.log(error.message);
