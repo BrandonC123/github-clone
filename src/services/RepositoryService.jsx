@@ -77,11 +77,12 @@ class RepositoryService {
                 storage,
                 `/${username}/repos/${repoName}/${file.name}`
             );
+
             uploadBytes(testFolderRef, file)
                 .then((snapshot) => {
                     console.log(snapshot);
-                    this.updateLastUpdated(username, repoName);
                     this.addToContributionArray(username, repoName, file.name);
+                    this.updateLastUpdated(username, repoName);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -139,8 +140,18 @@ class RepositoryService {
             fileName,
             time: currentDate,
         };
-        // TODO: fix date comparision to disregard time
-        if (tempContributionArray[currentIndex].day !== currentDate) {
+        /* 
+        Get the current date and the date of last contribution to 
+        determine whether or not a new entry needs to be made for that day.
+        If a contribution has already been made for that day then update
+        corresponding count and contribution details
+        */
+        const currentDay = new Date().toDateString();
+        let compareDay = new Date(
+            tempContributionArray[currentIndex].day.seconds * 1000
+        ).toDateString();
+        if (currentDay !== compareDay) {
+            console.log("new entry");
             const newEntry = {
                 day: currentDate,
                 contributionCount: 1,
@@ -148,12 +159,14 @@ class RepositoryService {
             };
             tempContributionArray.push(newEntry);
         } else {
+            console.log("repo already made");
             tempContributionArray[currentIndex].contributionCount++;
             tempContributionArray[currentIndex].contributions.push(
                 contributionObject
             );
         }
 
+        console.log(tempContributionArray);
         await updateDoc(doc(db, "users", `${username}`), {
             contributionArray: tempContributionArray,
         });
