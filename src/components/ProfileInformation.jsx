@@ -81,7 +81,7 @@ const ProfileInformation = ({ username }) => {
 
     return (
         <div className="profile-information-column">
-            <img src="/img/default-profile-pic.png" alt="" />
+            <img src={require("../img/default-profile-pic.png")} alt="" />
             {displayEditOrFollow()}
             <div className="profile-information">
                 <h1>{userDetails.name}</h1>

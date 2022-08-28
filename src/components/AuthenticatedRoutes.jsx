@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import CreateRepository from "./CreateRepository";
 import Home from "./Home";
@@ -8,8 +8,9 @@ import ViewRepository from "./ViewRepository";
 import { getAuth } from "firebase/auth";
 import ViewProfile from "./ViewProfile";
 import ViewRepositoryList from "./ViewRepositoryList";
+import ProfileSettings from "./ProfileSettings";
+import ViewStarredRepositories from "./ViewStarredRepositories";
 import UploadFile from "./UploadFile";
-import { useEffect } from "react";
 
 const AuthenticateRoutes = () => {
     const auth = getAuth();
@@ -47,6 +48,14 @@ const AuthenticateRoutes = () => {
                     <Route
                         path="/:username/:repoName"
                         element={<ViewRepository />}
+                    />
+                    <Route
+                        path="/settings/profile"
+                        element={<ProfileSettings />}
+                    />
+                    <Route
+                        path="/:username/stars"
+                        element={<ViewStarredRepositories />}
                     />
                 </Routes>
             </UserContext.Provider>

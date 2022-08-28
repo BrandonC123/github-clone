@@ -2,37 +2,28 @@ import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { getStorage, ref, listAll } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
+import RepositoryService from "../services/RepositoryService";
 
 const Sidebar = () => {
     const navigate = useNavigate();
     const [repoList, setRepoList] = useState([]);
     const user = useContext(UserContext);
-    const storage = getStorage();
     useEffect(() => {
-        const listRef = ref(storage, `/${user.displayName}/repos`);
-        let tempList = [];
-        listAll(listRef)
-            .then((res) => {
-                if (res.prefixes.length !== repoList.length) {
-                    res.prefixes.forEach((folderRef) => {
-                        tempList.push(folderRef.name);
-                    });
-                    setRepoList(tempList);
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+        RepositoryService.getRepoList(user.displayName).then(
+            (serviceRepoList) => {
+                setRepoList(serviceRepoList);
+            }
+        );
     }, [user]);
     function displayRepoList() {
         return repoList.map((repo) => {
             return (
-                <li>
+                <li key={repo.repoName}>
                     <Link
-                        to={`/${user.displayName}/${repo}`}
+                        to={`/${user.displayName}/${repo.repoName}`}
                         className="repo-item"
                     >
-                        {user.displayName}/{repo}
+                        {user.displayName}/{repo.repoName}
                     </Link>
                 </li>
             );
@@ -51,7 +42,7 @@ const Sidebar = () => {
                         className="green-action-btn btn vertical-center"
                     >
                         <img
-                            src="/img/repo-icon.svg"
+                            src={require("../img/repo-icon.svg").default}
                             width={"15px"}
                             alt="Repository icon"
                         />

@@ -106,6 +106,10 @@ h4 {
     visibility: hidden;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 .header {
     background-color: rgb(22, 27, 34);
     color: white;
@@ -133,10 +137,19 @@ h4 {
     position: relative;
 }
 
+.dropdown {
+    position: absolute;
+    background-color: rgb(22, 27, 34);
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 0.5em;
+    margin-top: 0.5em;
+    box-shadow: 0 0 10px black;
+    z-index: 100;
+}
+
 .header-dropdown {
     position: absolute;
-    border: 1px solid rgb(48, 54, 61);
-    border-radius: 0.25em;
+    border: 1px solid rgb(29, 34, 41);
     background-color: rgb(22, 27, 34);
     padding: 0.5em 0;
     width: 180px;
@@ -175,7 +188,7 @@ h4 {
 }
 
 .signup-page {
-    background: url("/public/img/bg1.gif") no-repeat center center fixed;
+    background: url("./img/bg1.gif") no-repeat center center fixed;
     background-size: cover;
     height: 100vh;
     color: var(--default-text-color);
@@ -391,10 +404,10 @@ h4 {
     width: 100%;
 }
 
-.create-repo-input > input,
 .create-repo-input > textarea,
 .form-group > input,
-.form-group > textarea {
+.form-group > textarea,
+.search-bar {
     border: 1px solid rgb(29, 34, 41);
     border-radius: 0.2em;
     background-color: rgb(1, 4, 9);
@@ -494,6 +507,12 @@ h4 {
     padding: 0.5em;
     border: 1px solid rgb(48, 54, 61);
     border-radius: 0.25em;
+}
+
+.contributions-container {
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 0.25em;
+    padding: 0.25em;
 }
 
 .secondary-nav {

@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
 
 const MainHeader = ({ username }) => {
-    // TODO: Finish styling dropdown. Add component for "Your Stars" link
     const dropdownItemList1 = [
-        { title: "Your Profile", url: `/${username}` },
-        { title: "Your Repositories", url: `/${username}/repositories` },
+        { title: "Your profile", url: `/${username}` },
+        { title: "Your repositories", url: `/${username}/repositories` },
         { title: "Your codespaces", url: "/settings/profile" },
         { title: "Your organizations", url: "/settings/profile" },
         { title: "Your projects", url: "/settings/profile" },
-        { title: "Your Stars", url: `/${username}/stars` },
+        { title: "Your stars", url: `/${username}/stars` },
         { title: "Your gists", url: "/settings/profile" },
     ];
     const dropdownItemList2 = [
@@ -56,7 +54,7 @@ const MainHeader = ({ username }) => {
             return (
                 <div className="header-right-column align-center row">
                     <img
-                        src="/img/bell-icon.svg"
+                        src={require("../img/bell-icon.svg").default}
                         alt="Notification bell icon"
                         width={"25px"}
                     />
@@ -72,7 +70,7 @@ const MainHeader = ({ username }) => {
                         >
                             {username}
                         </button>
-                        <div className="header-dropdown">
+                        <div className="header-dropdown hide">
                             Signed in as {username}
                             {fillDropdown()}
                             <Link
@@ -122,7 +120,10 @@ const MainHeader = ({ username }) => {
             <div className="header-container container row">
                 <div className="header-left-container row align-center">
                     <Link to={"/"}>
-                        <img src="/img/gh-logo.svg" alt="Github logo" />
+                        <img
+                            src={require("../img/gh-logo.svg").default}
+                            alt="Github logo"
+                        />
                     </Link>
                     <input
                         type="text"

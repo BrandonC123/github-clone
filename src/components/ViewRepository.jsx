@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { UserContext } from "./UserContext";
-import { getStorage, ref, listAll, getMetadata } from "firebase/storage";
 import RepositoryNav from "./RepositoryNav";
 import RepositoryService from "../services/RepositoryService";
 import Dropdown from "./Dropdown";
 
 const ViewRepository = () => {
+    // TODO: Make sure repository exists before displaying
     const user = useContext(UserContext);
     const { username } = useParams();
     const { repoName } = useParams();
@@ -47,7 +47,7 @@ const ViewRepository = () => {
 
     return (
         <div className="view-repo-page page container">
-            <RepositoryNav username={user.displayName} repoName={repoName} />
+            <RepositoryNav username={username} repoName={repoName} />
             <div className="view-repo-content-container row">
                 <section className="left-repo-column">
                     <div className="row align-center space-between">
@@ -63,15 +63,18 @@ const ViewRepository = () => {
                             <button className="secondary-gray-btn btn">
                                 Go to file
                             </button>
-                            <Dropdown
-                                btnName={"Add File ▾"}
-                                dropdownContent={[
-                                    {
-                                        url: `/${user.displayName}/${repoName}/upload`,
-                                        title: "Upload Files",
-                                    },
-                                ]}
-                            />
+                            {/* Display button only if user is signed in */}
+                            {user && user.displayName === username && (
+                                <Dropdown
+                                    btnName={"Add File ▾"}
+                                    dropdownContent={[
+                                        {
+                                            url: `/${username}/${repoName}/upload`,
+                                            title: "Upload Files",
+                                        },
+                                    ]}
+                                />
+                            )}
                             <button className="green-action-btn btn">
                                 Code
                             </button>
@@ -82,7 +85,7 @@ const ViewRepository = () => {
                             className="border-divider"
                             style={{ backgroundColor: "rgb(22,27,34)" }}
                         >
-                            {user.displayName} Update Readme
+                            {username} Update Readme
                         </div>
                         {displayFolders()}
                         {displayItems()}

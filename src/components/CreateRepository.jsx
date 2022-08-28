@@ -42,7 +42,7 @@ const CreateRepository = () => {
                             repoList,
                             readMeStatus
                         );
-                        // navigate(`/${uid}/${repoName}`);
+                        navigate(`/${user.displayName}/${name}`);
                     }
                 }}
                 action=""
@@ -91,7 +91,10 @@ const CreateRepository = () => {
                 <div className="repo-visibility-container border-divider">
                     <li className="create-repo-input row">
                         <input type="radio" name="repo-visibility" />
-                        <img src="/img/repo-icon.svg" alt="Repository icon" />
+                        <img
+                            src={require("../img/repo-icon.svg").default}
+                            alt="Repository icon"
+                        />
                         <p>
                             Public <br />{" "}
                             <span className="secondary-text">
@@ -102,7 +105,10 @@ const CreateRepository = () => {
                     </li>
                     <li className="create-repo-input row">
                         <input type="radio" name="repo-visibility" />
-                        <img src="/img/lock-icon.svg" alt="Lock icon" />
+                        <img
+                            src={require("../img/lock-icon.svg").default}
+                            alt="Lock icon"
+                        />
                         <p>
                             Private <br />{" "}
                             <span className="secondary-text">
