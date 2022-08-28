@@ -46,7 +46,7 @@ class RepositoryService {
         if (response.exists()) {
             return response.data().repoList;
         } else {
-            return [];
+            return null;
         }
     }
     getRepoContent(username, repoName) {
@@ -81,6 +81,7 @@ class RepositoryService {
                 .then((snapshot) => {
                     console.log(snapshot);
                     this.updateLastUpdated(username, repoName);
+                    this.addToContributionArray(username, repoName, file.name);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -118,6 +119,45 @@ class RepositoryService {
         return tempList;
     }
     // TODO: sorting algs for repoList
+    // TODO: keep track of contributions
+    async getContributionArray(username) {
+        const response = await getDoc(doc(db, "users", `${username}`));
+        if (response.exists()) {
+            return response.data().contributionArray;
+        } else {
+            return null;
+        }
+    }
+    async addToContributionArray(username, repoName, fileName) {
+        const currentDate = new Date();
+        let tempContributionArray = Array.from(
+            await this.getContributionArray(username)
+        );
+        const currentIndex = tempContributionArray.length - 1;
+        const contributionObject = {
+            repoName,
+            fileName,
+            time: currentDate,
+        };
+        // TODO: fix date comparision to disregard time
+        if (tempContributionArray[currentIndex].day !== currentDate) {
+            const newEntry = {
+                day: currentDate,
+                contributionCount: 1,
+                contributions: [contributionObject],
+            };
+            tempContributionArray.push(newEntry);
+        } else {
+            tempContributionArray[currentIndex].contributionCount++;
+            tempContributionArray[currentIndex].contributions.push(
+                contributionObject
+            );
+        }
+
+        await updateDoc(doc(db, "users", `${username}`), {
+            contributionArray: tempContributionArray,
+        });
+    }
 }
 
 export default new RepositoryService();
