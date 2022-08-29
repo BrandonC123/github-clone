@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
 import RepositoryService from "../services/RepositoryService";
-import { addDays, subDays } from "date-fns";
+import { subDays } from "date-fns";
 
 const months = [
     "Jan",
@@ -22,10 +22,13 @@ const months = [
 ];
 
 const ViewProfile = () => {
+    // TODO: Limit repoList to 6 most recent repos if no pins are available
     // TODO: Create option to pin repos
     const user = useContext(UserContext);
     const { username } = useParams();
     const [repoList, setRepoList] = useState([]);
+    const [contributionArray, setContributionArray] = useState([]);
+    const navigate = useNavigate();
 
     function displayRepos() {
         return repoList.map((repo) => {
@@ -64,18 +67,62 @@ const ViewProfile = () => {
     useEffect(() => {
         RepositoryService.getRepoList(username).then((list) => {
             if (list) {
-                setRepoList(list);
+                // Only get 6 most recently created repos
+                setRepoList(list.slice(-6));
+            } else {
+                // If list comes back null no user exists, navigate back
+                window.alert("No user exists with this username");
+                navigate(-1);
             }
         });
-    }, [user]);
+        RepositoryService.getContributionArray(username).then((list) => {
+            setContributionArray(list);
+        });
+    }, [username]);
+    // Return hex code for shade of green based on contribution count
+    function getShadeOfGreen(count) {
+        // #0e4429 (4) #006d32 (6) #26a641 (8) #39d353 (10)
+        console.log(count);
+        if (count >= 10) {
+            return "#39d353";
+        } else if (count >= 8) {
+            return "#26a641";
+        } else if (count >= 6) {
+            return "#006d32";
+        } else if (count <= 4 && count >= 1) {
+            return "#0e4429";
+        } else {
+            return "#161b22";
+        }
+    }
+    // Splice entry out after displaying contribution
     function displayContributionsCalendar() {
+        if (contributionArray.length === 0) {
+            return;
+        }
         const columns = [];
         let count = 0;
         const defaultSize = 15;
         const currentDate = new Date();
+        let tempContributionArray = Array.from(contributionArray);
         for (let i = 0; i < 56; i++) {
             for (let j = 6; j >= 0; j--) {
-                let date = subDays(currentDate, count);
+                let color = "#161b22";
+                let contributionCount = 0;
+                const date = subDays(currentDate, count);
+                if (tempContributionArray.length !== 0) {
+                    var tempContribution =
+                        tempContributionArray[tempContributionArray.length - 1];
+                    var compareDate = new Date(
+                        tempContribution.day.seconds * 1000
+                    ).toDateString();
+                }
+                if (compareDate === date.toDateString()) {
+                    color = getShadeOfGreen(tempContribution.contributionCount);
+                    tempContributionArray.pop();
+                    contributionCount = tempContribution.contributionCount;
+                    console.log(tempContributionArray);
+                }
                 columns.push(
                     <rect
                         key={count}
@@ -83,11 +130,11 @@ const ViewProfile = () => {
                         y={j * (defaultSize + 2)}
                         width={defaultSize}
                         height={defaultSize}
-                        style={{ fill: "#161b22" }}
+                        style={{ fill: color }}
                         rx={"2"}
                     >
                         <title className="hover-text">
-                            {`${
+                            {`${contributionCount} contributions on ${
                                 months[date.getMonth()]
                             } ${date.getDate()}, ${date.getFullYear()}`}
                         </title>
