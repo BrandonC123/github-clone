@@ -133,22 +133,20 @@ h4 {
     font-weight: 500;
 }
 
-.header-user-dropdown-container {
+.relative {
     position: relative;
 }
 
 .dropdown {
     position: absolute;
-    background-color: rgb(22, 27, 34);
-    border: 1px solid rgb(48, 54, 61);
     border-radius: 0.5em;
     margin-top: 0.5em;
     box-shadow: 0 0 10px black;
+    list-style: none;
     z-index: 100;
 }
 
 .header-dropdown {
-    position: absolute;
     border: 1px solid rgb(29, 34, 41);
     background-color: rgb(22, 27, 34);
     padding: 0.5em 0;
@@ -156,19 +154,14 @@ h4 {
     right: 0;
 }
 
-.default-dropdown {
-    position: absolute;
+.general-dropdown {
     border: 1px solid rgb(139, 148, 158);
     background-color: rgb(22, 27, 34);
-    border-radius: 0.5em;
-    list-style: none;
-    padding: 0.25em 0;
-    box-shadow: 0 0 10px black;
     min-width: 130px;
-    margin-top: 0.5em;
+    padding: 0.25em 0;
 }
 
-.default-dropdown-item {
+.dropdown-item {
     display: block;
     width: 100%;
     padding: 0.25em 0.5em;
@@ -176,8 +169,24 @@ h4 {
     color: lightgray;
 }
 
-.default-dropdown-item:hover {
+.blue-hover:hover {
     background-color: #2f56d6;
+}
+
+.view-repo-dropdown {
+    background-color: rgb(22, 27, 34);
+    border: 1px solid rgb(48, 54, 61);
+    min-width: 200px;
+    right: 0;
+}
+
+.view-repo-dropdown-item {
+    padding: 0.25em;
+    cursor: pointer;
+}
+
+.view-repo-dropdown-item:hover {
+    background-color: rgb(38, 47, 58);
 }
 
 .dropdown-btn {
@@ -327,6 +336,12 @@ h4 {
     border: 1px solid rgb(48, 54, 61);
 }
 
+.home-repo-card-link {
+    text-decoration: none;
+    color: rgb(201, 209, 217);
+    font-weight: 500;
+}
+
 .home-misc-text {
     padding: 0.5em;
     background-color: rgb(13, 17, 23);
@@ -337,11 +352,11 @@ h4 {
 
 .sidebar-container {
     position: sticky;
+    top: 0;
     background-color: rgb(13, 17, 23);
     color: lightgray;
-    height: calc(100vh - 70px);
+    height: 100vh;
     width: clamp(250px, 20%, 300px);
-    width: 20%;
     padding: 1em;
     border-right: 1px solid rgb(29, 34, 41);
 }
@@ -510,6 +525,9 @@ h4 {
 }
 
 .contributions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     border: 1px solid rgb(48, 54, 61);
     border-radius: 0.25em;
     padding: 0.25em;

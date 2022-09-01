@@ -26,7 +26,7 @@ const MainHeader = ({ username }) => {
                             <Link
                                 key={item.title}
                                 to={`${item.url}`}
-                                className="default-dropdown-item"
+                                className="dropdown-item blue-hover"
                             >
                                 {item.title}
                             </Link>
@@ -39,7 +39,7 @@ const MainHeader = ({ username }) => {
                             <Link
                                 key={item.title}
                                 to={`${item.url}`}
-                                className="default-dropdown-item"
+                                className="dropdown-item blue-hover"
                             >
                                 {item.title}
                             </Link>
@@ -59,7 +59,7 @@ const MainHeader = ({ username }) => {
                         width={"25px"}
                     />
                     +
-                    <div className="header-user-dropdown-container">
+                    <div className="relative">
                         <button
                             onClick={(e) => {
                                 const dropdown = e.target.nextSibling;
@@ -70,7 +70,7 @@ const MainHeader = ({ username }) => {
                         >
                             {username}
                         </button>
-                        <div className="header-dropdown hide">
+                        <div className="header-dropdown dropdown hide">
                             Signed in as {username}
                             {fillDropdown()}
                             <Link
@@ -78,7 +78,7 @@ const MainHeader = ({ username }) => {
                                     auth.signOut();
                                 }}
                                 to={"/signin"}
-                                className="header-dropdown-item"
+                                className="dropdown-item blue-hover"
                             >
                                 Sign out
                             </Link>
@@ -133,22 +133,22 @@ const MainHeader = ({ username }) => {
                     />
                     <nav className="header-nav row">
                         <li>
-                            <Link to={"/pulls"} className="header-link">
+                            <Link to={"#"} className="header-link">
                                 Pull requests
                             </Link>
                         </li>
                         <li>
-                            <Link to={"/issues"} className="header-link">
+                            <Link to={"#"} className="header-link">
                                 Issues
                             </Link>
                         </li>
                         <li>
-                            <Link to={"/marketplace"} className="header-link">
+                            <Link to={"#"} className="header-link">
                                 Marketplace
                             </Link>
                         </li>
                         <li>
-                            <Link to={"/explore"} className="header-link">
+                            <Link to={"#"} className="header-link">
                                 Explore
                             </Link>
                         </li>

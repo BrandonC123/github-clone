@@ -4,8 +4,8 @@ const Dropdown = ({ btnName, dropdownContent }) => {
     function fillDropdown() {
         return dropdownContent.map((item) => {
             return (
-                <Link to={`${item.url}`} className="dropdown-item">
-                    <li>{item.title}</li>
+                <Link to={`${item.url}`} className="dropdown-item blue-hover">
+                    {item.title}
                 </Link>
             );
         });
@@ -23,9 +23,7 @@ const Dropdown = ({ btnName, dropdownContent }) => {
         dropdownRef = dropdown;
     }
     function removeDrop(e) {
-        if (!e.target.className.toLowerCase().includes("dropdown-btn")) {
-            console.log(e.target);
-            console.log(dropdownRef);
+        if (e.target.nextSibling !== dropdownRef) {
             dropdownRef.classList.add("hide");
             document.removeEventListener("click", removeDrop);
         }
@@ -41,7 +39,7 @@ const Dropdown = ({ btnName, dropdownContent }) => {
             >
                 {btnName}
             </button>
-            <div className="default-dropdown hide">{fillDropdown()}</div>
+            <div className="general-dropdown dropdown hide">{fillDropdown()}</div>
         </div>
     );
 };
