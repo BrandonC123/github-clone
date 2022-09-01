@@ -7,6 +7,8 @@ import RepositoryService from "../services/RepositoryService";
 import ViewRepositoryListDropdown from "./ViewRepositoryListDropdown";
 import star from "../img/star-icon.svg";
 import filledStar from "../img/filled-star-icon.svg";
+import StarButton from "./StarButton";
+import useDebounce from "./useDebounce";
 
 const ViewRepositoryList = () => {
     // TODO: Add functionality to star repos
@@ -19,6 +21,8 @@ const ViewRepositoryList = () => {
     const [nameSortList, setNameSortList] = useState([]);
     const [starSortList, setStarSortList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    // Debounce search to make searching less intensive
+    const debouncedSearch = useDebounce(searchTerm, 1000);
 
     useEffect(() => {
         // Use username from Params to allow for viewing other user's repos
@@ -35,13 +39,15 @@ const ViewRepositoryList = () => {
         });
     }, [username]);
     useEffect(() => {
-        let tempRepoList = Array.from(repoList);
-        tempRepoList = tempRepoList.filter((repo) =>
-            repo.repoName.includes(searchTerm)
-        );
-        // console.log(tempRepoList);
-        setRepoList(tempRepoList);
-    }, [searchTerm]);
+        if (debouncedSearch) {
+            let tempRepoList = Array.from(lastUpdatedList);
+            tempRepoList = tempRepoList.filter((repo) =>
+                repo.repoName.includes(searchTerm)
+            );
+            // console.log(tempRepoList);
+            setRepoList(tempRepoList);
+        }
+    }, [debouncedSearch]);
     function sortByLastUpdated(repoList) {
         let tempLastUpdated = Array.from(repoList);
         tempLastUpdated
@@ -60,41 +66,6 @@ const ViewRepositoryList = () => {
         });
         setNameSortList(tempNameSort);
     }
-    function toggleStarBtn(btn) {
-        let btnText = btn.lastChild.textContent;
-        if (btnText === "Star") {
-            btn.lastChild.textContent = "Starred";
-            btn.firstChild.src = filledStar;
-        } else {
-            btn.lastChild.textContent = "Star";
-            btn.firstChild.src = star;
-        }
-    }
-    function displayStarBtn(repo, starred) {
-        const starSrc = starred ? filledStar : star;
-        const btnText = starred ? "Starred" : "Star";
-        return (
-            <button
-                onClick={(e) => {
-                    RepositoryService.starRepo(
-                        user.displayName,
-                        repo.repoName,
-                        repoList
-                    );
-                    // Make sure target is the button not img/span
-                    const btn =
-                        e.target === e.currentNode
-                            ? e.target
-                            : e.target.parentNode;
-                    toggleStarBtn(btn);
-                }}
-                className="secondary-gray-btn btn vertical-center"
-            >
-                <img src={starSrc} alt="Star icon" />
-                <span>{btnText}</span>
-            </button>
-        );
-    }
     // Update repo list to display current sort by selection
     function toggleRepoList(sortType) {
         switch (sortType.toLowerCase()) {
@@ -111,7 +82,6 @@ const ViewRepositoryList = () => {
                 return;
         }
     }
-    // TODO: Sort by last updated default. Add Sort by button and header
     function displayRepoList() {
         return repoList.map((repo) => {
             const date = new Date(repo.lastUpdated.seconds * 1000);
@@ -130,7 +100,7 @@ const ViewRepositoryList = () => {
                         </small>
                     </div>
                     <div className="profile-repo-actions">
-                        {displayStarBtn(repo, repo.starred)}
+                        <StarButton repo={repo} repoList={lastUpdatedList} />
                     </div>
                 </div>
             );
