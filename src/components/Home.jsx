@@ -8,7 +8,7 @@ import RepositoryCard from "./RepositoryCard";
 import Sidebar from "./Sidebar";
 import { UserContext } from "./UserContext";
 
-const Home = ({ loading }) => {
+const Home = () => {
     const user = useContext(UserContext);
     const [followList, setFollowList] = useState([]);
     const [repoDisplayList, setDisplayRepoList] = useState([]);
@@ -16,6 +16,10 @@ const Home = ({ loading }) => {
     useEffect(() => {
         if (user) {
             initializeFollowRepos();
+            // TODO: figure out way to store other user's repo when starred
+            // RepositoryService.getRepoList(username).then((list) => {
+            //     setRepoList(list);
+            // });
         }
     }, [user]);
     async function initializeFollowRepos() {
@@ -38,10 +42,19 @@ const Home = ({ loading }) => {
                     ) <= 10
                 ) {
                     tempDisplayList.push({ ...repo, username });
-                    setDisplayRepoList(tempDisplayList);
+                    setDisplayRepoList(sortByCreated(tempDisplayList));
                 }
             });
         });
+    }
+    function sortByCreated(list) {
+        let tempLastCreated = Array.from(list);
+        tempLastCreated
+            .sort((repo1, repo2) => {
+                return repo1.lastUpdated - repo2.lastUpdated;
+            })
+            .reverse();
+        return tempLastCreated;
     }
     function displayFollowedRepos() {
         return repoDisplayList.map((repo) => {
@@ -99,7 +112,7 @@ const Home = ({ loading }) => {
             return <div>no user</div>;
         }
     }
-    return !loading && <>{displayHome()}</>;
+    return <>{displayHome()}</>;
 };
 
 export default Home;

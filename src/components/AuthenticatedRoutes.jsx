@@ -11,32 +11,19 @@ import ViewRepositoryList from "./ViewRepositoryList";
 import ProfileSettings from "./ProfileSettings";
 import ViewStarredRepositories from "./ViewStarredRepositories";
 import UploadFile from "./UploadFile";
+import { useContext } from "react";
 
 const AuthenticateRoutes = () => {
-    const auth = getAuth();
-    const [user, setUser] = useState(null);
-    const [username, setUsername] = useState("");
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-        auth.onAuthStateChanged((tempUser) => {
-            if (tempUser) {
-                setUser(tempUser);
-                setUsername(tempUser.displayName);
-            }
-            // Once sign in status is established set loading to false to allow
-            // home page to display accordingly
-            setLoading(false);
-        });
-    });
+    const user = useContext(UserContext);
 
     return (
-        <>
-            <UserContext.Provider value={user}>
-                <MainHeader username={username} />
+        user && (
+            <>
+                <MainHeader username={user.displayName} />
                 <Routes>
-                    <Route path="/" element={<Home loading={loading} />} />
+                    <Route path="/" element={<Home />} />
                     <Route
-                        path="/:username/:repoName/upload"
+                        path={`/${user.displayName}/:repoName/upload`}
                         element={<UploadFile />}
                     />
                     <Route path={"/:username"} element={<ViewProfile />} />
@@ -58,8 +45,8 @@ const AuthenticateRoutes = () => {
                         element={<ViewStarredRepositories />}
                     />
                 </Routes>
-            </UserContext.Provider>
-        </>
+            </>
+        )
     );
 };
 
