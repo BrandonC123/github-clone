@@ -3,16 +3,25 @@ import {
     createUserWithEmailAndPassword,
     updateProfile,
 } from "firebase/auth";
+import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
-const Signup = () => {
+const Signup = ({ signedIn }) => {
+    // TODO: redirect to home if signed in (for sign up & signin)
     const [email, setEmail] = useState("");
     const [password, setPassowrd] = useState("");
     const [username, setUsername] = useState("");
     const [choice, setChoice] = useState("");
     const [errorText, setErrorText] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (signedIn) {
+            navigate("/");
+        }
+    }, [signedIn]);
     function toggleContinueButton(e) {
         const button = e.target.parentElement.parentElement.lastElementChild;
         if (e.target.checkValidity()) {
@@ -84,148 +93,153 @@ const Signup = () => {
                 updateProfile(userCredential.user, {
                     displayName: username,
                 });
-                navigate(`/${username}`)
+                navigate(`/${username}`);
             })
             .catch((error) => {
                 console.log(error.message);
             });
     }
     return (
-        <div className="signup-page">
-            <header className="signup-header">
-                <div className="signup-header-content container row">
-                    <img src="/img/gh-logo.svg" alt="Github logo" />
-                    <p>
-                        Already have an account?{" "}
-                        <Link to={"/signin"} className="signin-link">
-                            Sign in
-                        </Link>
+        !signedIn && (
+            <div className="signup-page">
+                <header className="signup-header">
+                    <div className="signup-header-content container row">
+                        <img
+                            src={require("../img/gh-logo.svg").default}
+                            alt="Github logo"
+                        />
+                        <p>
+                            Already have an account?{" "}
+                            <Link to={"/signin"} className="signin-link">
+                                Sign in
+                            </Link>
+                        </p>
+                    </div>
+                </header>
+                <div className="signup-content-container">
+                    <p className="signup-greeting">
+                        Welcome to GitHub! <br /> Lets begin the adventure
                     </p>
-                </div>
-            </header>
-            <div className="signup-content-container">
-                <p className="signup-greeting">
-                    Welcome to GitHub! <br /> Lets begin the adventure
-                </p>
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        if (checkError()) {
-                            createUser();
-                        }
-                    }}
-                    noValidate
-                    className="signup-form column"
-                >
-                    <div className={"input-container row"}>
-                        <div className="input column">
-                            <label
-                                htmlFor={"signup-email"}
-                                className="signup-accent-text"
-                            >
-                                Enter your email *
-                            </label>
-                            <input
-                                required
-                                minLength={5}
-                                onChange={(e) => {
-                                    toggleContinueButton(e);
-                                    setEmail(e.target.value);
-                                }}
-                                type={"email"}
-                                id={"signup-email"}
-                                className="signup-input"
-                            />
-                            <span className="signup-input-error"></span>
-                        </div>
-                        {displayButton()}
-                    </div>
-
-                    <div className={"input-container row hide"}>
-                        <div className="input column">
-                            <label
-                                htmlFor={"signup-password"}
-                                className="signup-accent-text "
-                            >
-                                Create a password (Must contain at least 8
-                                characters, 1 capital letter, 1 number, and 1
-                                special character) *
-                            </label>
-                            <input
-                                required
-                                onChange={(e) => {
-                                    toggleContinueButton(e);
-                                    setPassowrd(e.target.value);
-                                }}
-                                pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
-                                type={"password"}
-                                id={"signup-password"}
-                                className="signup-input"
-                            />
-                            <span className="signup-input-error"></span>
-                        </div>
-                        {displayButton()}
-                    </div>
-
-                    <div className={"input-container row hide"}>
-                        <div className="input column">
-                            <label
-                                htmlFor={"signup-username"}
-                                className="signup-accent-text "
-                            >
-                                Create a username *
-                            </label>
-                            <input
-                                required
-                                minLength={5}
-                                onChange={(e) => {
-                                    toggleContinueButton(e);
-                                    setUsername(e.target.value);
-                                }}
-                                type={"text"}
-                                id={"signup-username"}
-                                className="signup-input"
-                            />
-                            <span className="signup-input-error"></span>
-                        </div>
-                        {displayButton()}
-                    </div>
-
-                    <div className={"input-container row hide"}>
-                        <div className="input column">
-                            <label
-                                htmlFor={"signup-announcement"}
-                                className="signup-accent-text "
-                            >
-                                Would you like to receive product updates and
-                                announcements via email? Type "y" for yes or "n"
-                                for no *
-                            </label>
-                            <input
-                                required
-                                maxLength={1}
-                                onChange={(e) => {
-                                    toggleContinueButton(e);
-                                    setChoice(e.target.value);
-                                }}
-                                type={"text"}
-                                id={"signup-announcement"}
-                                className="signup-input"
-                            />
-                            <span className="signup-input-error"></span>
-                        </div>
-                        {displayButton()}
-                    </div>
-                    <button
-                        onClick={() => setErrorText("")}
-                        className="active-btn btn hide"
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            if (checkError()) {
+                                createUser();
+                            }
+                        }}
+                        noValidate
+                        className="signup-form column"
                     >
-                        Create Account
-                    </button>
-                </form>
+                        <div className={"input-container row"}>
+                            <div className="input column">
+                                <label
+                                    htmlFor={"signup-email"}
+                                    className="signup-accent-text"
+                                >
+                                    Enter your email *
+                                </label>
+                                <input
+                                    required
+                                    minLength={5}
+                                    onChange={(e) => {
+                                        toggleContinueButton(e);
+                                        setEmail(e.target.value);
+                                    }}
+                                    type={"email"}
+                                    id={"signup-email"}
+                                    className="signup-input"
+                                />
+                                <span className="signup-input-error"></span>
+                            </div>
+                            {displayButton()}
+                        </div>
+
+                        <div className={"input-container row hide"}>
+                            <div className="input column">
+                                <label
+                                    htmlFor={"signup-password"}
+                                    className="signup-accent-text "
+                                >
+                                    Create a password (Must contain at least 8
+                                    characters, 1 capital letter, 1 number, and
+                                    1 special character) *
+                                </label>
+                                <input
+                                    required
+                                    onChange={(e) => {
+                                        toggleContinueButton(e);
+                                        setPassowrd(e.target.value);
+                                    }}
+                                    pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
+                                    type={"password"}
+                                    id={"signup-password"}
+                                    className="signup-input"
+                                />
+                                <span className="signup-input-error"></span>
+                            </div>
+                            {displayButton()}
+                        </div>
+
+                        <div className={"input-container row hide"}>
+                            <div className="input column">
+                                <label
+                                    htmlFor={"signup-username"}
+                                    className="signup-accent-text "
+                                >
+                                    Create a username *
+                                </label>
+                                <input
+                                    required
+                                    minLength={5}
+                                    onChange={(e) => {
+                                        toggleContinueButton(e);
+                                        setUsername(e.target.value);
+                                    }}
+                                    type={"text"}
+                                    id={"signup-username"}
+                                    className="signup-input"
+                                />
+                                <span className="signup-input-error"></span>
+                            </div>
+                            {displayButton()}
+                        </div>
+
+                        <div className={"input-container row hide"}>
+                            <div className="input column">
+                                <label
+                                    htmlFor={"signup-announcement"}
+                                    className="signup-accent-text "
+                                >
+                                    Would you like to receive product updates
+                                    and announcements via email? Type "y" for
+                                    yes or "n" for no *
+                                </label>
+                                <input
+                                    required
+                                    maxLength={1}
+                                    onChange={(e) => {
+                                        toggleContinueButton(e);
+                                        setChoice(e.target.value);
+                                    }}
+                                    type={"text"}
+                                    id={"signup-announcement"}
+                                    className="signup-input"
+                                />
+                                <span className="signup-input-error"></span>
+                            </div>
+                            {displayButton()}
+                        </div>
+                        <button
+                            onClick={() => setErrorText("")}
+                            className="active-btn btn hide"
+                        >
+                            Create Account
+                        </button>
+                    </form>
+                </div>
+                <span className="error-message">{errorText}</span>
             </div>
-            <span className="error-message">{errorText}</span>
-        </div>
+        )
     );
 };
 
