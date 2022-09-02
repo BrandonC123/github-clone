@@ -464,7 +464,8 @@ h4 {
 }
 
 .repo-list-page,
-.profile-page {
+.profile-page,
+.view-star-page {
     display: grid;
     grid-template-columns: 15% 50%;
     justify-content: center;
@@ -569,6 +570,17 @@ h4 {
     flex-direction: column;
 }
 
+.divider {
+    display: flex;
+    gap: 0.25em;
+}
+
+.horizontal-form-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
 .profile-settings-page {
     margin: 0 auto;
     padding: 1em;
@@ -583,4 +595,15 @@ h4 {
 
 .account-settings-sidebar > .border-divider > a:hover {
     background-color: rgb(34, 40, 46);
+}
+
+.star-list-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 0.25em;
+    min-height: 250px;
 }

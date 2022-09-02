@@ -1,5 +1,9 @@
 import { differenceInCalendarDays } from "date-fns";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import RepositoryService from "../services/RepositoryService";
+import StarButton from "./StarButton";
 
 const months = [
     "January",
@@ -16,24 +20,49 @@ const months = [
     "December",
 ];
 
-const RepositoryCard = ({ repoDetails }) => {
-    const username = repoDetails.username;
-    const repoName = repoDetails.repoName;
+const RepositoryCard = ({ repo }) => {
+    const username = repo.username;
+    const repoName = repo.repoName;
     const currentDate = new Date();
-    const created = new Date(repoDetails.created.seconds * 1000);
-    const differnce = differenceInCalendarDays(currentDate, created);
-    const lastUpdated = new Date(repoDetails.lastUpdated.seconds * 1000);
+    const created = new Date(repo.created.seconds * 1000);
+    const difference = differenceInCalendarDays(currentDate, created);
+    const lastUpdated = new Date(repo.lastUpdated.seconds * 1000);
 
+    useEffect(() => {});
+    function getTimeDifferenceString() {
+        if (difference === 0) {
+            return "today";
+        } else if (difference === 1) {
+            return "a day ago";
+        } else {
+            return `${difference} days ago`;
+        }
+    }
     return (
-        <div className="repo-card-container border-divider">
+        <div className="home-repo-card-container border-divider">
             <p>
-                {username} created a repository {username}/{repoName}
-                <small className="secondary-text"> {differnce} days ago</small>
+                <Link to={`/${username}`} className="home-repo-card-link">
+                    {username}
+                </Link>{" "}
+                created a repository{" "}
+                <Link
+                    to={`/${username}/${repoName}`}
+                    className="home-repo-card-link"
+                >
+                    {username}/{repoName}
+                </Link>
+                <small className="secondary-text">
+                    {" "}
+                    {getTimeDifferenceString()}
+                </small>
             </p>
             <div className="home-repo-card">
                 <div>
                     <h4>
-                        <Link to={`/${username}/${repoName}`}>
+                        <Link
+                            to={`/${username}/${repoName}`}
+                            className="home-repo-card-link"
+                        >
                             {username}/{repoName}
                         </Link>
                     </h4>
@@ -42,13 +71,7 @@ const RepositoryCard = ({ repoDetails }) => {
                         {lastUpdated.getDate()}
                     </small>
                 </div>
-                <button className="secondary-gray-btn btn vertical-center">
-                    <img
-                        src={require("../img/star-icon.svg").default}
-                        alt="Star icon for button"
-                    />
-                    Star
-                </button>
+                <StarButton repo={repo} />
             </div>
         </div>
     );
