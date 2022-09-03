@@ -4,7 +4,7 @@ import RepositoryService from "../services/RepositoryService";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 
-const StarButton = ({ repo, repoList }) => {
+const StarButton = ({ repo, starredRepoList }) => {
     const user = useContext(UserContext);
     const starred = repo.starred;
     function toggleStarBtn(btn) {
@@ -23,11 +23,11 @@ const StarButton = ({ repo, repoList }) => {
         return (
             <button
                 onClick={(e) => {
-                    // RepositoryService.starRepo(
-                    //     user.displayName,
-                    //     repo.repoName,
-                    //     repoList
-                    // );
+                    RepositoryService.starRepo(
+                        user.displayName,
+                        repo,
+                        starredRepoList
+                    );
                     // Make sure target is the button not img/span
                     const btn =
                         e.target === e.currentTarget

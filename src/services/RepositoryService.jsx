@@ -49,6 +49,8 @@ class RepositoryService {
             return null;
         }
     }
+    // Get repositories of all users the user is following
+    async getFollowedRepolist() {}
     getRepoContent(username, repoName) {
         const storage = getStorage();
         const listRef = ref(storage, `/${username}/repos/${repoName}`);
@@ -99,16 +101,36 @@ class RepositoryService {
             repoList: tempRepoList,
         });
     }
-    async starRepo(username, repoName, repoList) {
-        console.log(repoList);
-        const index = repoList.map((repo) => repo.repoName).indexOf(repoName);
+    // store a total repoList that keeps track of followed repos as well?
+    // async starRepo(username, repoName, repoList) {
+    //     // Create id for starred repos to search? (id: username-repoName)
+    //     console.log(repoList);
+    //     const index = repoList.map((repo) => repo.repoName).indexOf(repoName);
+    //     let tempRepoList = Array.from(repoList);
+    //     tempRepoList[index].starred = !tempRepoList[index].starred;
+    //     console.log(tempRepoList);
+    //     await updateDoc(doc(db, "users", `${username}`), {
+    //         repoList: tempRepoList,
+    //     });
+    // }
+    async starRepo(username, repo, repoList) {
+        const index = repoList
+            .map(({ id }) => {
+                return id;
+            })
+            .includes(repo.id);
         let tempRepoList = Array.from(repoList);
-        tempRepoList[index].starred = !tempRepoList[index].starred;
-        console.log(tempRepoList);
+        if (!index) {
+            tempRepoList.push(repo);
+            console.log(tempRepoList);
+        } else {
+            tempRepoList = tempRepoList.filter(({ id }) => id !== repo.id);
+        }
         await updateDoc(doc(db, "users", `${username}`), {
-            repoList: tempRepoList,
+            starredRepoList: tempRepoList,
         });
     }
+    // Get all starred repos (only repos owned by user)
     async getStarredRepoList(username) {
         const repoList = await this.getRepoList(username);
         let tempList = [];
@@ -119,8 +141,16 @@ class RepositoryService {
         });
         return tempList;
     }
+    // Get all starred repos including followed users
+    async getAllStarredRepoList(username) {
+        const response = await getDoc(doc(db, "users", `${username}`));
+        if (response.exists()) {
+            return response.data().starredRepoList;
+        } else {
+            return null;
+        }
+    }
     // TODO: sorting algs for repoList
-    // TODO: keep track of contributions
     async getContributionArray(username) {
         const response = await getDoc(doc(db, "users", `${username}`));
         if (response.exists()) {
@@ -166,7 +196,6 @@ class RepositoryService {
             );
         }
 
-        console.log(tempContributionArray);
         await updateDoc(doc(db, "users", `${username}`), {
             contributionArray: tempContributionArray,
         });

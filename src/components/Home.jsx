@@ -12,6 +12,7 @@ const Home = () => {
     const user = useContext(UserContext);
     const [followList, setFollowList] = useState([]);
     const [repoDisplayList, setDisplayRepoList] = useState([]);
+    const [starredRepoList, setStarredRepoList] = useState([]);
 
     useEffect(() => {
         if (user) {
@@ -20,6 +21,11 @@ const Home = () => {
             // RepositoryService.getRepoList(username).then((list) => {
             //     setRepoList(list);
             // });
+            RepositoryService.getAllStarredRepoList(user.displayName).then(
+                (list) => {
+                    setStarredRepoList(list);
+                }
+            );
         }
     }, [user]);
     async function initializeFollowRepos() {
@@ -41,7 +47,10 @@ const Home = () => {
                         new Date(repo.created.seconds * 1000)
                     ) <= 10
                 ) {
-                    tempDisplayList.push({ ...repo, username });
+                    tempDisplayList.push({
+                        ...repo,
+                        id: `${username}-${repo.repoName}`,
+                    });
                     setDisplayRepoList(sortByCreated(tempDisplayList));
                 }
             });
@@ -58,7 +67,7 @@ const Home = () => {
     }
     function displayFollowedRepos() {
         return repoDisplayList.map((repo) => {
-            return <RepositoryCard repoDetails={repo} />;
+            return <RepositoryCard repo={repo} starredRepoList={starredRepoList} />;
         });
     }
     function displayHome() {
@@ -109,6 +118,7 @@ const Home = () => {
                 </div>
             );
         } else {
+            // TODO: home page for non-signed in user
             return <div>no user</div>;
         }
     }
