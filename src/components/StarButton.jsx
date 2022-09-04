@@ -6,7 +6,11 @@ import { UserContext } from "./UserContext";
 
 const StarButton = ({ repo, starredRepoList }) => {
     const user = useContext(UserContext);
-    const starred = repo.starred;
+    const starred = starredRepoList
+        .map(({ id }) => {
+            return id;
+        })
+        .includes(repo.id);
     function toggleStarBtn(btn) {
         let btnText = btn.lastChild.textContent;
         if (btnText === "Star") {

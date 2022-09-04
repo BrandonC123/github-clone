@@ -22,7 +22,7 @@ const ViewRepositoryList = () => {
     const [starSortList, setStarSortList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     // Debounce search to make searching less intensive
-    const debouncedSearch = useDebounce(searchTerm, 1000);
+    const debouncedSearch = useDebounce(searchTerm, 500);
 
     useEffect(() => {
         // Use username from Params to allow for viewing other user's repos
@@ -32,12 +32,15 @@ const ViewRepositoryList = () => {
                 sortByName(serviceRepoList);
             }
         });
-        RepositoryService.getStarredRepoList(username).then((starRepoList) => {
-            if (starRepoList) {
-                setStarSortList(starRepoList);
+        RepositoryService.getAllStarredRepoList(username).then(
+            (starRepoList) => {
+                if (starRepoList) {
+                    setStarSortList(starRepoList);
+                }
             }
-        });
+        );
     }, [username]);
+    // TODO: save which way it was sorted
     useEffect(() => {
         if (debouncedSearch) {
             let tempRepoList = Array.from(lastUpdatedList);
@@ -46,6 +49,8 @@ const ViewRepositoryList = () => {
             );
             // console.log(tempRepoList);
             setRepoList(tempRepoList);
+        } else {
+            setRepoList(lastUpdatedList);
         }
     }, [debouncedSearch]);
     function sortByLastUpdated(repoList) {
@@ -84,9 +89,16 @@ const ViewRepositoryList = () => {
     }
     function displayRepoList() {
         return repoList.map((repo) => {
+            // Skip repositories that do not belong to user
+            if (repo.id && repo.id.split("-")[0] !== username) {
+                return null;
+            }
             const date = new Date(repo.lastUpdated.seconds * 1000);
             return (
-                <div className="repo-list-container border-divider row">
+                <div
+                    key={repo.repoName}
+                    className="repo-list-container border-divider row"
+                >
                     <div className="profile-repo-info column">
                         <Link
                             to={`/${username}/${repo.repoName}`}
@@ -100,7 +112,13 @@ const ViewRepositoryList = () => {
                         </small>
                     </div>
                     <div className="profile-repo-actions">
-                        <StarButton repo={repo} repoList={lastUpdatedList} />
+                        <StarButton
+                            repo={{
+                                ...repo,
+                                id: `${username}-${repo.repoName}`,
+                            }}
+                            starredRepoList={starSortList}
+                        />
                     </div>
                 </div>
             );
