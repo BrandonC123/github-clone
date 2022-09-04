@@ -9,6 +9,7 @@ import star from "../img/star-icon.svg";
 import filledStar from "../img/filled-star-icon.svg";
 import StarButton from "./StarButton";
 import useDebounce from "./useDebounce";
+import RepositoryListing from "./RepositoryListing";
 
 const ViewRepositoryList = () => {
     // TODO: Add functionality to star repos
@@ -93,34 +94,12 @@ const ViewRepositoryList = () => {
             if (repo.id && repo.id.split("-")[0] !== username) {
                 return null;
             }
-            const date = new Date(repo.lastUpdated.seconds * 1000);
             return (
-                <div
-                    key={repo.repoName}
-                    className="repo-list-container border-divider row"
-                >
-                    <div className="profile-repo-info column">
-                        <Link
-                            to={`/${username}/${repo.repoName}`}
-                            className="repo-list-link"
-                        >
-                            {repo.repoName}
-                        </Link>
-                        <small className="secondary-text">
-                            Updated on {date.getMonth()} {date.getDate()}
-                            {/* {date.toUTCString()} */}
-                        </small>
-                    </div>
-                    <div className="profile-repo-actions">
-                        <StarButton
-                            repo={{
-                                ...repo,
-                                id: `${username}-${repo.repoName}`,
-                            }}
-                            starredRepoList={starSortList}
-                        />
-                    </div>
-                </div>
+                <RepositoryListing
+                    username={username}
+                    repo={repo}
+                    starredRepoList={starSortList}
+                />
             );
         });
     }
