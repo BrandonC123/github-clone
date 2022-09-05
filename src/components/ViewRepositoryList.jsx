@@ -21,6 +21,7 @@ const ViewRepositoryList = () => {
     const [lastUpdatedList, setLastUpdatedList] = useState([]);
     const [nameSortList, setNameSortList] = useState([]);
     const [starSortList, setStarSortList] = useState([]);
+    const [starredRepoList, setStarredRepoList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     // Debounce search to make searching less intensive
     const debouncedSearch = useDebounce(searchTerm, 500);
@@ -31,12 +32,13 @@ const ViewRepositoryList = () => {
             if (serviceRepoList) {
                 sortByLastUpdated(serviceRepoList);
                 sortByName(serviceRepoList);
+                sortByStar(serviceRepoList);
             }
         });
         RepositoryService.getAllStarredRepoList(username).then(
-            (starRepoList) => {
-                if (starRepoList) {
-                    setStarSortList(starRepoList);
+            (serviceStar) => {
+                if (serviceStar) {
+                    setStarredRepoList(serviceStar);
                 }
             }
         );
@@ -48,7 +50,6 @@ const ViewRepositoryList = () => {
             tempRepoList = tempRepoList.filter((repo) =>
                 repo.repoName.includes(searchTerm)
             );
-            // console.log(tempRepoList);
             setRepoList(tempRepoList);
         } else {
             setRepoList(lastUpdatedList);
@@ -72,6 +73,15 @@ const ViewRepositoryList = () => {
         });
         setNameSortList(tempNameSort);
     }
+    function sortByStar(repoList) {
+        let tempStarSort = Array.from(repoList);
+        tempStarSort
+            .sort((repo1, repo2) => {
+                return repo1.starCount - repo2.starCount;
+            })
+            .reverse();
+        setStarSortList(tempStarSort);
+    }
     // Update repo list to display current sort by selection
     function toggleRepoList(sortType) {
         switch (sortType.toLowerCase()) {
@@ -90,15 +100,11 @@ const ViewRepositoryList = () => {
     }
     function displayRepoList() {
         return repoList.map((repo) => {
-            // Skip repositories that do not belong to user
-            if (repo.id && repo.id.split("-")[0] !== username) {
-                return null;
-            }
             return (
                 <RepositoryListing
                     username={username}
                     repo={repo}
-                    starredRepoList={starSortList}
+                    starredRepoList={starredRepoList}
                 />
             );
         });
@@ -109,7 +115,6 @@ const ViewRepositoryList = () => {
             <main className="profile-repo-list">
                 <ProfileNav username={username} />
                 <div className="row space-between align-center">
-                    {/* TODO: search bar */}
                     <input
                         onChange={(e) => {
                             setSearchTerm(e.target.value);

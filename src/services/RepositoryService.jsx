@@ -3,6 +3,7 @@ import { getStorage, ref, listAll, list, uploadBytes } from "firebase/storage";
 import db from "..";
 
 class RepositoryService {
+    // TODO: add to contribution after creating repo
     createRepo(username, repoName, repoList, readMeStatus) {
         const storage = getStorage();
         const fileRef = ref(storage, ".git");
@@ -19,8 +20,10 @@ class RepositoryService {
                         `/${username}/repos/${repoName}/README.md`
                     );
                     uploadBytes(readmeFolderRef, readmeRef);
+                    // this.addToContributionArray(username, repoName, "README.md");
                 }
                 this.addRepoToFirestore(username, repoName, repoList);
+                // this.addToContributionArray(username, repoName, ".git");
             })
             .catch((error) => {
                 console.log(error);
@@ -36,7 +39,7 @@ class RepositoryService {
                     repoName: repoName,
                     lastUpdated: date,
                     created: date,
-                    starred: false,
+                    starCount: 0,
                 },
             ],
         });
@@ -101,18 +104,6 @@ class RepositoryService {
             repoList: tempRepoList,
         });
     }
-    // store a total repoList that keeps track of followed repos as well?
-    // async starRepo(username, repoName, repoList) {
-    //     // Create id for starred repos to search? (id: username-repoName)
-    //     console.log(repoList);
-    //     const index = repoList.map((repo) => repo.repoName).indexOf(repoName);
-    //     let tempRepoList = Array.from(repoList);
-    //     tempRepoList[index].starred = !tempRepoList[index].starred;
-    //     console.log(tempRepoList);
-    //     await updateDoc(doc(db, "users", `${username}`), {
-    //         repoList: tempRepoList,
-    //     });
-    // }
     async starRepo(username, repo, repoList) {
         const index = repoList
             .map(({ id }) => {
@@ -126,9 +117,15 @@ class RepositoryService {
         } else {
             tempRepoList = tempRepoList.filter(({ id }) => id !== repo.id);
         }
+        // TODO: add to starCount for repo
         await updateDoc(doc(db, "users", `${username}`), {
             starredRepoList: tempRepoList,
         });
+    }
+    async updateStarCount(add, repo, repoList) {
+        if (add) {
+
+        }
     }
     // Get all starred repos (only repos owned by user)
     async getStarredRepoList(username) {
