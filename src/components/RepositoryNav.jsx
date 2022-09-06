@@ -1,21 +1,79 @@
+import { doc, onSnapshot } from "firebase/firestore";
+import { useEffect } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import db from "..";
+import RepositoryService from "../services/RepositoryService";
+import StarButton from "./StarButton";
+import { UserContext } from "./UserContext";
 
 const RepositoryNav = ({ username, repoName }) => {
+    const user = useContext(UserContext);
+    const [repo, setRepo] = useState(null);
+    const [repoList, setRepoList] = useState([]);
+    const [starredRepoList, setStarredRepoList] = useState([]);
+
+    useEffect(() => {
+        RepositoryService.getRepoList(username).then((serviceRepoList) => {
+            if (serviceRepoList) {
+                setRepoList(serviceRepoList);
+                const index = serviceRepoList
+                    .map(({ repoName }) => repoName)
+                    .indexOf(repoName);
+                let tempRepo = serviceRepoList[index];
+                setRepo({
+                    ...tempRepo,
+                    id: `${username}-${tempRepo.repoName}`,
+                });
+            }
+        });
+        // Listen to changes to update starred repositories and star count
+        onSnapshot(doc(db, "users", `${user.displayName}`), (doc) => {
+            console.log(doc.data().starredRepoList);
+            setStarredRepoList(doc.data().starredRepoList);
+            setRepoList(doc.data().repoList);
+        });
+        // RepositoryService.getAllStarredRepoList(username).then(
+        //     (serviceStar) => {
+        //         if (serviceStar) {
+        //             setStarredRepoList(serviceStar);
+        //         }
+        //     }
+        // );
+    }, [user]);
     return (
         <div className="view-repo-head">
             <div className="view-repo-title row align-center space-between">
                 <h1>
-                    <Link to={`/${username}`}>{username}</Link>/{repoName}
+                    <Link to={`/${username}`} className="blue-accent-text">
+                        {username}
+                    </Link>
+                    /
+                    <Link
+                        to={`/${username}/${repoName}`}
+                        className="blue-accent-text"
+                    >
+                        {repoName}
+                    </Link>
                 </h1>
                 <div className="divider">
-                    <button className="secondary-gray-btn btn">Unpin</button>
+                    <button className="secondary-gray-btn btn">Pin</button>
                     <button className="secondary-gray-btn btn">Unwatch</button>
                     <button className="secondary-gray-btn btn">Fork</button>
-                    <button className="secondary-gray-btn btn">Star</button>
+                    {repo && (
+                        <StarButton
+                            repo={repo}
+                            starredRepoList={starredRepoList}
+                            repoList={repoList}
+                        />
+                    )}
                 </div>
             </div>
             <nav className="secondary-nav row">
-                <Link to={`/${username}`} className="vertical-center">
+                <Link
+                    to={`/${username}/${repoName}`}
+                    className="vertical-center"
+                >
                     <img src="/img/repo-header-icons/code.svg" alt="" />
                     Code
                 </Link>
@@ -30,30 +88,32 @@ const RepositoryNav = ({ username, repoName }) => {
                     <img src="/img/repo-header-icons/pull.svg" alt="" />
                     Pull Requests
                 </Link>
-                <Link to={"/packages"} className="vertical-center">
-                    <img src="/img/repo-header-icons/packages.svg" alt="" />
+                <Link to={"#"} className="vertical-center">
+                    <img src="/img/repo-header-icons/actions.svg" alt="" />
                     Actions
                 </Link>
-                <Link to={"/stars"} className="vertical-center">
+                <Link to={"#"} className="vertical-center">
                     <img src="/img/repo-header-icons/projects.svg" alt="" />
                     Projects
                 </Link>
-                <Link to={"/stars"} className="vertical-center">
+                <Link to={"#"} className="vertical-center">
                     <img src="/img/repo-header-icons/wiki.svg" alt="" />
                     Wiki
                 </Link>
-                <Link to={"/stars"} className="vertical-center">
+                <Link to={"#"} className="vertical-center">
                     <img src="/img/repo-header-icons/security.svg" alt="" />
                     Security
                 </Link>
-                <Link to={"/stars"} className="vertical-center">
+                <Link to={"#"} className="vertical-center">
                     <img src="/img/repo-header-icons/insights.svg" alt="" />
                     Insights
                 </Link>
-                <Link to={"/stars"} className="vertical-center">
-                    <img src="/img/repo-header-icons/settings.svg" alt="" />
-                    Settings
-                </Link>
+                {user.displayName === username && (
+                    <Link to={"#"} className="vertical-center">
+                        <img src="/img/repo-header-icons/settings.svg" alt="" />
+                        Settings
+                    </Link>
+                )}
             </nav>
         </div>
     );

@@ -105,27 +105,44 @@ class RepositoryService {
         });
     }
     async starRepo(username, repo, repoList) {
-        const index = repoList
+        /*
+         If repo is already starred remove = true
+         remove = true -> delete from starredRepoList return false 
+         remove = false -> add to starredRepoList return true
+         */
+        const remove = repoList
             .map(({ id }) => {
                 return id;
             })
             .includes(repo.id);
         let tempRepoList = Array.from(repoList);
-        if (!index) {
-            tempRepoList.push(repo);
-            console.log(tempRepoList);
-        } else {
+        if (remove) {
             tempRepoList = tempRepoList.filter(({ id }) => id !== repo.id);
+        } else {
+            repo.starCount++;
+            tempRepoList.push(repo);
         }
-        // TODO: add to starCount for repo
         await updateDoc(doc(db, "users", `${username}`), {
             starredRepoList: tempRepoList,
         });
+        return !remove;
     }
-    async updateStarCount(add, repo, repoList) {
+    async updateStarCount(username, add, repo, repoList) {
+        const index = repoList
+            .map(({ repoName }) => {
+                return repoName;
+            })
+            .indexOf(repo.repoName);
+        let tempRepoList = Array.from(repoList);
         if (add) {
-
+            tempRepoList[index].starCount++;
+            console.log(tempRepoList[index]);
+        } else {
+            tempRepoList[index].starCount--;
         }
+        await updateDoc(doc(db, "users", `${username}`), {
+            repoList: tempRepoList,
+        });
     }
     // Get all starred repos (only repos owned by user)
     async getStarredRepoList(username) {
