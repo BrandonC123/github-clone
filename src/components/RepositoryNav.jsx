@@ -14,10 +14,11 @@ const RepositoryNav = ({ username, repoName }) => {
     const [starredRepoList, setStarredRepoList] = useState([]);
 
     useEffect(() => {
+        let index;
         RepositoryService.getRepoList(username).then((serviceRepoList) => {
             if (serviceRepoList) {
                 setRepoList(serviceRepoList);
-                const index = serviceRepoList
+                index = serviceRepoList
                     .map(({ repoName }) => repoName)
                     .indexOf(repoName);
                 let tempRepo = serviceRepoList[index];
@@ -32,14 +33,9 @@ const RepositoryNav = ({ username, repoName }) => {
             console.log(doc.data().starredRepoList);
             setStarredRepoList(doc.data().starredRepoList);
             setRepoList(doc.data().repoList);
+            const tempRepo = doc.data().repoList[index];
+            setRepo({ ...tempRepo, id: `${username}-${tempRepo.repoName}` });
         });
-        // RepositoryService.getAllStarredRepoList(username).then(
-        //     (serviceStar) => {
-        //         if (serviceStar) {
-        //             setStarredRepoList(serviceStar);
-        //         }
-        //     }
-        // );
     }, [user]);
     return (
         <div className="view-repo-head">

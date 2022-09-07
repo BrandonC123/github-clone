@@ -1,27 +1,27 @@
 import { useContext, useEffect, useState } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
 import RepositoryService from "../services/RepositoryService";
 import ViewRepositoryListDropdown from "./ViewRepositoryListDropdown";
-import star from "../img/star-icon.svg";
-import filledStar from "../img/filled-star-icon.svg";
-import StarButton from "./StarButton";
 import useDebounce from "./useDebounce";
 import RepositoryListing from "./RepositoryListing";
+import db from "..";
 
 const ViewRepositoryList = () => {
-    // TODO: Add functionality to star repos
     const user = useContext(UserContext);
     const navigate = useNavigate();
     const { username } = useParams();
+    const [sortType, setSortType] = useState("");
     // Repo list that is updated to tell webpage to render which sorted array
     const [repoList, setRepoList] = useState([]);
     const [lastUpdatedList, setLastUpdatedList] = useState([]);
     const [nameSortList, setNameSortList] = useState([]);
     const [starSortList, setStarSortList] = useState([]);
     const [starredRepoList, setStarredRepoList] = useState([]);
+
     const [searchTerm, setSearchTerm] = useState("");
     // Debounce search to make searching less intensive
     const debouncedSearch = useDebounce(searchTerm, 500);
@@ -30,18 +30,13 @@ const ViewRepositoryList = () => {
         // Use username from Params to allow for viewing other user's repos
         RepositoryService.getRepoList(username).then((serviceRepoList) => {
             if (serviceRepoList) {
-                sortByLastUpdated(serviceRepoList);
-                sortByName(serviceRepoList);
-                sortByStar(serviceRepoList);
+                updateAllLists(serviceRepoList);
             }
         });
-        RepositoryService.getAllStarredRepoList(username).then(
-            (serviceStar) => {
-                if (serviceStar) {
-                    setStarredRepoList(serviceStar);
-                }
-            }
-        );
+        onSnapshot(doc(db, "users", `${user.displayName}`), (doc) => {
+            setStarredRepoList(doc.data().starredRepoList);
+            updateAllLists(doc.data().repoList);
+        });
     }, [username]);
     // TODO: save which way it was sorted
     useEffect(() => {
@@ -55,6 +50,11 @@ const ViewRepositoryList = () => {
             setRepoList(lastUpdatedList);
         }
     }, [debouncedSearch]);
+    function updateAllLists(list) {
+        sortByLastUpdated(list);
+        sortByName(list);
+        sortByStar(list);
+    }
     function sortByLastUpdated(repoList) {
         let tempLastUpdated = Array.from(repoList);
         tempLastUpdated
@@ -86,12 +86,15 @@ const ViewRepositoryList = () => {
     function toggleRepoList(sortType) {
         switch (sortType.toLowerCase()) {
             case "last updated":
+                setSortType("last updated");
                 setRepoList(lastUpdatedList);
                 break;
             case "name":
+                setSortType("name");
                 setRepoList(nameSortList);
                 break;
             case "stars":
+                setSortType("stars");
                 setRepoList(starSortList);
                 break;
             default:
@@ -105,6 +108,7 @@ const ViewRepositoryList = () => {
                     username={username}
                     repo={repo}
                     starredRepoList={starredRepoList}
+                    repoList={lastUpdatedList}
                 />
             );
         });
