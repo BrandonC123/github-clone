@@ -10,11 +10,19 @@ import { UserContext } from "./components/UserContext";
 function App() {
     const auth = getAuth();
     const [user, setUser] = useState(null);
+    const [signedIn, setSignedIn] = useState(null);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         auth.onAuthStateChanged((tempUser) => {
             if (tempUser) {
                 setUser(tempUser);
+            } else {
+                setSignedIn(false);
             }
+            // Allow header to display either signin/signup or user once status
+            // is loaded
+            setLoading(false);
         });
     });
 
@@ -22,9 +30,18 @@ function App() {
         <Router>
             <UserContext.Provider value={user}>
                 <Routes>
-                    <Route path="/*" element={<AuthenticateRoutes />} />
-                    <Route path="/signup" element={<Signup />} />
-                    <Route path="/signin" element={<Signin />} />
+                    <Route
+                        path="/*"
+                        element={<AuthenticateRoutes loading={loading} />}
+                    />
+                    <Route
+                        path="/signup"
+                        element={<Signup signedIn={signedIn} />}
+                    />
+                    <Route
+                        path="/signin"
+                        element={<Signin signedIn={signedIn} />}
+                    />
                 </Routes>
             </UserContext.Provider>
         </Router>

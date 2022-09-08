@@ -33,10 +33,12 @@ const ViewRepositoryList = () => {
                 updateAllLists(serviceRepoList);
             }
         });
-        onSnapshot(doc(db, "users", `${user.displayName}`), (doc) => {
-            setStarredRepoList(doc.data().starredRepoList);
-            updateAllLists(doc.data().repoList);
-        });
+        if (user) {
+            onSnapshot(doc(db, "users", `${user.displayName}`), (doc) => {
+                setStarredRepoList(doc.data().starredRepoList);
+                updateAllLists(doc.data().repoList);
+            });
+        }
     }, [username]);
     // TODO: save which way it was sorted
     useEffect(() => {
@@ -105,6 +107,7 @@ const ViewRepositoryList = () => {
         return repoList.map((repo) => {
             return (
                 <RepositoryListing
+                    key={repo.repoName}
                     username={username}
                     repo={repo}
                     starredRepoList={starredRepoList}
@@ -132,7 +135,7 @@ const ViewRepositoryList = () => {
                             toggleRepoList={toggleRepoList}
                         />
                     </div>
-                    {user.displayName === username && (
+                    {user && user.displayName === username && (
                         <button
                             onClick={() => {
                                 navigate("/new");
