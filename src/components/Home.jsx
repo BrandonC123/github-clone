@@ -1,7 +1,9 @@
 import { differenceInCalendarDays } from "date-fns";
+import { doc, onSnapshot } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
+import db from "..";
 import RepositoryService from "../services/RepositoryService";
 import UserService from "../services/UserService";
 import RepositoryCard from "./RepositoryCard";
@@ -10,51 +12,57 @@ import { UserContext } from "./UserContext";
 
 const Home = () => {
     const user = useContext(UserContext);
-    const [followList, setFollowList] = useState([]);
+    const [allRepoList, setAllRepoList] = useState([]);
     const [repoDisplayList, setDisplayRepoList] = useState([]);
     const [starredRepoList, setStarredRepoList] = useState([]);
 
     useEffect(() => {
         if (user) {
             initializeFollowRepos();
-            // TODO: figure out way to store other user's repo when starred
-            // RepositoryService.getRepoList(username).then((list) => {
-            //     setRepoList(list);
-            // });
-            RepositoryService.getAllStarredRepoList(user.displayName).then(
-                (list) => {
-                    setStarredRepoList(list);
-                }
-            );
+            onSnapshot(doc(db, "users", `${user.displayName}`), (doc) => {
+                setStarredRepoList(doc.data().starredRepoList);
+            });
         }
     }, [user]);
     async function initializeFollowRepos() {
         const currentDate = new Date();
-        // Get recent repositories of followed users
+        // Get repositories of followed users
         const serviceFollowList = await UserService.getFollowList(
             user.displayName
         );
-        setFollowList(serviceFollowList);
+        let tempAllRepoList = [];
         let tempDisplayList = [];
+        // Get repositories created in last 30 days to display
         serviceFollowList.forEach(async function (username) {
             const serviceRepoList = await RepositoryService.getRepoList(
                 username
             );
+            tempAllRepoList.push({
+                username,
+                repoList: serviceRepoList,
+            });
             serviceRepoList.forEach((repo) => {
                 if (
                     differenceInCalendarDays(
                         currentDate,
                         new Date(repo.created.seconds * 1000)
-                    ) <= 10
+                    ) <= 30
                 ) {
                     tempDisplayList.push({
                         ...repo,
                         id: `${username}-${repo.repoName}`,
                     });
-                    setDisplayRepoList(sortByCreated(tempDisplayList));
                 }
             });
+            setDisplayRepoList(sortByCreated(tempDisplayList));
+            setAllRepoList(tempAllRepoList);
         });
+    }
+    function getRepoList(username) {
+        const index = allRepoList
+            .map(({ username }) => username)
+            .indexOf(username);
+        return allRepoList[index].repoList;
     }
     function sortByCreated(list) {
         let tempLastCreated = Array.from(list);
@@ -67,7 +75,14 @@ const Home = () => {
     }
     function displayFollowedRepos() {
         return repoDisplayList.map((repo) => {
-            return <RepositoryCard repo={repo} starredRepoList={starredRepoList} />;
+            return (
+                <RepositoryCard
+                    key={repo.id}
+                    repo={repo}
+                    starredRepoList={starredRepoList}
+                    getRepoList={getRepoList}
+                />
+            );
         });
     }
     function displayHome() {

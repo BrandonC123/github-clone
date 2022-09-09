@@ -20,9 +20,10 @@ const months = [
     "December",
 ];
 
-const RepositoryCard = ({ repo, starredRepoList }) => {
+const RepositoryCard = ({ repo, starredRepoList, getRepoList }) => {
     const username = repo.id.split("-")[0];
-    const repoName = repo.id.split("-")[1];
+    const repoName = repo.repoName;
+    const repoList = getRepoList(username);
     const currentDate = new Date();
     const created = new Date(repo.created.seconds * 1000);
     const difference = differenceInCalendarDays(currentDate, created);
@@ -71,7 +72,11 @@ const RepositoryCard = ({ repo, starredRepoList }) => {
                         {lastUpdated.getDate()}
                     </small>
                 </div>
-                <StarButton repo={repo} starredRepoList={starredRepoList} />
+                <StarButton
+                    repo={repo}
+                    starredRepoList={starredRepoList}
+                    repoList={repoList}
+                />
             </div>
         </div>
     );
