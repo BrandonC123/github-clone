@@ -13,49 +13,51 @@ import { useContext } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const AuthenticateRoutes = ({loading}) => {
+const AuthenticateRoutes = ({ loading }) => {
     const user = useContext(UserContext);
     const [username, setUsername] = useState("");
 
     useEffect(() => {
-        console.log(user);
         if (user) {
             setUsername(user.displayName);
         }
     }, [user]);
     return (
-        <>
-            <MainHeader username={username} loading={loading} />
-            {user && (
+        !loading && (
+            <>
+                <MainHeader username={username} loading={loading} />
                 <Routes>
+                    {user && (
+                        <>
+                            <Route
+                                path={`/${username}/:repoName/upload`}
+                                element={<UploadFile />}
+                            />
+                            <Route path="/new" element={<CreateRepository />} />
+                            <Route
+                                path="/settings/profile"
+                                element={<ProfileSettings />}
+                            />
+                        </>
+                    )}
+
+                    <Route path="/" element={<Home />} />
+                    <Route path={"/:username"} element={<ViewProfile />} />
                     <Route
-                        path={`/${user.displayName}/:repoName/upload`}
-                        element={<UploadFile />}
+                        path="/:username/repositories"
+                        element={<ViewRepositoryList />}
                     />
-                    <Route path="/new" element={<CreateRepository />} />
                     <Route
-                        path="/settings/profile"
-                        element={<ProfileSettings />}
+                        path="/:username/:repoName"
+                        element={<ViewRepository />}
+                    />
+                    <Route
+                        path="/:username/stars"
+                        element={<ViewStarredRepositories />}
                     />
                 </Routes>
-            )}
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path={"/:username"} element={<ViewProfile />} />
-                <Route
-                    path="/:username/repositories"
-                    element={<ViewRepositoryList />}
-                />
-                <Route
-                    path="/:username/:repoName"
-                    element={<ViewRepository />}
-                />
-                <Route
-                    path="/:username/stars"
-                    element={<ViewStarredRepositories />}
-                />
-            </Routes>
-        </>
+            </>
+        )
     );
 };
 
