@@ -36,6 +36,7 @@ class RepositoryService {
             repoList: [
                 ...repoList,
                 {
+                    // id: `${username}-${repoName}`,
                     repoName: repoName,
                     lastUpdated: date,
                     created: date,
@@ -104,30 +105,33 @@ class RepositoryService {
             repoList: tempRepoList,
         });
     }
-    async starRepo(username, repo, repoList) {
+    async starRepo(username, repo, starredRepoList, repoList) {
         /*
          If repo is already starred remove = true
          remove = true -> delete from starredRepoList return false 
          remove = false -> add to starredRepoList return true
          */
-        const remove = repoList
+        const remove = starredRepoList
             .map(({ id }) => {
                 return id;
             })
             .includes(repo.id);
-        let tempRepoList = Array.from(repoList);
+        let tempRepoList = Array.from(starredRepoList);
         if (remove) {
             tempRepoList = tempRepoList.filter(({ id }) => id !== repo.id);
         } else {
             repo.starCount++;
             tempRepoList.push(repo);
         }
+        this.updateStarCount(!remove, repo, repoList);
         await updateDoc(doc(db, "users", `${username}`), {
             starredRepoList: tempRepoList,
         });
         return !remove;
     }
-    async updateStarCount(username, add, repo, repoList) {
+    // TODO: other user starring repo does not update owner starCount
+    async updateStarCount(add, repo, repoList) {
+        const username = repo.id.split("-")[0];
         const index = repoList
             .map(({ repoName }) => {
                 return repoName;
@@ -136,7 +140,6 @@ class RepositoryService {
         let tempRepoList = Array.from(repoList);
         if (add) {
             tempRepoList[index].starCount++;
-            console.log(tempRepoList[index]);
         } else {
             tempRepoList[index].starCount--;
         }
@@ -164,7 +167,6 @@ class RepositoryService {
             return null;
         }
     }
-    // TODO: sorting algs for repoList
     async getContributionArray(username) {
         const response = await getDoc(doc(db, "users", `${username}`));
         if (response.exists()) {

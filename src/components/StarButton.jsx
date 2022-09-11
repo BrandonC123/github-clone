@@ -1,65 +1,66 @@
 import star from "../img/star-icon.svg";
 import filledStar from "../img/filled-star-icon.svg";
 import RepositoryService from "../services/RepositoryService";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "./UserContext";
 import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 const StarButton = ({ repo, starredRepoList, repoList }) => {
     const user = useContext(UserContext);
-    const { username } = useParams();
+    const username = repo.id.split("-")[0];
     const { repoName } = useParams();
-    const id = repo.id ? repo.id : `${user.displayName}-${repo.repoName}`;
+    const id = repo.id ? repo.id : `${username}-${repo.repoName}`;
+    const [btnText, setBtnText] = useState("");
     const starred = starredRepoList
         .map(({ id }) => {
             return id;
         })
         .includes(id);
-    function toggleStarBtn(btn, add) {
-        let btnText = add ? "Starred" : "Star";
+
+    useEffect(() => {
+        console.log(repo);
+        let text = starred ? "Starred" : "Star";
+        setBtnText(text);
         if (repoName) {
             // Display star count inside button if viewing individual repository
-            btnText += ` ${repo.starCount}`;
+            setBtnText(text + ` ${repo.starCount}`);
         }
-
+    }, [repo]);
+    function toggleStarBtn(btn, add) {
         if (add) {
-            // TODO: only display star count on view repo route
-            btn.lastChild.textContent = btnText;
             btn.firstChild.src = filledStar;
         } else {
-            btn.lastChild.textContent = btnText;
             btn.firstChild.src = star;
         }
     }
+    function delayButtonClick(btn) {
+        btn.style.pointerEvents = "none";
+        setTimeout(() => {
+            btn.style.removeProperty("pointer-events");
+        }, 500);
+    }
     function displayStarBtn() {
         const starSrc = starred ? filledStar : star;
-        let btnText = starred ? "Starred" : "Star";
-        if (repoName) {
-            // Display star count inside button if viewing individual repository
-            btnText += ` ${repo.starCount}`;
-        }
-        // TODO: star count does not work with other user's repo  ??
+        // TODO: disable button if no user is signed in
         return (
             <button
                 onClick={(e) => {
                     let currentTarget = e.currentTarget;
+                    const btn =
+                        e.target === currentTarget
+                            ? e.target
+                            : e.target.parentNode;
+                    delayButtonClick(btn);
+
                     RepositoryService.starRepo(
                         user.displayName,
                         repo,
-                        starredRepoList
+                        starredRepoList,
+                        repoList
                     ).then((add) => {
                         // Make sure target is the button not img/span
-                        const btn =
-                            e.target === currentTarget
-                                ? e.target
-                                : e.target.parentNode;
                         toggleStarBtn(btn, add);
-                        RepositoryService.updateStarCount(
-                            username,
-                            add,
-                            repo,
-                            repoList
-                        );
                     });
                 }}
                 className="secondary-gray-btn btn vertical-center"

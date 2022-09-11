@@ -14,34 +14,28 @@ const RepositoryNav = ({ username, repoName }) => {
     const [starredRepoList, setStarredRepoList] = useState([]);
 
     useEffect(() => {
-        let index;
-        RepositoryService.getRepoList(username).then((serviceRepoList) => {
-            if (serviceRepoList) {
-                setRepoList(serviceRepoList);
-                index = serviceRepoList
-                    .map(({ repoName }) => repoName)
-                    .indexOf(repoName);
-                let tempRepo = serviceRepoList[index];
-                setRepo({
-                    ...tempRepo,
-                    id: `${username}-${tempRepo.repoName}`,
-                });
-            }
-        });
         if (user) {
             // Listen to changes to update starred repositories and star count
             onSnapshot(doc(db, "users", `${user.displayName}`), (doc) => {
-                console.log(doc.data().starredRepoList);
                 setStarredRepoList(doc.data().starredRepoList);
-                setRepoList(doc.data().repoList);
-                const tempRepo = doc.data().repoList[index];
-                setRepo({
-                    ...tempRepo,
-                    id: `${username}-${tempRepo.repoName}`,
-                });
+                RepositoryService.getRepoList(username).then(
+                    (serviceRepoList) => {
+                        if (serviceRepoList) {
+                            const index = serviceRepoList
+                                .map(({ repoName }) => repoName)
+                                .indexOf(repoName);
+                            setRepoList(serviceRepoList);
+                            const tempRepo = serviceRepoList[index];
+                            setRepo({
+                                ...tempRepo,
+                                id: `${username}-${tempRepo.repoName}`,
+                            });
+                        }
+                    }
+                );
             });
         }
-    }, [user]);
+    }, [user, username]);
     return (
         <div className="view-repo-head">
             <div className="view-repo-title row align-center space-between">
