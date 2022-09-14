@@ -1,4 +1,5 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import db from "..";
 
 class UserService {
@@ -23,6 +24,8 @@ class UserService {
                 twitterUsername: "",
                 repoList: [],
                 followList: [],
+                contributionArray: [],
+                starredRepoList: [],
             };
             await setDoc(doc(db, "users", `${username}`), emptyUser);
             return emptyUser;
@@ -31,6 +34,18 @@ class UserService {
     }
     async updateUserProfile(username, updatedUserObject) {
         await updateDoc(doc(db, "users", username), updatedUserObject);
+    }
+    uploadProfileImg(username, img) {
+        const storage = getStorage();
+        const storageRef = ref(storage, `/${username}/profile-pic`);
+        uploadBytes(storageRef, img).then((snapshot) => {
+            console.log(snapshot);
+        });
+    }
+    async getProfileImg(username) {
+        const storage = getStorage();
+        const profileRef = ref(storage, `/${username}/profile-pic.png`);
+        return getDownloadURL(profileRef);
     }
     async getFollowList(username) {
         const response = await getDoc(doc(db, "users", `${username}`));
@@ -46,9 +61,10 @@ class UserService {
         });
     }
     async unfollowUser(username, followUsername, followList) {
-        const index = followList.indexOf(followUsername);
         await updateDoc(doc(db, "users", `${username}`), {
-            followList: followList.splice(index, 1),
+            followList: followList.filter(
+                (username) => username !== followUsername
+            ),
         });
     }
 }
