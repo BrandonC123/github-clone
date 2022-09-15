@@ -1,20 +1,23 @@
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "./UserContext";
 
-const MainHeader = ({ username }) => {
+const MainHeader = ({ username, loading }) => {
+    const user = useContext(UserContext);
     const dropdownItemList1 = [
         { title: "Your profile", url: `/${username}` },
         { title: "Your repositories", url: `/${username}/repositories` },
-        { title: "Your codespaces", url: "/settings/profile" },
-        { title: "Your organizations", url: "/settings/profile" },
-        { title: "Your projects", url: "/settings/profile" },
+        { title: "Your codespaces", url: "#" },
+        { title: "Your organizations", url: "#" },
+        { title: "Your projects", url: "#" },
         { title: "Your stars", url: `/${username}/stars` },
-        { title: "Your gists", url: "/settings/profile" },
+        { title: "Your gists", url: "#" },
     ];
     const dropdownItemList2 = [
-        { title: "Upgrade", url: "/settings/profile" },
-        { title: "Feature preview", url: "/settings/profile" },
-        { title: "Help", url: "/settings/profile" },
+        { title: "Upgrade", url: "#" },
+        { title: "Feature preview", url: "#" },
+        { title: "Help", url: "#" },
         { title: "Settings", url: "/settings/profile" },
     ];
     function fillDropdown() {
@@ -60,16 +63,15 @@ const MainHeader = ({ username }) => {
                     />
                     +
                     <div className="relative">
-                        <button
+                        <img
                             onClick={(e) => {
                                 const dropdown = e.target.nextSibling;
                                 toggleDropdown(dropdown);
                             }}
-                            className="dropdown-btn"
-                            to={`/${username}`}
-                        >
-                            {username}
-                        </button>
+                            src={user.photoURL}
+                            alt="Profile icon"
+                            className="dropdown-btn round-profile-img profile-icon"
+                        />
                         <div className="header-dropdown dropdown hide">
                             Signed in as {username}
                             {fillDropdown()}
@@ -99,17 +101,15 @@ const MainHeader = ({ username }) => {
     let dropdownRef = null;
     function toggleDropdown(dropdown) {
         if (dropdown.classList.contains("hide")) {
-            console.log("add");
             document.addEventListener("click", removeDrop);
         } else {
-            console.log("remove");
             document.removeEventListener("click", removeDrop);
         }
         dropdown.classList.toggle("hide");
         dropdownRef = dropdown;
     }
     function removeDrop(e) {
-        if (e.target.className.toLowerCase() !== "dropdown-btn") {
+        if (e.target.nextSibling !== dropdownRef) {
             dropdownRef.classList.add("hide");
             document.removeEventListener("click", removeDrop);
         }
@@ -129,6 +129,7 @@ const MainHeader = ({ username }) => {
                         type="text"
                         name="search"
                         id="search"
+                        className="search-bar"
                         placeholder="Search or jump to..."
                     />
                     <nav className="header-nav row">
@@ -154,7 +155,7 @@ const MainHeader = ({ username }) => {
                         </li>
                     </nav>
                 </div>
-                {displaySignOrUser()}
+                {!loading && displaySignOrUser()}
             </div>
         </header>
     );
