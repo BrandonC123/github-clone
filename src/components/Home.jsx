@@ -58,10 +58,13 @@ const Home = () => {
                         ...repo,
                         id: `${username}-${repo.repoName}`,
                     });
-                    tempProfileSrcList.push(userDetail.profileImgSrc);
+                    tempProfileSrcList.push({
+                        lastUpdated: repo.lastUpdated,
+                        profileImcSrc: userDetail.profileImgSrc,
+                    });
                 }
             });
-            setProfileSrcList(tempProfileSrcList);
+            setProfileSrcList(sortByCreated(tempProfileSrcList));
             setRepoDisplayList(sortByCreated(tempDisplayList));
             setAllRepoList(tempAllRepoList);
         });
@@ -83,11 +86,10 @@ const Home = () => {
     }
     function displayFollowedRepos() {
         return repoDisplayList.map((repo, index) => {
-            // console.log(profileSrcList);
             return (
                 <RepositoryCard
                     key={repo.id}
-                    profileImgSrc={profileSrcList[index]}
+                    profileImgSrc={profileSrcList[index].profileImcSrc}
                     repo={repo}
                     starredRepoList={starredRepoList}
                     getRepoList={getRepoList}
