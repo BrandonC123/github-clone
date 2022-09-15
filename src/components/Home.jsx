@@ -1,4 +1,5 @@
 import { differenceInCalendarDays } from "date-fns";
+import { updateProfile } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -12,8 +13,9 @@ import { UserContext } from "./UserContext";
 
 const Home = () => {
     const user = useContext(UserContext);
+    const [profileSrcList, setProfileSrcList] = useState([]);
     const [allRepoList, setAllRepoList] = useState([]);
-    const [repoDisplayList, setDisplayRepoList] = useState([]);
+    const [repoDisplayList, setRepoDisplayList] = useState([]);
     const [starredRepoList, setStarredRepoList] = useState([]);
 
     useEffect(() => {
@@ -25,6 +27,9 @@ const Home = () => {
         }
     }, [user]);
     async function initializeFollowRepos() {
+        UserService.updateUserProfile(user.displayName, {
+            profileImgSrc: user.photoURL,
+        });
         const currentDate = new Date();
         // Get repositories of followed users
         const serviceFollowList = await UserService.getFollowList(
@@ -32,16 +37,17 @@ const Home = () => {
         );
         let tempAllRepoList = [];
         let tempDisplayList = [];
+        let tempProfileSrcList = [];
         // Get repositories created in last 30 days to display
         serviceFollowList.forEach(async function (username) {
-            const serviceRepoList = await RepositoryService.getRepoList(
-                username
-            );
+            const userDetail = await UserService.getUserDetails(user, username);
+            const serviceRepoList = userDetail.repoList;
+            console.log(userDetail);
             tempAllRepoList.push({
                 username,
                 repoList: serviceRepoList,
             });
-            serviceRepoList.forEach((repo) => {
+            serviceRepoList.forEach(async function (repo) {
                 if (
                     differenceInCalendarDays(
                         currentDate,
@@ -52,9 +58,11 @@ const Home = () => {
                         ...repo,
                         id: `${username}-${repo.repoName}`,
                     });
+                    tempProfileSrcList.push(userDetail.profileImgSrc);
                 }
             });
-            setDisplayRepoList(sortByCreated(tempDisplayList));
+            setProfileSrcList(tempProfileSrcList);
+            setRepoDisplayList(sortByCreated(tempDisplayList));
             setAllRepoList(tempAllRepoList);
         });
     }
@@ -74,10 +82,12 @@ const Home = () => {
         return tempLastCreated;
     }
     function displayFollowedRepos() {
-        return repoDisplayList.map((repo) => {
+        return repoDisplayList.map((repo, index) => {
+            // console.log(profileSrcList);
             return (
                 <RepositoryCard
                     key={repo.id}
+                    profileImgSrc={profileSrcList[index]}
                     repo={repo}
                     starredRepoList={starredRepoList}
                     getRepoList={getRepoList}

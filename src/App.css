@@ -11,6 +11,7 @@
     --main-color: rgb(1, 4, 9);
     --accent-green: rgb(35, 134, 54);
     --accent-blue: rgb(88, 166, 255);
+    --header-height: 70px;
 }
 
 * {
@@ -114,6 +115,7 @@ h4 {
     background-color: rgb(22, 27, 34);
     color: white;
     padding: 1em 0;
+    max-height: var(--header-height);
 }
 
 .header-container {
@@ -330,6 +332,7 @@ h4 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    margin-left: 2em;
     padding: 1em;
     border-radius: 0.5em;
     background-color: rgb(13, 17, 23);
@@ -355,7 +358,7 @@ h4 {
     top: 0;
     background-color: rgb(13, 17, 23);
     color: lightgray;
-    height: 100vh;
+    height: calc(100vh - var(--header-height));
     width: clamp(250px, 20%, 300px);
     padding: 1em;
     border-right: 1px solid rgb(29, 34, 41);
@@ -451,24 +454,26 @@ h4 {
 }
 
 .view-repo-content {
-    border: 1px solid rgb(29, 34, 41);
+    border: 1px solid rgb(48, 54, 61);
     border-radius: 0.5em;
     /* width: 70%; */
 }
 
 .view-repo-folder,
 .view-repo-item {
-    justify-content: space-between;
+    display: flex;
+    align-items: center;
     padding: 0.5em;
-    border-bottom: 1px solid rgb(29, 34, 41);
+    border-bottom: 1px solid rgb(33, 38, 45);
 }
 
 .repo-list-page,
 .profile-page,
 .view-star-page {
     display: grid;
-    grid-template-columns: 15% 50%;
+    grid-template-columns: 13% clamp(500px, 50%, 892px);
     justify-content: center;
+    max-width: 1900px;
     gap: 2em;
 }
 
@@ -485,6 +490,15 @@ h4 {
 
 .profile-information > p {
     margin: 0;
+}
+
+.round-profile-img {
+    /* width: 100%; */
+    border-radius: 50%;
+}
+
+.profile-icon {
+    width: 2em;
 }
 
 .edit-profile-form {
@@ -528,7 +542,7 @@ h4 {
 .contributions-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     border: 1px solid rgb(48, 54, 61);
     border-radius: 0.25em;
     padding: 0.25em;

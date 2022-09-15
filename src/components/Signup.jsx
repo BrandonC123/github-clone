@@ -3,13 +3,12 @@ import {
     createUserWithEmailAndPassword,
     updateProfile,
 } from "firebase/auth";
-import { useContext } from "react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "./UserContext";
+import defaultProfile from "../img/default-profile-pic.png";
+import UserService from "../services/UserService";
 
 const Signup = ({ signedIn }) => {
-    // TODO: redirect to home if signed in (for sign up & signin)
     const [email, setEmail] = useState("");
     const [password, setPassowrd] = useState("");
     const [username, setUsername] = useState("");
@@ -89,10 +88,14 @@ const Signup = ({ signedIn }) => {
     function createUser() {
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
+            .then(async function (userCredential) {
+                UserService.uploadProfileImg(username, defaultProfile);
+                const img = await UserService.getProfileImg(username);
                 updateProfile(userCredential.user, {
                     displayName: username,
+                    photoUrl: img,
                 });
+                // TODO: after navigating user is not yet created causing error
                 navigate(`/${username}`);
             })
             .catch((error) => {

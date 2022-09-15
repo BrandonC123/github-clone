@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import RepositoryService from "../services/RepositoryService";
+import UserService from "../services/UserService";
 import StarButton from "./StarButton";
 
 const months = [
@@ -20,7 +21,12 @@ const months = [
     "December",
 ];
 
-const RepositoryCard = ({ repo, starredRepoList, getRepoList }) => {
+const RepositoryCard = ({
+    profileImgSrc,
+    repo,
+    starredRepoList,
+    getRepoList,
+}) => {
     const username = repo.id.split("-")[0];
     const repoName = repo.repoName;
     const repoList = getRepoList(username);
@@ -28,8 +34,7 @@ const RepositoryCard = ({ repo, starredRepoList, getRepoList }) => {
     const created = new Date(repo.created.seconds * 1000);
     const difference = differenceInCalendarDays(currentDate, created);
     const lastUpdated = new Date(repo.lastUpdated.seconds * 1000);
-
-    useEffect(() => {});
+ 
     function getTimeDifferenceString() {
         if (difference === 0) {
             return "today";
@@ -41,7 +46,12 @@ const RepositoryCard = ({ repo, starredRepoList, getRepoList }) => {
     }
     return (
         <div className="home-repo-card-container border-divider">
-            <p>
+            <p className="vertical-center">
+                <img
+                    src={profileImgSrc}
+                    alt="Profile icon"
+                    className="round-profile-img profile-icon"
+                />
                 <Link to={`/${username}`} className="home-repo-card-link">
                     {username}
                 </Link>{" "}
