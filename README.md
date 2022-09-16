@@ -15,10 +15,10 @@ Route: "/new" Create new repository
  -Create a new repository with optional description field
  -Option to click checkbox for creating repository with README
   
-Route: "/:username/:repoName" View repository
- -Based on username and repository name the repository is fetched from Firestore Database and displayed
- -Displays files that are stored in Firebase storage
- -Depending on if the user is the owner of the repository a "Add File" dropdown will be present to allow users to upload files to it
+Route: "/:username/:repoName" View repository  
+ -Based on username and repository name the repository is fetched from Firestore Database and displayed  
+ -Displays files that are stored in Firebase storage  
+ -Depending on if the user is the owner of the repository a "Add File" dropdown will be present to allow users to upload files to it  
 
 Route: "/:username/:repoName/upload" Upload file
 
