@@ -1,3 +1,27 @@
+Implemented Features By Route:  
+ Route: "/" Home
+-Checks whether or not a user is signed in before displaying content  
+-Left sidebar: Display recent repositories and button for creating new repositories  
+-Main section displays recently created repositories from followed users
+
+Route: "/:username" View user profile  
+-View recently created repositories in a 3x2 grid  
+-Display user profile information along with a form to edit using "Edit Profile" button   
+-Display contributions calendar showing when the user made changes to a repository  
+-If viewing another person's profile option to Follow/Unfollow user will be displayed instead of Edit Profile  
+
+
+    Route: "/new" Create new repository
+    -Create a new repository with optional description field
+    -Option to click checkbox for creating repository with README
+
+    Route: "/:username/:repoName" View repository
+    -Based on username and repository name the repository is fetched from Firestore Database and displayed
+    -Displays files that are stored in Firebase storage
+    -Depending on if the user is the owner of the repository a "Add File" dropdown will be present to allow users to upload files to it
+
+    Route: "/:username/:repoName/upload" Upload file
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
