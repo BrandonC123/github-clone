@@ -6,6 +6,7 @@ import AuthenticateRoutes from "./components/AuthenticatedRoutes";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { UserContext } from "./components/UserContext";
+import UnAuthenticatedHome from "./components/UnAuthenticatedHome";
 
 function App() {
     const auth = getAuth();
@@ -34,6 +35,11 @@ function App() {
                         path="/*"
                         element={<AuthenticateRoutes loading={loading} />}
                     />
+                    {/* Only load unauthenticated home route when no user is
+                    detected and data has finished fetching */}
+                    {!user && !loading && (
+                        <Route path="/" element={<UnAuthenticatedHome />} />
+                    )}
                     <Route
                         path="/signup"
                         element={<Signup signedIn={signedIn} />}
