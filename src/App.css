@@ -98,6 +98,10 @@ h4 {
     border-bottom: 1px solid rgb(29, 34, 41);
 }
 
+.margin-right {
+    margin-right: 0.5em;
+}
+
 .secondary-text {
     color: var(--default-text-color);
 }
@@ -105,6 +109,7 @@ h4 {
 .hide {
     display: none;
     visibility: hidden;
+    opacity: 10%;
 }
 
 .hidden {
@@ -154,6 +159,7 @@ h4 {
     padding: 0.5em 0;
     width: 180px;
     right: 0;
+    transition: opacity 1s ease-out;
 }
 
 .general-dropdown {
@@ -200,7 +206,8 @@ h4 {
 
 .signup-page {
     background: url("./img/bg1.gif") no-repeat center center fixed;
-    background-size: cover;
+    /* background-size: cover; */
+    background-size: contain;
     height: 100vh;
     color: var(--default-text-color);
 }
@@ -320,6 +327,66 @@ h4 {
     gap: 0.5em;
 }
 
+.unauth-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em 0;
+    width: 65%;
+    margin: 0 auto;
+}
+
+.button-link {
+    color: white;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    font-size: 1.125rem;
+    cursor: pointer;
+    text-decoration: none;
+    text-shadow: 2px 2px 5px rgb(90, 90, 90);
+}
+
+.unauth-home-page {
+    background: rgb(1, 52, 123);
+    background: linear-gradient(
+        138deg,
+        rgba(1, 52, 123, 1) 0%,
+        rgba(5, 13, 32, 1) 50%,
+        rgba(77, 32, 75, 1) 100%
+    );
+    background-size: cover;
+    height: 100vh;
+    color: white;
+}
+
+.unauth-content-container {
+    display: flex;
+    gap: 2em;
+    width: 65%;
+    margin: 0 auto;
+    padding: 4em 0 4em 0;
+}
+
+.unauth-text-content {
+    width: 50%;
+}
+
+.unauth-misc-stats {
+    display: flex;
+    gap: 2.5em;
+    width: 65%;
+    margin: 0 auto;
+}
+
+.misc-stat {
+    font-size: 1.25rem;
+}
+
+.img-shadow {
+    box-shadow: 0 0 20px rgba(5, 13, 32, 1);
+}
+
 .home-page {
     background-color: var(--main-color);
 }
@@ -332,7 +399,7 @@ h4 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-left: 2em;
+    margin-left: 2.25em;
     padding: 1em;
     border-radius: 0.5em;
     background-color: rgb(13, 17, 23);
@@ -358,7 +425,7 @@ h4 {
     top: 0;
     background-color: rgb(13, 17, 23);
     color: lightgray;
-    height: calc(100vh - var(--header-height));
+    height: 100vh;
     width: clamp(250px, 20%, 300px);
     padding: 1em;
     border-right: 1px solid rgb(29, 34, 41);
