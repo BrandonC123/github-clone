@@ -4,11 +4,12 @@ import {
     updateProfile,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import defaultProfile from "../img/default-profile-pic.png";
 import UserService from "../services/UserService";
 
 const Signup = ({ signedIn }) => {
+    const { inputEmail } = useParams();
     const [email, setEmail] = useState("");
     const [password, setPassowrd] = useState("");
     const [username, setUsername] = useState("");
@@ -20,6 +21,10 @@ const Signup = ({ signedIn }) => {
         if (signedIn) {
             navigate("/");
         }
+        if (inputEmail) {
+            setEmail(inputEmail);
+        }
+        console.log(inputEmail);
     }, [signedIn]);
     function toggleContinueButton(e) {
         const button = e.target.parentElement.parentElement.lastElementChild;
@@ -88,15 +93,19 @@ const Signup = ({ signedIn }) => {
     function createUser() {
         const auth = getAuth();
         createUserWithEmailAndPassword(auth, email, password)
-            .then(async function (userCredential) {
-                UserService.uploadProfileImg(username, defaultProfile);
-                const img = await UserService.getProfileImg(username);
-                updateProfile(userCredential.user, {
-                    displayName: username,
-                    photoUrl: img,
-                });
-                // TODO: after navigating user is not yet created causing error
-                navigate(`/${username}`);
+            .then((userCredential) => {
+                UserService.uploadProfileImg(username, defaultProfile).then(
+                    async function () {
+                        const img = await UserService.getProfileImg(username);
+                        console.log(img);
+                        updateProfile(userCredential.user, {
+                            displayName: username,
+                            photoURL: img,
+                        }).then(() => {
+                            navigate(`/${username}`);
+                        });
+                    }
+                );
             })
             .catch((error) => {
                 console.log(error.message);
@@ -106,11 +115,13 @@ const Signup = ({ signedIn }) => {
         !signedIn && (
             <div className="signup-page">
                 <header className="signup-header">
-                    <div className="signup-header-content container row">
-                        <img
-                            src={require("../img/gh-logo.svg").default}
-                            alt="Github logo"
-                        />
+                    <div className="signup-header-content container">
+                        <Link to={"/"}>
+                            <img
+                                src={require("../img/gh-logo.svg").default}
+                                alt="Github logo"
+                            />
+                        </Link>
                         <p>
                             Already have an account?{" "}
                             <Link to={"/signin"} className="signin-link">
@@ -142,6 +153,7 @@ const Signup = ({ signedIn }) => {
                                     Enter your email *
                                 </label>
                                 <input
+                                    value={email}
                                     required
                                     minLength={5}
                                     onChange={(e) => {
@@ -161,7 +173,7 @@ const Signup = ({ signedIn }) => {
                             <div className="input column">
                                 <label
                                     htmlFor={"signup-password"}
-                                    className="signup-accent-text "
+                                    className="signup-accent-text"
                                 >
                                     Create a password (Must contain at least 8
                                     characters, 1 capital letter, 1 number, and

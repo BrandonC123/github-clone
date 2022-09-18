@@ -29,6 +29,7 @@ const AuthenticateRoutes = ({ loading }) => {
                 <Routes>
                     {user && (
                         <>
+                            <Route path="/" element={<Home />} />
                             <Route
                                 path={`/${username}/:repoName/upload`}
                                 element={<UploadFile />}
@@ -40,8 +41,6 @@ const AuthenticateRoutes = ({ loading }) => {
                             />
                         </>
                     )}
-
-                    <Route path="/" element={<Home />} />
                     <Route path={"/:username"} element={<ViewProfile />} />
                     <Route
                         path="/:username/repositories"

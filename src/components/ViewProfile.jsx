@@ -23,6 +23,7 @@ const months = [
 
 const ViewProfile = () => {
     // TODO: Create option to pin repos
+    const user = useContext(UserContext);
     const { username } = useParams();
     const [repoList, setRepoList] = useState([]);
     const [contributionArray, setContributionArray] = useState([]);
@@ -33,7 +34,7 @@ const ViewProfile = () => {
         return repoList.map((repo) => {
             return (
                 <div key={repo.repoName} className="profile-repo-card">
-                    <div className="repo-content row">
+                    <div className="repo-content vertical-center">
                         <svg
                             fill="#6b737c"
                             height="24"
@@ -56,7 +57,6 @@ const ViewProfile = () => {
                         >
                             {repo.repoName}
                         </Link>
-                        <button>drag</button>
                     </div>
                     javascript
                 </div>
@@ -68,10 +68,10 @@ const ViewProfile = () => {
             if (list) {
                 // Only get 6 most recently created repos
                 setRepoList(list.slice(-6));
-            } else {
+            } else if (user.displayName !== username) {
                 // If list comes back null no user exists, navigate back
                 window.alert("No user exists with this username");
-                navigate(-1);
+                navigate("/");
             }
         });
         RepositoryService.getContributionArray(username).then((list) => {
@@ -95,14 +95,13 @@ const ViewProfile = () => {
     }
     const defaultGridSize = 15;
     function displayContributionsCalendar() {
-        if (!contributionArray) {
-            return;
-        }
         const columns = [];
         let count = 0;
         let tempTotalCount = 0;
         const currentDate = new Date();
-        let tempContributionArray = Array.from(contributionArray);
+        let tempContributionArray = contributionArray
+            ? Array.from(contributionArray)
+            : [];
         for (let i = 0; i < 52; i++) {
             for (let j = 6; j >= 0; j--) {
                 let color = "#161b22";
@@ -152,6 +151,10 @@ const ViewProfile = () => {
             <ProfileInformation username={username} />
             <main className="profile-repo-content">
                 <ProfileNav username={username} />
+                <div className="row space-between">
+                    <span>Recent Repositories:</span>
+                    <span className="secondary-text">Customize your pins</span>
+                </div>
                 <div className="view-six-repo">{displayRepos()}</div>
                 <p>{totalContributionCount} contributions in the last year</p>
                 <div className="contributions-container">

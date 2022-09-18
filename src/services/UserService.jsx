@@ -1,5 +1,11 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+    getDownloadURL,
+    getStorage,
+    ref,
+    uploadBytes,
+    uploadString,
+} from "firebase/storage";
 import db from "..";
 
 class UserService {
@@ -36,12 +42,10 @@ class UserService {
     async updateUserProfile(username, updatedUserObject) {
         await updateDoc(doc(db, "users", username), updatedUserObject);
     }
-    uploadProfileImg(username, img) {
+    async uploadProfileImg(username, img) {
         const storage = getStorage();
         const storageRef = ref(storage, `/${username}/profile-pic`);
-        uploadBytes(storageRef, img).then((snapshot) => {
-            console.log(getDownloadURL(storageRef));
-        });
+        return await uploadString(storageRef, img, "data_url");
     }
     async getProfileImg(username) {
         const storage = getStorage();
