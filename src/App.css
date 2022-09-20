@@ -30,10 +30,6 @@ img {
     max-width: 100%;
 }
 
-input {
-    color: white;
-}
-
 h1,
 h2,
 h3,
@@ -90,12 +86,17 @@ h4 {
 .vertical-center {
     display: flex;
     align-items: center;
-    gap: 0.25em;
+    gap: 0.5em;
 }
 
 .border-divider {
     padding-bottom: 1em;
     border-bottom: 1px solid rgb(29, 34, 41);
+}
+
+.border-divider-light {
+    padding-bottom: 1em;
+    border-bottom: 1px solid #30363d;
 }
 
 .margin-right {
@@ -163,7 +164,7 @@ h4 {
 }
 
 .general-dropdown {
-    border: 1px solid rgb(139, 148, 158);
+    border: 1px solid rgb(48, 54, 61);
     background-color: rgb(22, 27, 34);
     min-width: 130px;
     padding: 0.25em 0;
@@ -213,7 +214,9 @@ h4 {
 }
 
 .signup-header-content {
+    display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 95%;
     margin: 0 auto;
     color: var(--default-text-color);
@@ -254,6 +257,10 @@ h4 {
     color: rgb(28, 224, 224);
 }
 
+.credit-text {
+    position: absolute;
+}
+
 .input-container {
     justify-content: space-between;
     align-items: flex-start;
@@ -291,6 +298,7 @@ h4 {
 
 .signin-input {
     background-color: var(--main-color);
+    color: lightgray;
     border: 1px solid rgb(41, 50, 63);
     border-radius: 0.25em;
     padding: 0.25em;
@@ -331,8 +339,6 @@ h4 {
     display: flex;
     justify-content: space-between;
     padding: 1em 0;
-    width: 65%;
-    margin: 0 auto;
 }
 
 .button-link {
@@ -347,12 +353,19 @@ h4 {
     text-shadow: 2px 2px 5px rgb(90, 90, 90);
 }
 
+.unauth-sign-link {
+    color: #d3d3d3;
+    font-size: 1.125rem;
+    text-decoration: none;
+}
+
 .unauth-home-page {
     background: rgb(1, 52, 123);
     background: linear-gradient(
-        138deg,
+        156deg,
         rgba(1, 52, 123, 1) 0%,
-        rgba(5, 13, 32, 1) 50%,
+        rgba(5, 13, 32, 1) 25%,
+        rgba(5, 13, 32, 1) 75%,
         rgba(77, 32, 75, 1) 100%
     );
     background-size: cover;
@@ -360,23 +373,32 @@ h4 {
     color: white;
 }
 
+.unauth-container {
+    width: 65%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
 .unauth-content-container {
     display: flex;
+    justify-content: space-between;
     gap: 2em;
-    width: 65%;
-    margin: 0 auto;
-    padding: 4em 0 4em 0;
+    padding: 4em 0 8em 0;
 }
 
 .unauth-text-content {
     width: 50%;
+    padding-top: 4em;
+}
+
+.unauth-img-content {
+    width: 40%;
+    text-align: end;
 }
 
 .unauth-misc-stats {
     display: flex;
     gap: 2.5em;
-    width: 65%;
-    margin: 0 auto;
 }
 
 .misc-stat {
@@ -596,8 +618,8 @@ h4 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 0.5em;
-    margin-top: 2em;
+    gap: 0.75em;
+    margin-top: 1em;
 }
 
 .profile-repo-card {
@@ -632,8 +654,25 @@ h4 {
 }
 
 .upload-file-container {
-    border: 1px solid rgb(48, 54, 61);
     margin: 0 auto;
+    max-width: 1400px;
+}
+
+.kiHXWb {
+    border: 1px solid rgb(48, 54, 61) !important;
+    height: 20vh !important;
+    max-width: 1400px !important;
+    margin-bottom: 0.9em;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.9em;
+    padding: 0 1em;
+    border: 1px solid rgb(48, 54, 61);
+    border-radius: 0.25em;
 }
 
 .profile-settings-sidebar {
@@ -644,6 +683,22 @@ h4 {
     display: grid;
     grid-template-columns: 60% auto;
     width: 100%;
+}
+
+.message-content {
+    position: absolute;
+    left: 50%;
+    opacity: 0%;
+    background-color: #30363d;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.show {
+    opacity: 100%;
+    pointer-events: all;
 }
 
 .form-group {
