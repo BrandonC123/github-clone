@@ -235,6 +235,9 @@ const Signup = ({ signedIn }) => {
                                     onChange={(e) => {
                                         toggleContinueButton(e);
                                         setChoice(e.target.value);
+                                        document.getElementById(
+                                            "create-account-btn"
+                                        ).disabled = false;
                                     }}
                                     type={"text"}
                                     id={"signup-announcement"}
@@ -246,7 +249,9 @@ const Signup = ({ signedIn }) => {
                         </div>
                         <button
                             onClick={() => setErrorText("")}
+                            id="create-account-btn"
                             className="active-btn btn hide"
+                            disabled={true}
                         >
                             Create Account
                         </button>

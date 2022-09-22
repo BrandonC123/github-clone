@@ -6,7 +6,7 @@ const UnAuthenticatedHome = () => {
     const navigate = useNavigate();
     return (
         <div className="unauth-home-page">
-            <header className="unauth-header">
+            <header className="unauth-header unauth-container">
                 <div className="vertical-center">
                     <Link to={"/"}>
                         <svg
@@ -48,7 +48,7 @@ const UnAuthenticatedHome = () => {
                     </Link>
                 </div>
             </header>
-            <div className="unauth-content-container border-divider">
+            <div className="unauth-content-container unauth-container border-divider">
                 <div className="unauth-text-content">
                     <h1 style={{ fontWeight: "4rem" }}>
                         Let's build from here, together
@@ -91,13 +91,18 @@ const UnAuthenticatedHome = () => {
                         </button>
                     </form>
                 </div>
-                <img
-                    src={require("../img/code-animation.gif")}
-                    alt="Code animation gif"
-                    className="img-shadow"
-                />
+                <div className="unauth-img-content">
+                    <img
+                        src={require("../img/code-animation.gif")}
+                        alt="Code animation gif"
+                        className="img-shadow"
+                    />
+                    <small className="secondary-text">
+                        Developers Gif designed by Ajay Kumar on Dribble
+                    </small>
+                </div>
             </div>
-            <div className="unauth-misc-stats">
+            <div className="unauth-misc-stats unauth-container">
                 <p className="column">
                     <span className="misc-stat">56+ million </span>
                     <small className="secondary-text">Developers</small>

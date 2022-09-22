@@ -4,7 +4,7 @@ const Dropdown = ({ btnName, dropdownContent }) => {
     function fillDropdown() {
         return dropdownContent.map((item) => {
             return (
-                <Link to={`${item.url}`} className="dropdown-item blue-hover">
+                <Link key={item.title} to={`${item.url}`} className="dropdown-item blue-hover">
                     {item.title}
                 </Link>
             );
@@ -13,10 +13,8 @@ const Dropdown = ({ btnName, dropdownContent }) => {
     let dropdownRef = null;
     function toggleDropdown(dropdown) {
         if (dropdown.classList.contains("hide")) {
-            console.log("add");
             document.addEventListener("click", removeDrop);
         } else {
-            console.log("remove");
             document.removeEventListener("click", removeDrop);
         }
         dropdown.classList.toggle("hide");
@@ -39,7 +37,9 @@ const Dropdown = ({ btnName, dropdownContent }) => {
             >
                 {btnName}
             </button>
-            <div className="general-dropdown dropdown hide">{fillDropdown()}</div>
+            <div className="general-dropdown dropdown hide">
+                {fillDropdown()}
+            </div>
         </div>
     );
 };

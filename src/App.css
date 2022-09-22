@@ -232,6 +232,7 @@ h4 {
     font-family: "SF Mono Regular", sans-serif;
     background-color: rgb(20, 42, 75);
     width: 35%;
+    min-width: 500px;
     margin: 0 auto;
     padding: 1em;
     border: 1px solid rgb(29, 59, 105);
@@ -264,11 +265,19 @@ h4 {
 .input-container {
     justify-content: space-between;
     align-items: flex-start;
-    gap: 10px;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 .input {
     width: 100%;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2em;
 }
 
 .signin-page {
@@ -287,13 +296,14 @@ h4 {
 .signin-page-container {
     border: 1px solid rgb(41, 50, 63);
     border-radius: 0.5em;
-    width: clamp(275px, 20%, 350px);
+    width: clamp(275px, 20%, 325px);
     margin: 0 auto;
 }
 
 .signin-form {
     padding: 1em;
     background-color: rgb(22, 27, 34);
+    margin-bottom: 1em;
 }
 
 .signin-input {
@@ -316,6 +326,7 @@ h4 {
 .create-account-container {
     padding: 1em 0;
     text-align: center;
+    margin-bottom: 4em;
 }
 
 .blue-accent-text {
@@ -479,6 +490,7 @@ h4 {
     background-color: var(--accent-green);
     color: white;
     border: none;
+    font-weight: bold;
 }
 
 .green-action-btn:hover {

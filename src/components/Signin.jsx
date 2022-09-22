@@ -27,13 +27,15 @@ const Signin = ({ signedIn }) => {
     return (
         !signedIn && (
             <div className="signin-page">
-                <div className="logo-container column align-center">
-                    <img
-                        className="signin-logo"
-                        src={require("../img/gh-logo.svg").default}
-                        alt="Github logo"
-                        width={"55px"}
-                    />{" "}
+                <div className="logo-container">
+                    <Link to={"/"}>
+                        <img
+                            className="signin-logo"
+                            src={require("../img/gh-logo.svg").default}
+                            alt="Github logo"
+                            width={"55px"}
+                        />{" "}
+                    </Link>
                     <h1 className="title">Sign in to GitHub</h1>
                 </div>
                 <form
@@ -60,15 +62,16 @@ const Signin = ({ signedIn }) => {
                         />
                     </div>
                     <div className="input-container column">
-                        <label
+                        <div
                             htmlFor="signin-password"
-                            className="signin-page-label"
+                            style={{ width: "100%" }}
+                            className="signin-page-label row space-between"
                         >
                             Password
                             <Link to={"#"} className="signin-page-forget">
                                 Forgot password?
                             </Link>
-                        </label>
+                        </div>
                         <input
                             onChange={(e) => {
                                 setPassowrd(e.target.value);
@@ -76,10 +79,16 @@ const Signin = ({ signedIn }) => {
                             type="password"
                             id="signin-password"
                             className="signin-input"
+                            autoComplete="on"
                         />
                     </div>
                     <span>{errorMessage}</span>
-                    <button className="signin-btn btn">Sign in</button>
+                    <button
+                        style={{ width: "100%" }}
+                        className="green-action-btn btn"
+                    >
+                        Sign in
+                    </button>
                 </form>
                 <div className="create-account-container signin-page-container">
                     New to Github? <Link to={"/signup"}>Create an account</Link>

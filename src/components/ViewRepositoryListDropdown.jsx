@@ -6,10 +6,8 @@ const ViewRepositoryListDropdown = ({ toggleRepoList }) => {
     let dropdownRef = null;
     function toggleDropdown(dropdown) {
         if (dropdown.classList.contains("hide")) {
-            console.log("add");
             document.addEventListener("click", removeDrop);
         } else {
-            console.log("remove");
             document.removeEventListener("click", removeDrop);
         }
         dropdown.classList.toggle("hide");
@@ -26,10 +24,8 @@ const ViewRepositoryListDropdown = ({ toggleRepoList }) => {
         setPrevSort(document.querySelector(".default-sort"));
     }, []);
     function chooseSort(option) {
-        console.log(prevSort);
         if (prevSort) {
             prevSort.firstChild.classList.add("hidden");
-            console.log(prevSort);
         }
         toggleRepoList(option.textContent);
         option.firstChild.classList.remove("hidden");

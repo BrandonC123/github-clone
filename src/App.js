@@ -19,6 +19,8 @@ function App() {
             if (tempUser) {
                 setUser(tempUser);
             } else {
+                // Set user to null if signout is detected
+                setUser(null);
                 setSignedIn(false);
             }
             // Allow header to display either signin/signup or user once status
@@ -42,6 +44,10 @@ function App() {
                     )}
                     <Route
                         path="/signup"
+                        element={<Signup signedIn={signedIn} />}
+                    />
+                    <Route
+                        path="/signup/:inputEmail"
                         element={<Signup signedIn={signedIn} />}
                     />
                     <Route
