@@ -5,6 +5,7 @@ import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
 import RepositoryService from "../services/RepositoryService";
 import { subDays } from "date-fns";
+import NotFound from "./NotFound";
 
 const months = [
     "Jan",
@@ -23,6 +24,7 @@ const months = [
 
 const ViewProfile = () => {
     // TODO: Create option to pin repos
+    const [display, setDisplay] = useState(null);
     const user = useContext(UserContext);
     const { username } = useParams();
     const [repoList, setRepoList] = useState([]);
@@ -68,10 +70,10 @@ const ViewProfile = () => {
             if (list) {
                 // Only get 6 most recently created repos
                 setRepoList(list.slice(-6));
+                setDisplay(true);
             } else if (user.displayName !== username) {
-                // If list comes back null no user exists, navigate back
-                window.alert("No user exists with this username");
-                navigate("/");
+                // If list comes back null no user exists display not found
+                setDisplay(false);
             }
         });
         RepositoryService.getContributionArray(username).then((list) => {
@@ -147,76 +149,90 @@ const ViewProfile = () => {
         return <>{columns}</>;
     }
     return (
-        <div className="profile-page page">
-            <ProfileInformation username={username} />
-            <main className="profile-repo-content">
-                <ProfileNav username={username} />
-                <div className="row space-between">
-                    <span>Recent Repositories:</span>
-                    <span className="secondary-text">Customize your pins</span>
-                </div>
-                <div className="view-six-repo">{displayRepos()}</div>
-                <p>{totalContributionCount} contributions in the last year</p>
-                <div className="contributions-container">
-                    <svg
-                        className="contributions-svg"
-                        width={"100%"}
-                        height={(defaultGridSize + 2) * 7}
-                        transform={"scale(-1 1)"}
-                    >
-                        {displayContributionsCalendar()}
-                    </svg>
-                    <div>
-                        <small className="vertical-center">
-                            Less{" "}
-                            <svg height={"15px"} width={"85"}>
-                                <rect
-                                    x={0}
-                                    y={0}
-                                    width={15}
-                                    height={15}
-                                    style={{ fill: "#161b22" }}
-                                    rx={"2"}
-                                />
-                                <rect
-                                    x={17}
-                                    y={0}
-                                    width={15}
-                                    height={15}
-                                    style={{ fill: "#0e4429" }}
-                                    rx={"2"}
-                                />
-                                <rect
-                                    x={34}
-                                    y={0}
-                                    width={15}
-                                    height={15}
-                                    style={{ fill: "#006d32" }}
-                                    rx={"2"}
-                                />
-                                <rect
-                                    x={51}
-                                    y={0}
-                                    width={15}
-                                    height={15}
-                                    style={{ fill: "#26a641" }}
-                                    rx={"2"}
-                                />
-                                <rect
-                                    x={68}
-                                    y={0}
-                                    width={15}
-                                    height={15}
-                                    style={{ fill: "#39d353" }}
-                                    rx={"2"}
-                                />
-                            </svg>
-                            More
-                        </small>
-                    </div>
-                </div>
-            </main>
-        </div>
+        <>
+            {display === false && <NotFound />}
+            <div className="profile-page page">
+                {display && (
+                    <>
+                        <ProfileInformation username={username} />
+                        <main className="profile-repo-content">
+                            <ProfileNav username={username} />
+                            <div className="row space-between">
+                                <span>Recent Repositories:</span>
+                                <span className="secondary-text">
+                                    Customize your pins
+                                </span>
+                            </div>
+                            <div className="view-six-repo">
+                                {displayRepos()}
+                            </div>
+                            <p>
+                                {totalContributionCount} contributions in the
+                                last year
+                            </p>
+                            <div className="contributions-container">
+                                <svg
+                                    className="contributions-svg"
+                                    width={"100%"}
+                                    height={(defaultGridSize + 2) * 7}
+                                    transform={"scale(-1 1)"}
+                                >
+                                    {displayContributionsCalendar()}
+                                </svg>
+                                <div>
+                                    <small className="vertical-center">
+                                        Less{" "}
+                                        <svg height={"15px"} width={"85"}>
+                                            <rect
+                                                x={0}
+                                                y={0}
+                                                width={15}
+                                                height={15}
+                                                style={{ fill: "#161b22" }}
+                                                rx={"2"}
+                                            />
+                                            <rect
+                                                x={17}
+                                                y={0}
+                                                width={15}
+                                                height={15}
+                                                style={{ fill: "#0e4429" }}
+                                                rx={"2"}
+                                            />
+                                            <rect
+                                                x={34}
+                                                y={0}
+                                                width={15}
+                                                height={15}
+                                                style={{ fill: "#006d32" }}
+                                                rx={"2"}
+                                            />
+                                            <rect
+                                                x={51}
+                                                y={0}
+                                                width={15}
+                                                height={15}
+                                                style={{ fill: "#26a641" }}
+                                                rx={"2"}
+                                            />
+                                            <rect
+                                                x={68}
+                                                y={0}
+                                                width={15}
+                                                height={15}
+                                                style={{ fill: "#39d353" }}
+                                                rx={"2"}
+                                            />
+                                        </svg>
+                                        More
+                                    </small>
+                                </div>
+                            </div>
+                        </main>
+                    </>
+                )}
+            </div>
+        </>
     );
 };
 
