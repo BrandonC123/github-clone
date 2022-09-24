@@ -23,7 +23,7 @@ const MainHeader = ({ username, loading }) => {
     function fillDropdown() {
         return (
             <>
-                <div className="border-divider">
+                <div style={{ borderBottom: "1px solid #30363d" }}>
                     {dropdownItemList1.map((item) => {
                         return (
                             <Link
@@ -36,7 +36,7 @@ const MainHeader = ({ username, loading }) => {
                         );
                     })}
                 </div>
-                <div className="border-divider">
+                <div style={{ borderBottom: "1px solid #30363d" }}>
                     {dropdownItemList2.map((item) => {
                         return (
                             <Link
@@ -56,24 +56,36 @@ const MainHeader = ({ username, loading }) => {
         if (username) {
             return (
                 <div className="header-right-column align-center row">
-                    <img
-                        src={require("../img/bell-icon.svg").default}
-                        alt="Notification bell icon"
-                        width={"25px"}
-                    />
-                    +
                     <div className="relative">
-                        <img
-                            onClick={(e) => {
-                                const dropdown = e.target.nextSibling;
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                color: "#f0f6fc",
+                                cursor: "pointer",
+                            }}
+                            onClick={() => {
+                                const dropdown =
+                                    document.querySelector(".header-dropdown");
                                 toggleDropdown(dropdown);
                             }}
-                            src={user.photoURL}
-                            alt="Profile icon"
-                            className="dropdown-btn round-profile-img profile-icon"
-                        />
+                        >
+                            <img
+                                src={user.photoURL}
+                                alt="Profile icon"
+                                className="dropdown-btn round-profile-img profile-icon"
+                            />
+                            <span>▾</span>
+                        </div>
                         <div className="header-dropdown dropdown hide">
-                            Signed in as {username}
+                            <div
+                                style={{
+                                    padding: "0 .5em .5em",
+                                    borderBottom: "1px solid #30363d",
+                                }}
+                            >
+                                Signed in as {username}
+                            </div>
                             {fillDropdown()}
                             <Link
                                 onClick={() => {
@@ -109,7 +121,7 @@ const MainHeader = ({ username, loading }) => {
         dropdownRef = dropdown;
     }
     function removeDrop(e) {
-        if (e.target.nextSibling !== dropdownRef) {
+        if (e.target.parentNode.nextSibling !== dropdownRef) {
             dropdownRef.classList.add("hide");
             document.removeEventListener("click", removeDrop);
         }
