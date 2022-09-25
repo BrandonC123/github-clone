@@ -79,7 +79,7 @@ h4 {
 .btn {
     cursor: pointer;
     border-radius: 0.5em;
-    padding: 0.75em 1.5em;
+    padding: 0.5em 1.25em;
     font-weight: 500;
 }
 
@@ -89,7 +89,7 @@ h4 {
     gap: 0.5em;
 }
 
-.border-divider {
+.border-divider-dark {
     padding-bottom: 1em;
     border-bottom: 1px solid rgb(29, 34, 41);
 }
@@ -160,7 +160,6 @@ h4 {
     padding: 0.5em 0;
     width: 180px;
     right: 0;
-    transition: opacity 1s ease-out;
 }
 
 .general-dropdown {
@@ -439,6 +438,10 @@ h4 {
     border: 1px solid rgb(48, 54, 61);
 }
 
+.home-page-content {
+    position: relative;
+}
+
 .home-repo-card-link {
     text-decoration: none;
     color: rgb(201, 209, 217);
@@ -446,6 +449,7 @@ h4 {
 }
 
 .home-misc-text {
+    margin-bottom: 0.5em;
     padding: 0.5em;
     background-color: rgb(13, 17, 23);
     border: 1px solid rgb(33, 38, 45);
@@ -458,8 +462,9 @@ h4 {
     top: 0;
     background-color: rgb(13, 17, 23);
     color: lightgray;
-    height: 100vh;
-    width: clamp(250px, 20%, 300px);
+    height: calc(100vh - 70px);
+    width: clamp(250px, 20%, 325px);
+    min-width: 250px;
     padding: 1em;
     border-right: 1px solid rgb(29, 34, 41);
 }
@@ -501,6 +506,7 @@ h4 {
     background-color: rgb(33, 38, 45);
     color: lightgray;
     border: 1px solid rgb(54, 59, 66);
+    font-weight: bold;
 }
 
 .create-repo-form {
@@ -557,15 +563,21 @@ h4 {
 .view-repo-content {
     border: 1px solid rgb(48, 54, 61);
     border-radius: 0.5em;
-    /* width: 70%; */
 }
 
 .view-repo-folder,
 .view-repo-item {
     display: flex;
     align-items: center;
+    gap: 0.5em;
     padding: 0.5em;
     border-bottom: 1px solid rgb(33, 38, 45);
+}
+
+.about-entry {
+    color: #8b949e;
+    font-weight: 500;
+    margin: 0.5em 0;
 }
 
 .repo-list-page,
@@ -754,4 +766,16 @@ h4 {
     border: 1px solid rgb(48, 54, 61);
     border-radius: 0.25em;
     min-height: 250px;
+}
+
+.not-found-background {
+    max-height: 450px;
+}
+
+.not-found-img-container {
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    position: absolute;
+    top: calc(450px * 0.35);
 }
