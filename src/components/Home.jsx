@@ -1,11 +1,9 @@
 import { differenceInCalendarDays } from "date-fns";
-import { updateProfile } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import db from "..";
-import RepositoryService from "../services/RepositoryService";
 import UserService from "../services/UserService";
 import RepositoryCard from "./RepositoryCard";
 import Sidebar from "./Sidebar";
@@ -26,10 +24,8 @@ const Home = () => {
             });
         }
     }, [user]);
+    useEffect(() => {}, [repoDisplayList]);
     async function initializeFollowRepos() {
-        UserService.updateUserProfile(user.displayName, {
-            profileImgSrc: user.photoURL,
-        });
         const currentDate = new Date();
         // Get repositories of followed users
         const serviceFollowList = await UserService.getFollowList(
@@ -42,12 +38,11 @@ const Home = () => {
         serviceFollowList.forEach(async function (username) {
             const userDetail = await UserService.getUserDetails(user, username);
             const serviceRepoList = userDetail.repoList;
-            console.log(userDetail);
             tempAllRepoList.push({
                 username,
                 repoList: serviceRepoList,
             });
-            serviceRepoList.forEach(async function (repo) {
+            serviceRepoList.forEach((repo) => {
                 if (
                     differenceInCalendarDays(
                         currentDate,
@@ -97,6 +92,13 @@ const Home = () => {
             );
         });
     }
+    // Extend sidebar height if vertical scroll bar is present
+    useEffect(() => {
+        const element = document.querySelector(".home-page");
+        if (element.scrollWidth < window.innerWidth) {
+            document.querySelector(".sidebar-container").style.height = "100vh";
+        }
+    }, [repoDisplayList]);
     return (
         <div className="home-page row">
             <Sidebar />
