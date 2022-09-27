@@ -502,6 +502,12 @@ h4 {
     background-color: rgb(56, 167, 71);
 }
 
+.green-action-btn:disabled {
+    background-color: #1a5729;
+    color: #89ab94;
+    pointer-events: none;
+}
+
 .secondary-gray-btn {
     background-color: rgb(33, 38, 45);
     color: lightgray;
@@ -511,18 +517,20 @@ h4 {
 
 .create-repo-form {
     width: 60%;
-    margin: 0 auto;
+    max-width: 900px;
+    margin: 2em auto;
     align-items: flex-start;
     gap: 15px;
 }
 
-.create-repo-input > p {
-    margin: 0;
+.create-repo-input-container {
+    width: 100%;
+    padding-bottom: 1em;
+    border-bottom: 1px solid rgb(29, 34, 41);
 }
 
-.repo-info-container {
-    list-style: none;
-    width: 100%;
+.create-repo-input > p {
+    margin: 0;
 }
 
 #repo-description {
@@ -592,6 +600,7 @@ h4 {
 
 .repo-list-container {
     justify-content: space-between;
+    margin-top: 0.25em;
 }
 
 .repo-list-link {
@@ -748,12 +757,12 @@ h4 {
     gap: 3em;
 }
 
-.account-settings-sidebar > .border-divider > a {
+.account-settings-sidebar > .border-divider-dark > a {
     color: rgb(201, 209, 217);
     text-decoration: none;
 }
 
-.account-settings-sidebar > .border-divider > a:hover {
+.account-settings-sidebar > .border-divider-dark > a:hover {
     background-color: rgb(34, 40, 46);
 }
 
