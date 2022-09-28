@@ -4,7 +4,7 @@ import db from "..";
 
 class RepositoryService {
     // TODO: add to contribution after creating repo
-    createRepo(username, repoName, repoList, readMeStatus) {
+    createRepo(username, repoName, description, repoList, readMeStatus) {
         const storage = getStorage();
         const fileRef = ref(storage, ".git");
         const folderRef = ref(storage, `/${username}/repos/${repoName}/.git`);
@@ -22,7 +22,12 @@ class RepositoryService {
                     uploadBytes(readmeFolderRef, readmeRef);
                     // this.addToContributionArray(username, repoName, "README.md");
                 }
-                this.addRepoToFirestore(username, repoName, repoList);
+                this.addRepoToFirestore(
+                    username,
+                    repoName,
+                    description,
+                    repoList
+                );
                 // this.addToContributionArray(username, repoName, ".git");
             })
             .catch((error) => {
@@ -30,14 +35,14 @@ class RepositoryService {
             });
     }
     // Add repository details to firestore database to store name and misc data
-    async addRepoToFirestore(username, repoName, repoList) {
+    async addRepoToFirestore(username, repoName, description, repoList) {
         const date = new Date();
         await updateDoc(doc(db, "users", `${username}`), {
             repoList: [
                 ...repoList,
                 {
-                    // id: `${username}-${repoName}`,
-                    repoName: repoName,
+                    repoName,
+                    description,
                     lastUpdated: date,
                     created: date,
                     starCount: 0,
@@ -129,7 +134,6 @@ class RepositoryService {
         });
         return !remove;
     }
-    // TODO: other user starring repo does not update owner starCount
     async updateStarCount(add, repo, repoList) {
         const username = repo.id.split("-")[0];
         const index = repoList

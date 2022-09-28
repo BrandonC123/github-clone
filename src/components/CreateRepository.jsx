@@ -3,12 +3,14 @@ import { UserContext } from "./UserContext";
 import { getStorage } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import RepositoryService from "../services/RepositoryService";
+import useDebounce from "./useDebounce";
 
 const CreateRepository = () => {
     const navigate = useNavigate();
     const storage = getStorage();
     const user = useContext(UserContext);
     const [name, setName] = useState("");
+    const debouncedSearch = useDebounce(name, 300);
     const [repoList, setRepoList] = useState([]);
     const [description, setDescription] = useState("");
     const [readMeStatus, setReadMeStatus] = useState(false);
@@ -22,26 +24,46 @@ const CreateRepository = () => {
             });
         }
     }, [user]);
-
+    useEffect(() => {
+        if (name.length === 0) {
+            document.getElementById("create-repo-btn").disabled = true;
+        } else {
+            if (repoList.map((repo) => repo.repoName).includes(name)) {
+                document
+                    .getElementById("repo-name")
+                    .setCustomValidity("Repository name already in use");
+                toggleRepoNameInput(true);
+            } else {
+                toggleRepoNameInput(false);
+            }
+        }
+    }, [debouncedSearch]);
+    // Enable create repository button once fields are satisfied, toggle
+    // error message if repository name is already in use
+    function toggleRepoNameInput(status) {
+        const createBtn = document.getElementById("create-repo-btn");
+        const errorText = document.querySelector(".repo-error-text");
+        // Remove error text if newly updated name is available
+        if (status || (errorText.classList.contains("show") && !status)) {
+            errorText.classList.toggle("show");
+        }
+        createBtn.disabled = status;
+    }
     // TODO: ability to create private repo
     return (
         <main className="create-repo-page">
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    if (repoList.includes(name)) {
-                        console.log("dupe");
-                    } else {
-                        RepositoryService.createRepo(
-                            user.displayName,
-                            name,
-                            repoList,
-                            readMeStatus
-                        );
-                        navigate(`/${user.displayName}/${name}`);
-                    }
+                    RepositoryService.createRepo(
+                        user.displayName,
+                        name,
+                        description,
+                        repoList,
+                        readMeStatus
+                    );
+                    navigate(`/${user.displayName}/${name}`);
                 }}
-                action=""
                 className="create-repo-form column"
             >
                 <div className="create-repo-input-container">
@@ -56,17 +78,39 @@ const CreateRepository = () => {
                     </a>
                 </div>
                 <div className="create-repo-input-container">
-                    <div className="row">
-                        <div className="create-repo-input column">
-                            <label htmlFor="repo-name">Owner*</label>
-                            <select name="repository-owner" id="repo-owner">
-                                <option value="Brandon">
-                                    {user.displayName}
-                                </option>
-                            </select>
+                    <div className="repo-info">
+                        <div className="column">
+                            <label htmlFor="">Owner</label>
+                            <div
+                                style={{
+                                    backgroundColor: "#21262d",
+                                    padding: ".25em 1em",
+                                    border: "1px solid #363b42",
+                                    borderRadius: ".5em",
+                                }}
+                                className="vertical-center"
+                            >
+                                <img
+                                    src={user.photoURL}
+                                    alt="Profile icon"
+                                    className="profile-icon round-profile-img"
+                                />
+                                {user.displayName}
+                            </div>
                         </div>
-                        <div className="create-repo-input column repo-name">
-                            <label htmlFor="repo-name">Repository Name*</label>
+                        <div style={{ fontSize: "2em", alignSelf: "flex-end" }}>
+                            /
+                        </div>
+                        <div
+                            style={{ flexGrow: "1" }}
+                            className="create-repo-input column repo-name"
+                        >
+                            <label htmlFor="repo-name">
+                                Repository Name*{" "}
+                                <small className="repo-error-text">
+                                    Already in use
+                                </small>
+                            </label>
                             <input
                                 onChange={(e) => {
                                     // Replace spaces with hyphen
@@ -79,7 +123,9 @@ const CreateRepository = () => {
                                 required
                                 type="text"
                                 name="repository-name"
+                                style={{ height: "100%" }}
                                 id="repo-name"
+                                className="input"
                             />
                         </div>
                     </div>
@@ -89,14 +135,23 @@ const CreateRepository = () => {
                             <small className="secondary-text">(optional)</small>
                         </label>
                         <textarea
+                            onChange={(e) => {
+                                setDescription(e.target.value);
+                            }}
                             name="repository-description"
                             id="repo-description"
+                            className="input"
                         ></textarea>
                     </div>
                 </div>
                 <div className="create-repo-input-container">
                     <div className="create-repo-input vertical-center">
-                        <input type="radio" name="repo-visibility" />
+                        <input
+                            defaultChecked
+                            type="radio"
+                            name="repo-visibility"
+                            className="create-repo-radio"
+                        />
                         <svg
                             fill="#8b949e"
                             height="24"
@@ -122,7 +177,11 @@ const CreateRepository = () => {
                         </p>
                     </div>
                     <div className="create-repo-input vertical-center">
-                        <input type="radio" name="repo-visibility" />
+                        <input
+                            type="radio"
+                            name="repo-visibility"
+                            className="create-repo-radio"
+                        />
                         <svg
                             fill="#8b949e"
                             height="24"
@@ -148,7 +207,7 @@ const CreateRepository = () => {
                     </div>
                 </div>
                 <div className="create-repo-input-container">
-                    <p>
+                    <p style={{ marginTop: "0" }}>
                         Initialize this repository with: <br />
                         <small className="secondary-text">
                             Skip this step if you're importing an existing
@@ -162,7 +221,7 @@ const CreateRepository = () => {
                             }}
                             type="checkbox"
                             name="add-readme"
-                            style={{ backgroundColor: "#3b3b3b" }}
+                            className="create-repo-radio"
                         />
                         <p>
                             Add a README file
@@ -174,7 +233,11 @@ const CreateRepository = () => {
                         </p>
                     </div>
                 </div>
-                <button disabled className="green-action-btn btn">
+                <button
+                    disabled
+                    id="create-repo-btn"
+                    className="green-action-btn btn"
+                >
                     Create repository
                 </button>
             </form>
