@@ -135,7 +135,7 @@ const ViewRepository = () => {
                     </div>
                     <div className="view-repo-content">
                         <div
-                            className="view-repo-item border-divider"
+                            className="view-repo-item border-divider-dark"
                             style={{
                                 backgroundColor: "rgb(22,27,34)",
                                 gap: ".5em",

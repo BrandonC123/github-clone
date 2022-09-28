@@ -74,7 +74,6 @@ const EditProfile = ({ display, toggleForm, userDetails, setUserDetails }) => {
                         version="1.1"
                         width="16"
                         data-view-component="true"
-                        class="octicon octicon-organization"
                     >
                         <path
                             fillRule="evenodd"
@@ -100,7 +99,6 @@ const EditProfile = ({ display, toggleForm, userDetails, setUserDetails }) => {
                         version="1.1"
                         width="16"
                         data-view-component="true"
-                        class="octicon octicon-location"
                     >
                         <path
                             fillRule="evenodd"
@@ -126,7 +124,6 @@ const EditProfile = ({ display, toggleForm, userDetails, setUserDetails }) => {
                         version="1.1"
                         width="16"
                         data-view-component="true"
-                        class="octicon octicon-mail"
                     >
                         <path
                             fillRule="evenodd"
@@ -152,7 +149,6 @@ const EditProfile = ({ display, toggleForm, userDetails, setUserDetails }) => {
                         version="1.1"
                         width="16"
                         data-view-component="true"
-                        class="octicon octicon-link"
                     >
                         <path
                             fillRule="evenodd"

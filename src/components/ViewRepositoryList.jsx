@@ -121,7 +121,14 @@ const ViewRepositoryList = () => {
             <ProfileInformation username={username} />
             <main className="profile-repo-list">
                 <ProfileNav username={username} />
-                <div className="row space-between align-center">
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "0.5em",
+                    }}
+                >
                     <input
                         onChange={(e) => {
                             setSearchTerm(e.target.value);

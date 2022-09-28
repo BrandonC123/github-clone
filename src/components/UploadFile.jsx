@@ -27,7 +27,6 @@ const UploadFile = () => {
                             version="1.1"
                             width="16"
                             data-view-component="true"
-                            class="octicon octicon-file color-fg-muted"
                         >
                             <path
                                 fill="#c9d1d9"
@@ -48,7 +47,6 @@ const UploadFile = () => {
                         version="1.1"
                         width="16"
                         data-view-component="true"
-                        class="octicon octicon-x"
                     >
                         <path
                             fill="#c9d1d9"

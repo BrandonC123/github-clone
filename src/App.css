@@ -110,7 +110,12 @@ h4 {
 .hide {
     display: none;
     visibility: hidden;
-    opacity: 10%;
+    opacity: 0%;
+}
+
+.show {
+    opacity: 100% !important;
+    pointer-events: all !important;
 }
 
 .hidden {
@@ -266,10 +271,6 @@ h4 {
     align-items: flex-start;
     gap: 0.5em;
     margin-bottom: 0.5em;
-}
-
-.input {
-    width: 100%;
 }
 
 .logo-container {
@@ -529,6 +530,24 @@ h4 {
     border-bottom: 1px solid rgb(29, 34, 41);
 }
 
+.create-repo-radio {
+    accent-color: #99c8ff !important;
+}
+
+.repo-error-text {
+    opacity: 0%;
+    pointer-events: none;
+    transition: opacity 0.15s ease-in;
+    color: rgb(221, 45, 45);
+}
+
+.repo-info {
+    display: flex;
+    margin-bottom: 1em;
+    width: 45%;
+    min-width: 380px;
+}
+
 .create-repo-input > p {
     margin: 0;
 }
@@ -537,13 +556,12 @@ h4 {
     width: 100%;
 }
 
-.create-repo-input > textarea,
-.form-group > input,
-.form-group > textarea,
+.input,
 .search-bar {
     border: 1px solid rgb(29, 34, 41);
-    border-radius: 0.2em;
+    border-radius: 0.25em;
     background-color: rgb(1, 4, 9);
+    color: #c9d1d9;
     padding: 0.5em;
     resize: none;
 }
@@ -715,6 +733,7 @@ h4 {
 .profile-settings-content {
     display: grid;
     grid-template-columns: 60% auto;
+    gap: 2em;
     width: 100%;
 }
 
@@ -727,11 +746,6 @@ h4 {
     border-radius: 0.5em;
     transition: opacity 0.5s ease;
     pointer-events: none;
-}
-
-.show {
-    opacity: 100%;
-    pointer-events: all;
 }
 
 .form-group {

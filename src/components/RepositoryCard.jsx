@@ -34,7 +34,7 @@ const RepositoryCard = ({
     const created = new Date(repo.created.seconds * 1000);
     const difference = differenceInCalendarDays(currentDate, created);
     const lastUpdated = new Date(repo.lastUpdated.seconds * 1000);
- 
+
     function getTimeDifferenceString() {
         if (difference === 0) {
             return "today";
@@ -45,27 +45,28 @@ const RepositoryCard = ({
         }
     }
     return (
-        <div className="home-repo-card-container border-divider">
+        <div className="home-repo-card-container border-divider-dark">
             <p className="vertical-center">
                 <img
                     src={profileImgSrc}
                     alt="Profile icon"
                     className="round-profile-img profile-icon"
                 />
-                <Link to={`/${username}`} className="home-repo-card-link">
-                    {username}
-                </Link>{" "}
-                created a repository{" "}
-                <Link
-                    to={`/${username}/${repoName}`}
-                    className="home-repo-card-link"
-                >
-                    {username}/{repoName}
-                </Link>
-                <small className="secondary-text">
-                    {" "}
-                    {getTimeDifferenceString()}
-                </small>
+                <span>
+                    <Link to={`/${username}`} className="home-repo-card-link">
+                        {username}
+                    </Link>{" "}
+                    created a repository{" "}
+                    <Link
+                        to={`/${username}/${repoName}`}
+                        className="home-repo-card-link"
+                    >
+                        {username}/{repoName}
+                    </Link>{" "}
+                    <small className="secondary-text">
+                        {getTimeDifferenceString()}
+                    </small>
+                </span>
             </p>
             <div className="home-repo-card">
                 <div>
@@ -78,7 +79,7 @@ const RepositoryCard = ({
                         </Link>
                     </h4>
                     <small className="secondary-text">
-                        Updated {months[lastUpdated.getMonth()]}{" "}
+                        Updated {months[lastUpdated.getMonth()]}
                         {lastUpdated.getDate()}
                     </small>
                 </div>

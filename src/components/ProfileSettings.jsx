@@ -6,9 +6,7 @@ import ProfileImageEditor from "./ProfileImageEditor";
 import { UserContext } from "./UserContext";
 
 const ProfileSettings = ({}) => {
-    // TODO: Profile image selector/cropper
     const user = useContext(UserContext);
-    const [display, setDisplay] = useState(true);
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
     const [company, setCompany] = useState("");
@@ -16,25 +14,32 @@ const ProfileSettings = ({}) => {
     const [email, setEmail] = useState("");
     const [website, setWebsite] = useState("");
     const [twitterUsername, setTwitterUsername] = useState("");
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImgSrc, setProfileImgSrc] = useState("");
+    const [newProfile, setNewProfile] = useState("");
 
     useEffect(() => {
         if (user) {
-            UserService.getUserDetails(user.displayName).then((detail) => {
-                setName(detail.name);
-                setBio(detail.bio);
-                setCompany(detail.company);
-                setLocation(detail.location);
-                setEmail(detail.email);
-                setWebsite(detail.website);
-                setTwitterUsername(detail.twitterUsername);
-            });
+            UserService.getUserDetails(user, user.displayName).then(
+                (detail) => {
+                    setName(detail.name);
+                    setBio(detail.bio);
+                    setCompany(detail.company);
+                    setLocation(detail.location);
+                    setEmail(detail.email);
+                    setWebsite(detail.website);
+                    setTwitterUsername(detail.twitterUsername);
+                    setProfileImgSrc(detail.profileImgSrc);
+                }
+            );
         }
     }, [user]);
     return (
         <div className="profile-settings-page row">
             <AccountSettingsSidebar />
             <section className="profile-settings-content">
+                <div className="message-content">
+                    Profile updated refresh to see changes
+                </div>
                 <div>
                     <h1>Public Profile</h1>
                     <form
@@ -61,6 +66,7 @@ const ProfileSettings = ({}) => {
                                 type="text"
                                 name="name"
                                 id="name"
+                                className="input"
                             />
                             <small className="secondary-text">
                                 Your name may appear around GitHub where you
@@ -87,6 +93,7 @@ const ProfileSettings = ({}) => {
                                 cols="30"
                                 rows="5"
                                 placeholder="Tell us a little bit about yourself"
+                                className="input"
                             ></textarea>
                             <small className="secondary-text">
                                 You can @mention other users and organizations
@@ -103,6 +110,7 @@ const ProfileSettings = ({}) => {
                                 type="text"
                                 name="url"
                                 id="url"
+                                className="input"
                             />
                         </div>
                         <div className="form-group">
@@ -117,6 +125,7 @@ const ProfileSettings = ({}) => {
                                 type="text"
                                 name="twitter-username"
                                 id="twitter-username"
+                                className="input"
                             />
                         </div>
                         <div className="form-group">
@@ -129,6 +138,7 @@ const ProfileSettings = ({}) => {
                                 type="text"
                                 name="company"
                                 id="company"
+                                className="input"
                             />
                             <small className="secondary-text">
                                 You can @mention your company’s GitHub
@@ -145,6 +155,7 @@ const ProfileSettings = ({}) => {
                                 type="text"
                                 name="location"
                                 id="location"
+                                className="input"
                             />
                         </div>
                         <small className="secondary-text">
@@ -161,15 +172,21 @@ const ProfileSettings = ({}) => {
                     </form>
                 </div>
                 <div>
-                    <ProfileImageEditor
-                        display={display}
-                        profileImage={profileImage}
+                    <img
+                        src={profileImgSrc}
+                        alt="Profile icon"
+                        className="round-profile-img"
                     />
                     <input
                         onChange={(e) => {
-                            setProfileImage(e.target.files[0]);
+                            setNewProfile(e.target.files[0]);
+                            e.target.nextSibling.classList.toggle("hide");
                         }}
                         type="file"
+                    />
+                    <ProfileImageEditor
+                        username={user.displayName}
+                        src={newProfile}
                     />
                 </div>
             </section>

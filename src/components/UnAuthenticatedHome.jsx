@@ -48,7 +48,7 @@ const UnAuthenticatedHome = () => {
                     </Link>
                 </div>
             </header>
-            <div className="unauth-content-container unauth-container border-divider">
+            <div className="unauth-content-container unauth-container border-divider-dark">
                 <div className="unauth-text-content">
                     <h1 style={{ fontWeight: "4rem" }}>
                         Let's build from here, together

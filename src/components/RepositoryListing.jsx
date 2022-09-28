@@ -18,7 +18,7 @@ const months = [
     "Dec",
 ];
 
-const RepositoryListing = ({ username, repo, starredRepoList }) => {
+const RepositoryListing = ({ username, repo, starredRepoList, repoList }) => {
     const [repoTitle, setRepoTitle] = useState("");
     const date = new Date(repo.lastUpdated.seconds * 1000);
 
@@ -28,11 +28,11 @@ const RepositoryListing = ({ username, repo, starredRepoList }) => {
         } else {
             setRepoTitle(repo.repoName);
         }
-    }, []);
+    }, [repo]);
     return (
         <div
             key={repo.repoName}
-            className="repo-list-container border-divider row"
+            className="repo-list-container border-divider-dark row"
         >
             <div className="profile-repo-info column">
                 <Link
@@ -43,16 +43,13 @@ const RepositoryListing = ({ username, repo, starredRepoList }) => {
                 </Link>
                 <small className="secondary-text">
                     Updated on {months[date.getMonth()]} {date.getDate()}
-                    {/* {date.toUTCString()} */}
                 </small>
             </div>
             <div className="profile-repo-actions">
                 <StarButton
-                    repo={{
-                        ...repo,
-                        id: `${username}-${repo.repoName}`,
-                    }}
+                    repo={{ ...repo, id: `${username}-${repo.repoName}` }}
                     starredRepoList={starredRepoList}
+                    repoList={repoList}
                 />
             </div>
         </div>
