@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useContext } from "react";
 import { useState } from "react";
 import db from "..";
+import RepositoryService from "../services/RepositoryService";
 import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
 import RepositoryListing from "./RepositoryListing";
@@ -11,6 +12,7 @@ import { UserContext } from "./UserContext";
 const ViewStarredRepositories = () => {
     const user = useContext(UserContext);
     const [unStarredRepo, setUnStarredRepo] = useState(null);
+    const [unStarredText, setUnStarredText] = useState("");
     const [starredRepoList, setStarredRepoList] = useState([]);
     // Includes own repositories and followed users
     useEffect(() => {
@@ -43,12 +45,36 @@ const ViewStarredRepositories = () => {
                     console.log(index);
                 }
             });
-            setUnStarredRepo(prevList[repoIndex]);
-            console.log(prevList[repoIndex]);
-            document
-                .querySelector(".view-star-message")
-                .classList.add("slidein");
+            const tempUnStarred = prevList[repoIndex];
+            setUnStarredRepo(tempUnStarred);
+            setUnStarredText(`${tempUnStarred.id} has been unstarred.`);
+            toggleSlideIn();
         }
+    }
+    // Toggle slide in animation and add pointer events to allow user to hover
+    // over the message to keep it from disappearing
+    function toggleSlideIn() {
+        const message = document.querySelector(".view-star-message");
+        message.classList.add("slidein");
+        message.style.pointerEvents = "all";
+        message.addEventListener("mouseleave", () => {
+            message.classList.remove("slidein");
+            message.style.pointerEvents = "none";
+            setUnStarredText("");
+        });
+        setTimeout(() => {
+            message.classList.remove("slidein");
+        }, 5000);
+    }
+
+    function undoStar() {
+        const username = unStarredRepo.id.split("-")[0];
+        RepositoryService.starRepo(
+            username,
+            unStarredRepo,
+            starredRepoList,
+            null
+        );
     }
     function displayList() {
         // if list === 0
@@ -85,12 +111,22 @@ const ViewStarredRepositories = () => {
         <div className="view-star-page page two-column">
             <ProfileInformation username={user.displayName} />
             <main className="view-star-content">
-                <p className="view-star-message">Message</p>
+                <p className="view-star-message">
+                    {unStarredText}{" "}
+                    <button
+                        onClick={() => {
+                            undoStar();
+                        }}
+                        className="undo-button-link"
+                    >
+                        Undo?
+                    </button>
+                </p>
                 <ProfileNav username={user.displayName} />
                 <div className="row space-between">
                     <h2>Lists</h2>
-                    <div className="divider">
-                        <button className="btn">Sort</button>
+                    <div style={{ marginBottom: "0.5em" }} className="divider">
+                        <button className="secondary-gray-btn btn">Sort</button>
                         <button className="green-action-btn btn">
                             Create List
                         </button>

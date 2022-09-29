@@ -128,7 +128,10 @@ class RepositoryService {
             repo.starCount++;
             tempRepoList.push(repo);
         }
-        this.updateStarCount(!remove, repo, repoList);
+        // If null no updates needs to be made to starCount
+        if (repoList !== null) {
+            this.updateStarCount(!remove, repo, repoList);
+        }
         await updateDoc(doc(db, "users", `${username}`), {
             starredRepoList: tempRepoList,
         });

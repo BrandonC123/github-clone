@@ -616,6 +616,51 @@ h4 {
     gap: 2em;
 }
 
+.view-star-message {
+    position: absolute;
+    pointer-events: none;
+    padding: 0.5em 1em;
+    background-color: #438eda;
+    border-radius: 0.25em;
+    left: 50%;
+    opacity: 0%;
+}
+
+.undo-button-link {
+    color: white;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.undo-button-link:hover {
+    text-decoration: underline;
+}
+
+.view-star-message:hover {
+    opacity: 100%;
+}
+
+.slidein {
+    animation: slidein 5s;
+}
+
+@keyframes slidein {
+    from {
+        margin-left: 25%;
+    }
+    25% {
+        margin-left: 0%;
+        opacity: 85%;
+    }
+    to {
+        opacity: 100%;
+    }
+}
+
 .repo-list-container {
     justify-content: space-between;
     margin-top: 0.25em;
