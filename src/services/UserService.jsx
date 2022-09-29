@@ -22,6 +22,7 @@ class UserService {
              user with empty fields */
             const emptyUser = {
                 profileImgSrc: user.photoURL,
+                username: user.displayName,
                 name: "",
                 bio: "",
                 company: "",

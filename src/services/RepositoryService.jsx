@@ -4,12 +4,12 @@ import db from "..";
 
 class RepositoryService {
     // TODO: add to contribution after creating repo
-    createRepo(username, repoName, description, repoList, readMeStatus) {
+    async createRepo(username, repoName, description, repoList, readMeStatus) {
         const storage = getStorage();
         const fileRef = ref(storage, ".git");
         const folderRef = ref(storage, `/${username}/repos/${repoName}/.git`);
 
-        uploadBytes(folderRef, fileRef)
+        return uploadBytes(folderRef, fileRef)
             .then(() => {
                 console.log("uploaded");
                 if (readMeStatus) {
@@ -20,7 +20,6 @@ class RepositoryService {
                         `/${username}/repos/${repoName}/README.md`
                     );
                     uploadBytes(readmeFolderRef, readmeRef);
-                    // this.addToContributionArray(username, repoName, "README.md");
                 }
                 this.addRepoToFirestore(
                     username,
@@ -28,7 +27,11 @@ class RepositoryService {
                     description,
                     repoList
                 );
-                // this.addToContributionArray(username, repoName, ".git");
+                this.addToContributionArray(
+                    username,
+                    repoName,
+                    `Create ${repoName}`
+                );
             })
             .catch((error) => {
                 console.log(error);
@@ -90,8 +93,7 @@ class RepositoryService {
             );
 
             uploadBytes(testFolderRef, file)
-                .then((snapshot) => {
-                    console.log(snapshot);
+                .then(() => {
                     this.addToContributionArray(username, repoName, file.name);
                     this.updateLastUpdated(username, repoName);
                 })
@@ -194,15 +196,18 @@ class RepositoryService {
             time: currentDate,
         };
         /* 
-        Get the current date and the date of last contribution to 
-        determine whether or not a new entry needs to be made for that day.
-        If a contribution has already been made for that day then update
-        corresponding count and contribution details
+            Get the current date and the date of last contribution to 
+            determine whether or not a new entry needs to be made for that day.
+            If a contribution has already been made for that day then update
+            corresponding count and contribution details
         */
         const currentDay = new Date().toDateString();
-        let compareDay = new Date(
-            tempContributionArray[currentIndex].day.seconds * 1000
-        ).toDateString();
+        let compareDay =
+            currentIndex >= 0
+                ? new Date(
+                      tempContributionArray[currentIndex].day.seconds * 1000
+                  ).toDateString()
+                : null;
         if (currentDay !== compareDay) {
             console.log("new entry");
             const newEntry = {
@@ -212,7 +217,7 @@ class RepositoryService {
             };
             tempContributionArray.push(newEntry);
         } else {
-            console.log("repo already made");
+            console.log("contribution already made");
             tempContributionArray[currentIndex].contributionCount++;
             tempContributionArray[currentIndex].contributions.push(
                 contributionObject

@@ -42,7 +42,6 @@ const ViewStarredRepositories = () => {
             tempPrev.forEach((id, index) => {
                 if (tempCur.indexOf(id) === -1) {
                     repoIndex = index;
-                    console.log(index);
                 }
             });
             const tempUnStarred = prevList[repoIndex];

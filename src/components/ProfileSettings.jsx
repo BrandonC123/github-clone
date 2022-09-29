@@ -43,7 +43,8 @@ const ProfileSettings = ({}) => {
                 <div>
                     <h1>Public Profile</h1>
                     <form
-                        onSubmit={() => {
+                        onSubmit={(e) => {
+                            e.preventDefault();
                             UserService.updateUserProfile(user.displayName, {
                                 name: name,
                                 bio: bio,
@@ -166,7 +167,11 @@ const ProfileSettings = ({}) => {
                             statement to learn more about how we use this
                             information.
                         </small>
-                        <button type="submit" className="green-action-btn btn">
+                        <button
+                            type="submit"
+                            style={{ alignSelf: "flex-start" }}
+                            className="green-action-btn btn"
+                        >
                             Update Profile
                         </button>
                     </form>

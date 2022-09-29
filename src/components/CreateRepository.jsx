@@ -35,6 +35,7 @@ const CreateRepository = () => {
                 toggleRepoNameInput(true);
             } else {
                 toggleRepoNameInput(false);
+                document.getElementById("repo-name").setCustomValidity("");
             }
         }
     }, [debouncedSearch]);
@@ -61,8 +62,9 @@ const CreateRepository = () => {
                         description,
                         repoList,
                         readMeStatus
-                    );
-                    navigate(`/${user.displayName}/${name}`);
+                    ).then(() => {
+                        navigate(`/${user.displayName}/${name}`);
+                    });
                 }}
                 className="create-repo-form column"
             >

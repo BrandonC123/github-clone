@@ -33,7 +33,16 @@ const EditProfile = ({ display, toggleForm, userDetails, setUserDetails }) => {
             website: website,
             twitterUsername: twitterUsername,
         };
-        setUserDetails(updatedUserObject);
+        setUserDetails({
+            ...userDetails,
+            name: name,
+            bio: bio,
+            company: company,
+            location: location,
+            email: email,
+            website: website,
+            twitterUsername: twitterUsername,
+        });
         UserService.updateUserProfile(user.displayName, updatedUserObject);
     }
     return (
