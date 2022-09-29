@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import RepositoryService from "../services/RepositoryService";
 import StarButton from "./StarButton";
 
 const months = [
@@ -18,7 +19,12 @@ const months = [
     "Dec",
 ];
 
-const RepositoryListing = ({ username, repo, starredRepoList, repoList }) => {
+const RepositoryListing = ({
+    username,
+    repo,
+    starredRepoList,
+    inputRepoList,
+}) => {
     const [repoTitle, setRepoTitle] = useState("");
     const date = new Date(repo.lastUpdated.seconds * 1000);
 
@@ -49,7 +55,6 @@ const RepositoryListing = ({ username, repo, starredRepoList, repoList }) => {
                 <StarButton
                     repo={{ ...repo, id: `${username}-${repo.repoName}` }}
                     starredRepoList={starredRepoList}
-                    repoList={repoList}
                 />
             </div>
         </div>

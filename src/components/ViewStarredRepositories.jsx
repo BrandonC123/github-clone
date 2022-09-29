@@ -1,28 +1,55 @@
+import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
-import RepositoryService from "../services/RepositoryService";
+import db from "..";
 import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
 import RepositoryListing from "./RepositoryListing";
 import { UserContext } from "./UserContext";
 
-const ViewStarredRepositories = ({}) => {
+const ViewStarredRepositories = () => {
     const user = useContext(UserContext);
+    const [unStarredRepo, setUnStarredRepo] = useState(null);
     const [starredRepoList, setStarredRepoList] = useState([]);
     // Includes own repositories and followed users
     useEffect(() => {
         if (user) {
-            RepositoryService.getAllStarredRepoList(user.displayName).then(
-                (repos) => {
-                    setStarredRepoList(repos);
-                    console.log(repos);
-                }
+            const q = query(
+                collection(db, "users"),
+                where("username", "==", `${user.displayName}`)
             );
+            let prevList = [];
+            onSnapshot(q, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    const tempStarList = change.doc.data().starredRepoList;
+                    if (change.type === "modified") {
+                        toggleUnStar(prevList, tempStarList);
+                    }
+                    prevList = tempStarList;
+                    setStarredRepoList(tempStarList);
+                });
+            });
         }
     }, [user]);
-    // TODO: View stars page
+    function toggleUnStar(prevList, currentList) {
+        if (currentList.length < prevList.length) {
+            const tempPrev = prevList.map(({ id }) => id);
+            const tempCur = currentList.map(({ id }) => id);
+            let repoIndex;
+            tempPrev.forEach((id, index) => {
+                if (tempCur.indexOf(id) === -1) {
+                    repoIndex = index;
+                    console.log(index);
+                }
+            });
+            setUnStarredRepo(prevList[repoIndex]);
+            console.log(prevList[repoIndex]);
+            document
+                .querySelector(".view-star-message")
+                .classList.add("slidein");
+        }
+    }
     function displayList() {
         // if list === 0
         return (
@@ -43,8 +70,11 @@ const ViewStarredRepositories = ({}) => {
     }
     function displayStarredRepos() {
         return starredRepoList.map((repo) => {
+            const username = repo.id.split("-")[0];
             return (
                 <RepositoryListing
+                    key={repo.id}
+                    username={username}
                     repo={repo}
                     starredRepoList={starredRepoList}
                 />
@@ -55,6 +85,7 @@ const ViewStarredRepositories = ({}) => {
         <div className="view-star-page page two-column">
             <ProfileInformation username={user.displayName} />
             <main className="view-star-content">
+                <p className="view-star-message">Message</p>
                 <ProfileNav username={user.displayName} />
                 <div className="row space-between">
                     <h2>Lists</h2>

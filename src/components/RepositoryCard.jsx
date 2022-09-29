@@ -86,7 +86,7 @@ const RepositoryCard = ({
                 <StarButton
                     repo={repo}
                     starredRepoList={starredRepoList}
-                    repoList={repoList}
+                    inputRepoList={repoList}
                 />
             </div>
         </div>

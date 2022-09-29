@@ -111,7 +111,7 @@ const ViewRepositoryList = () => {
                     username={username}
                     repo={repo}
                     starredRepoList={starredRepoList}
-                    repoList={lastUpdatedList}
+                    inputRepoList={lastUpdatedList}
                 />
             );
         });
