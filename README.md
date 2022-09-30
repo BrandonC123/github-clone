@@ -1,4 +1,4 @@
-Prototype [Link Here](https://github-clone-5883f.web.app/)
+Prototype [Link Here](https://github-clone-5883f.web.app/)  
 Implemented Features By Route:  
 Route: "/" Home
  -Checks whether or not a user is signed in before displaying content  
