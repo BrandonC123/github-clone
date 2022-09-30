@@ -1,10 +1,18 @@
 import { getAuth } from "firebase/auth";
+import { useState } from "react";
+import { useEffect } from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 
-const MainHeader = ({ username, loading }) => {
+const MainHeader = ({ loading }) => {
     const user = useContext(UserContext);
+    const [username, setUsername] = useState("");
+    useEffect(() => {
+        if (user) {
+            setUsername(user.displayName);
+        }
+    }, [user]);
     const dropdownItemList1 = [
         { title: "Your profile", url: `/${username}` },
         { title: "Your repositories", url: `/${username}/repositories` },
@@ -53,7 +61,8 @@ const MainHeader = ({ username, loading }) => {
         );
     }
     function displaySignOrUser() {
-        if (username) {
+        if (user) {
+            console.log(user);
             return (
                 <div className="header-right-column align-center row">
                     <div className="relative">
@@ -84,7 +93,7 @@ const MainHeader = ({ username, loading }) => {
                                     borderBottom: "1px solid #30363d",
                                 }}
                             >
-                                Signed in as {username}
+                                Signed in as {user.displayName}
                             </div>
                             {fillDropdown()}
                             <Link
@@ -102,9 +111,13 @@ const MainHeader = ({ username, loading }) => {
             );
         } else {
             return (
-                <div>
-                    <Link to={"/signin"}>Sign in</Link>
-                    <Link to={"/signup"}>Sign up</Link>
+                <div className="vertical-center">
+                    <Link className="main-header-link" to={"/signin"}>
+                        Sign in
+                    </Link>
+                    <Link className="main-header-link" to={"/signup"}>
+                        Sign up
+                    </Link>
                 </div>
             );
         }

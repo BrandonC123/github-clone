@@ -8,7 +8,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import defaultProfile from "../img/default-profile-pic.png";
 import UserService from "../services/UserService";
 
-const Signup = ({ signedIn }) => {
+const Signup = ({ signedIn, setUser }) => {
     const { inputEmail } = useParams();
     const [email, setEmail] = useState("");
     const [password, setPassowrd] = useState("");
@@ -22,18 +22,21 @@ const Signup = ({ signedIn }) => {
             navigate("/");
         }
         if (inputEmail) {
+            // Toggle continue button if email is pre-filled in
+            const emailInput = document.getElementById("signup-email");
+            emailInput.value = inputEmail;
             setEmail(inputEmail);
+            toggleContinueButton(emailInput);
         }
-        console.log(inputEmail);
     }, [signedIn]);
-    function toggleContinueButton(e) {
-        const button = e.target.parentElement.parentElement.lastElementChild;
-        if (e.target.checkValidity()) {
+    function toggleContinueButton(input) {
+        const button = input.parentElement.parentElement.lastElementChild;
+        if (input.checkValidity()) {
             button.classList.remove("inactive-btn");
             button.classList.add("active-btn");
             // Remove invalid border and error message below input
-            e.target.classList.remove("invalid-input");
-            e.target.nextSibling.textContent = "";
+            input.classList.remove("invalid-input");
+            input.nextSibling.textContent = "";
         } else {
             button.classList.add("inactive-btn");
             button.classList.remove("active-btn");
@@ -75,9 +78,6 @@ const Signup = ({ signedIn }) => {
             return "Please follow the required format.";
         }
     }
-    useEffect(() => {
-        console.log(errorText);
-    }, [errorText]);
     function checkError() {
         let valid = true;
         const formInputs = document.querySelectorAll(".signup-input");
@@ -97,11 +97,16 @@ const Signup = ({ signedIn }) => {
                 UserService.uploadProfileImg(username, defaultProfile).then(
                     async function () {
                         const img = await UserService.getProfileImg(username);
-                        console.log(img);
                         updateProfile(userCredential.user, {
                             displayName: username,
                             photoURL: img,
                         }).then(() => {
+                            console.log(userCredential.user);
+                            setUser({
+                                ...userCredential.user,
+                                displayName: username,
+                                photoURL: img,
+                            });
                             navigate(`/${username}`);
                         });
                     }
@@ -145,7 +150,7 @@ const Signup = ({ signedIn }) => {
                         className="signup-form column"
                     >
                         <div className={"input-container row"}>
-                            <div className="input column">
+                            <div className="signup-input-container column">
                                 <label
                                     htmlFor={"signup-email"}
                                     className="signup-accent-text"
@@ -157,7 +162,7 @@ const Signup = ({ signedIn }) => {
                                     required
                                     minLength={5}
                                     onChange={(e) => {
-                                        toggleContinueButton(e);
+                                        toggleContinueButton(e.target);
                                         setEmail(e.target.value);
                                     }}
                                     type={"email"}
@@ -170,7 +175,7 @@ const Signup = ({ signedIn }) => {
                         </div>
 
                         <div className={"input-container row hide"}>
-                            <div className="input column">
+                            <div className="signup-input-container column">
                                 <label
                                     htmlFor={"signup-password"}
                                     className="signup-accent-text"
@@ -182,7 +187,7 @@ const Signup = ({ signedIn }) => {
                                 <input
                                     required
                                     onChange={(e) => {
-                                        toggleContinueButton(e);
+                                        toggleContinueButton(e.target);
                                         setPassowrd(e.target.value);
                                     }}
                                     pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$"
@@ -196,7 +201,7 @@ const Signup = ({ signedIn }) => {
                         </div>
 
                         <div className={"input-container row hide"}>
-                            <div className="input column">
+                            <div className="signup-input-container column">
                                 <label
                                     htmlFor={"signup-username"}
                                     className="signup-accent-text "
@@ -207,7 +212,7 @@ const Signup = ({ signedIn }) => {
                                     required
                                     minLength={5}
                                     onChange={(e) => {
-                                        toggleContinueButton(e);
+                                        toggleContinueButton(e.target);
                                         setUsername(e.target.value);
                                     }}
                                     type={"text"}
@@ -220,7 +225,7 @@ const Signup = ({ signedIn }) => {
                         </div>
 
                         <div className={"input-container row hide"}>
-                            <div className="input column">
+                            <div className="signup-input-container column">
                                 <label
                                     htmlFor={"signup-announcement"}
                                     className="signup-accent-text "
@@ -233,7 +238,7 @@ const Signup = ({ signedIn }) => {
                                     required
                                     maxLength={1}
                                     onChange={(e) => {
-                                        toggleContinueButton(e);
+                                        toggleContinueButton(e.target);
                                         setChoice(e.target.value);
                                         document.getElementById(
                                             "create-account-btn"

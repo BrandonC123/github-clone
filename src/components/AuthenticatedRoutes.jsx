@@ -10,28 +10,20 @@ import ViewRepository from "./ViewRepository";
 import ProfileSettings from "./ProfileSettings";
 import UploadFile from "./UploadFile";
 import { useContext } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const AuthenticateRoutes = ({ loading }) => {
     const user = useContext(UserContext);
-    const [username, setUsername] = useState("");
 
-    useEffect(() => {
-        if (user) {
-            setUsername(user.displayName);
-        }
-    }, [user]);
     return (
         !loading && (
             <>
-                <MainHeader username={username} loading={loading} />
+                <MainHeader loading={loading} />
                 <Routes>
                     {user && (
                         <>
                             <Route path="/" element={<Home />} />
                             <Route
-                                path={`/${username}/:repoName/upload`}
+                                path={`/${user.displayName}/:repoName/upload`}
                                 element={<UploadFile />}
                             />
                             <Route path="/new" element={<CreateRepository />} />

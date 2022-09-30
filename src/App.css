@@ -146,6 +146,12 @@ h4 {
     font-weight: 500;
 }
 
+.main-header-link {
+    color: #d3d3d3;
+    font-weight: 500;
+    text-decoration: none;
+}
+
 .relative {
     position: relative;
 }
@@ -247,10 +253,15 @@ h4 {
     gap: 10px;
 }
 
+.signup-input-container {
+    width: 100%;
+}
+
 .signup-input {
     font-family: "SF Mono Regular", sans-serif;
     padding: 0.25em;
     background-color: rgb(23, 46, 82);
+    color: white;
     border: none;
 }
 
@@ -480,7 +491,8 @@ h4 {
 }
 
 .repo-item:hover,
-.repo-list-link:hover {
+.repo-list-link:hover,
+.main-header-link:hover {
     text-decoration: underline;
 }
 

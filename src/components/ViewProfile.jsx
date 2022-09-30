@@ -71,9 +71,11 @@ const ViewProfile = () => {
                 // Only get 6 most recently created repos
                 setRepoList(list.slice(-6));
                 setDisplay(true);
-            } else if (user.displayName !== username) {
+            } else if (!list && !user) {
                 // If list comes back null no user exists display not found
                 setDisplay(false);
+            } else {
+                setDisplay(true);
             }
         });
         RepositoryService.getContributionArray(username).then((list) => {
