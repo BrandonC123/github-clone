@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import EditProfile from "./EditProfile";
 import { UserContext } from "./UserContext";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import db from "..";
 import UserService from "../services/UserService";
 
 const ProfileInformation = ({ username }) => {
@@ -63,7 +61,7 @@ const ProfileInformation = ({ username }) => {
                                 e.target.textContent = "Follow";
                             }
                         }}
-                        className="btn"
+                        className="edit-profile-btn btn"
                     >
                         {followList.includes(username) ? "Unfollow" : "Follow"}
                     </button>
@@ -81,8 +79,11 @@ const ProfileInformation = ({ username }) => {
 
     return (
         <div className="profile-information-column">
-            <img src={require("../img/default-profile-pic.png")} alt="" />
-            {displayEditOrFollow()}
+            <img
+                src={userDetails.profileImgSrc}
+                alt="Profile icon"
+                className="round-profile-img"
+            />
             <div className="profile-information">
                 <h1>{userDetails.name}</h1>
                 <h2>{username}</h2>
@@ -93,6 +94,7 @@ const ProfileInformation = ({ username }) => {
                 <p>{userDetails.website}</p>
                 <p>{userDetails.twitterUsername}</p>
             </div>
+            {displayEditOrFollow()}
         </div>
     );
 };

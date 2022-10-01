@@ -16,7 +16,7 @@ function App() {
 
     useEffect(() => {
         auth.onAuthStateChanged((tempUser) => {
-            if (tempUser) {
+            if (tempUser && tempUser.displayName) {
                 setUser(tempUser);
             } else {
                 // Set user to null if signout is detected
@@ -40,20 +40,32 @@ function App() {
                     {/* Only load unauthenticated home route when no user is
                     detected and data has finished fetching */}
                     {!user && !loading && (
-                        <Route path="/" element={<UnAuthenticatedHome />} />
+                        <>
+                            <Route path="/" element={<UnAuthenticatedHome />} />
+                            <Route
+                                path="/signup"
+                                element={
+                                    <Signup
+                                        signedIn={signedIn}
+                                        setUser={setUser}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/signup/:inputEmail"
+                                element={
+                                    <Signup
+                                        signedIn={signedIn}
+                                        setUser={setUser}
+                                    />
+                                }
+                            />
+                            <Route
+                                path="/signin"
+                                element={<Signin signedIn={signedIn} />}
+                            />
+                        </>
                     )}
-                    <Route
-                        path="/signup"
-                        element={<Signup signedIn={signedIn} />}
-                    />
-                    <Route
-                        path="/signup/:inputEmail"
-                        element={<Signup signedIn={signedIn} />}
-                    />
-                    <Route
-                        path="/signin"
-                        element={<Signin signedIn={signedIn} />}
-                    />
                 </Routes>
             </UserContext.Provider>
         </Router>

@@ -62,7 +62,6 @@ const MainHeader = ({ loading }) => {
     }
     function displaySignOrUser() {
         if (user) {
-            console.log(user);
             return (
                 <div className="header-right-column align-center row">
                     <div className="relative">
