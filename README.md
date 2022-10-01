@@ -1,9 +1,9 @@
 Prototype [Link Here](https://github-clone-5883f.web.app/)  
 Implemented Features By Route:  
 Route: "/" Home
- -Checks whether or not a user is signed in before displaying content  
- -Left sidebar: Display recent repositories and button for creating new repositories  
- -Main section displays recently created repositories from followed users
+   -Checks whether or not a user is signed in before displaying content  
+   -Left sidebar: Display recent repositories and button for creating new repositories  
+   -Main section displays recently created repositories from followed users
 
 Route: "/:username" View user profile  
  -View recently created repositories in a 3x2 grid  
