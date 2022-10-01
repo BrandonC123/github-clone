@@ -63,7 +63,7 @@ const CreateRepository = () => {
                         repoList,
                         readMeStatus
                     ).then(() => {
-                        navigate(`/${user.displayName}`);
+                        navigate(`/${user.displayName}/${name}`);
                     });
                 }}
                 className="create-repo-form column"

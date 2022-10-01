@@ -123,17 +123,16 @@ class RepositoryService {
                 return id;
             })
             .includes(repo.id);
+        console.log(remove);
         let tempRepoList = Array.from(starredRepoList);
         if (remove) {
             tempRepoList = tempRepoList.filter(({ id }) => id !== repo.id);
         } else {
             repo.starCount++;
             tempRepoList.push(repo);
+            console.log(tempRepoList);
         }
-        // If null no updates needs to be made to starCount
-        if (repoList !== null) {
-            this.updateStarCount(!remove, repo, repoList);
-        }
+        this.updateStarCount(!remove, repo, repoList);
         await updateDoc(doc(db, "users", `${username}`), {
             starredRepoList: tempRepoList,
         });

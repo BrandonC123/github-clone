@@ -66,13 +66,15 @@ const ViewStarredRepositories = () => {
         }, 5000);
     }
 
-    function undoStar() {
+    async function undoStar() {
         const username = unStarredRepo.id.split("-")[0];
+        const repoList = await RepositoryService.getRepoList(username);
+        unStarredRepo.starCount--;
         RepositoryService.starRepo(
-            username,
+            user.displayName,
             unStarredRepo,
             starredRepoList,
-            null
+            repoList
         );
     }
     function displayList() {
