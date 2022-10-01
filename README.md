@@ -1,9 +1,12 @@
 Prototype [Link Here](https://github-clone-5883f.web.app/)  
 Implemented Features By Route:  
 Route: "/" Home
-   - Checks whether or not a user is signed in before displaying content  
-   - Left sidebar: Display recent repositories and button for creating new repositories  
-   - Main section displays recently created repositories from followed users  
+- UnAuthenticated (no user):  
+    - Landing page with filler text and image  
+    - Option to signup with pre-filled in email or options in header  
+- Authenticated (user signed-in):  
+    - Left sidebar: Display recent repositories and button for creating new repositories  
+    - Main section displays recently created repositories from followed users  
   
 Route: "/:username" View user profile  
  - View recently created repositories in a 3x2 grid  
@@ -11,16 +14,28 @@ Route: "/:username" View user profile
  - Display contributions calendar showing when the user made changes to a repository  
  - If viewing another person's profile option to Follow/Unfollow user will be displayed instead of Edit Profile  
   
+Route: ":/username/repositories" View user repositories  
+ - View all user created repositories  
+ - Option search, sort (last updated, name, stars), or create a new repository  
+  
+Route: Route: ":/username/stars" View user stars  
+ - View all repositories that are starred by the user including repositories not owned by user  
+ - Unstarring a repository displays animation with option to undo action as well as detailing what repository has been unstarred  
+  
 Route: "/new" Create new repository
  - Create a new repository with optional description field
  - Option to click checkbox for creating repository with README
+ - Custom form validation checking for duplicate repository names and disables button if error is present  
   
 Route: "/:username/:repoName" View repository  
  - Based on username and repository name the repository is fetched from Firestore Database and displayed  
- - Displays files that are stored in Firebase storage  
- - Depending on if the user is the owner of the repository a "Add File" dropdown will be present to allow users to upload files to it  
+ - Displays repository files that are stored in Firebase storage  
+ - Depending on if the user is the owner of the repository an "Add File" dropdown will be present to allow users to upload files to it  
 
-Route: "/:username/:repoName/upload" Upload file
+Route: "/:username/:repoName/upload" Upload file  
+ - Utilize react-drag-drop-files for file upload  
+ - Option to drag drop files to upload area or manually choose files to upload  
+ - Display current files to be uploaded in list  
 
 # Getting Started with Create React App
 
