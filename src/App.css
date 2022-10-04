@@ -311,6 +311,18 @@ h4 {
     margin: 0 auto;
 }
 
+.signin-container-link {
+    color: var(--accent-blue);
+    background-color: transparent;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.signin-container-link:hover {
+    text-decoration: underline;
+}
+
 .signin-form {
     padding: 1em;
     background-color: rgb(22, 27, 34);
@@ -346,8 +358,7 @@ h4 {
 }
 
 .external-links > a,
-.signin-page-label > a,
-.create-account-container > a {
+.signin-page-label > a {
     color: #438eda;
     font-size: 0.85rem;
     text-decoration: none;
@@ -766,7 +777,7 @@ h4 {
     max-width: 1400px;
 }
 
-.kiHXWb {
+.drag-drop-parent > label {
     border: 1px solid rgb(48, 54, 61) !important;
     height: 20vh !important;
     max-width: 1400px !important;

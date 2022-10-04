@@ -24,6 +24,16 @@ const Signin = ({ signedIn }) => {
                 setErrorMessage("Wrong email or password.");
             });
     }
+    function loginWithDemo() {
+        const auth = getAuth();
+        signInWithEmailAndPassword(
+            auth,
+            "testeraccount@gmail.com",
+            "Testerpass123"
+        ).then(() => {
+            navigate("/");
+        });
+    }
     return (
         !signedIn && (
             <div className="signin-page">
@@ -91,7 +101,17 @@ const Signin = ({ signedIn }) => {
                     </button>
                 </form>
                 <div className="create-account-container signin-page-container">
-                    New to Github? <Link to={"/signup"}>Create an account</Link>
+                    New to Github?{" "}
+                    <Link to={"/signup"} className="signin-container-link">
+                        <small>Create an account</small>
+                    </Link>{" "}
+                    <br /> Or Login with{" "}
+                    <button
+                        onClick={() => loginWithDemo()}
+                        className="signin-container-link"
+                    >
+                        Demo Account
+                    </button>
                 </div>
                 <div className="external-links row justify-center">
                     <Link to={"#"}>Terms</Link>

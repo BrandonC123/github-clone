@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FileUploader } from "react-drag-drop-files";
 
 const fileTypes = ["JPG", "PNG", "GIF", "txt", "pdf"];
@@ -8,12 +8,14 @@ const DragDrop = ({ addFileToList }) => {
         addFileToList(file);
     };
     return (
-        <FileUploader
-            handleChange={handleChange}
-            name="file"
-            types={fileTypes}
-            multiple={true}
-        />
+        <div className="drag-drop-parent">
+            <FileUploader
+                handleChange={handleChange}
+                name="file"
+                types={fileTypes}
+                multiple={true}
+            />
+        </div>
     );
 };
 
