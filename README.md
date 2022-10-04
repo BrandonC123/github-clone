@@ -1,4 +1,5 @@
 Prototype [Link Here](https://github-clone-5883f.web.app/)  
+<img src="/example-images/signin.gif">
 Implemented Features By Route:  
 Route: "/" Home
 - UnAuthenticated (no user):  
