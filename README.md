@@ -1,6 +1,17 @@
-Prototype [Link Here](https://github-clone-5883f.web.app/)  
+Prototype version [Link Here](https://github-clone-5883f.web.app/)  
+Demonstration GIF:  
 <img src="/example-images/signin.gif">
+  
 Implemented Features By Route:  
+Route: "/signup" Signup
+ - Custom signup form mimicking actual GitHub signup interface  
+ - Firebase authentication automatically detects if there is duplicate email  
+ - Validation for relevant form types (email, username, password)  
+  
+Route: "/signin" Signin  
+ - Main signin page with validation checking if account exists or not  
+ - Links to redirect to create an account or login with a demo account  
+  
 Route: "/" Home
 - UnAuthenticated (no user):  
     - Landing page with filler text and image  
@@ -11,9 +22,13 @@ Route: "/" Home
   
 Route: "/:username" View user profile  
  - View recently created repositories in a 3x2 grid  
- - Display user profile information along with a form to edit using "Edit Profile" button   
+ - Display user profile information along with a form to edit information using "Edit Profile" button   
  - Display contributions calendar showing when the user made changes to a repository  
  - If viewing another person's profile option to Follow/Unfollow user will be displayed instead of Edit Profile  
+
+Route: "/:username/settings" Edit user profile  
+ - Displays current user details with option to update  
+ - Right column displays option to upload an image to crop and serve as profile image  
   
 Route: ":/username/repositories" View user repositories  
  - View all user created repositories  
@@ -37,6 +52,8 @@ Route: "/:username/:repoName/upload" Upload file
  - Utilize react-drag-drop-files for file upload  
  - Option to drag drop files to upload area or manually choose files to upload  
  - Display current files to be uploaded in list  
+   
+
 
 # Getting Started with Create React App
 
