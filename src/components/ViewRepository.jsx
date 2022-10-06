@@ -109,7 +109,7 @@ const ViewRepository = () => {
                                 </svg>
                                 main ▾
                             </button>
-                            <p>2 branches</p>
+                            <p>1 branch</p>
                             <p>0 tags</p>
                         </div>
                         <div className="divider row">

@@ -41,13 +41,16 @@ const RepositoryNav = ({ username, repoName }) => {
         <div className="view-repo-head">
             <div className="view-repo-title row align-center space-between">
                 <h1>
-                    <Link to={`/${username}`} className="blue-accent-text">
+                    <Link
+                        to={`/${username}`}
+                        className="blue-accent-text hover-underline"
+                    >
                         {username}
                     </Link>
                     /
                     <Link
                         to={`/${username}/${repoName}`}
-                        className="blue-accent-text"
+                        className="blue-accent-text hover-underline"
                     >
                         {repoName}
                     </Link>
@@ -61,7 +64,7 @@ const RepositoryNav = ({ username, repoName }) => {
                             version="1.1"
                             width="16"
                             data-view-component="true"
-                            class="octicon octicon-pin mr-2"
+                            className="octicon octicon-pin mr-2"
                         >
                             <path
                                 fill="#8b949e"
@@ -79,7 +82,7 @@ const RepositoryNav = ({ username, repoName }) => {
                             version="1.1"
                             width="16"
                             data-view-component="true"
-                            class="octicon octicon-eye"
+                            className="octicon octicon-eye"
                         >
                             <path
                                 fill="#8b949e"
@@ -97,7 +100,7 @@ const RepositoryNav = ({ username, repoName }) => {
                             version="1.1"
                             width="16"
                             data-view-component="true"
-                            class="octicon octicon-eye"
+                            className="octicon octicon-eye"
                         >
                             <path
                                 fill="#8b949e"
@@ -111,7 +114,7 @@ const RepositoryNav = ({ username, repoName }) => {
                         <StarButton
                             repo={repo}
                             starredRepoList={starredRepoList}
-                            repoList={repoList}
+                            inputRepoList={repoList}
                         />
                     )}
                 </div>

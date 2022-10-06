@@ -111,10 +111,16 @@ const MainHeader = ({ loading }) => {
         } else {
             return (
                 <div className="vertical-center">
-                    <Link className="main-header-link" to={"/signin"}>
+                    <Link
+                        className="main-header-link hover-underline"
+                        to={"/signin"}
+                    >
                         Sign in
                     </Link>
-                    <Link className="main-header-link" to={"/signup"}>
+                    <Link
+                        className="main-header-link hover-underline"
+                        to={"/signup"}
+                    >
                         Sign up
                     </Link>
                 </div>

@@ -79,8 +79,8 @@ const RepositoryCard = ({
                         </Link>
                     </h4>
                     <small className="secondary-text">
-                        Updated {months[lastUpdated.getMonth()]}
-                        {lastUpdated.getDate()}
+                        {`Updated ${months[lastUpdated.getMonth()]}
+                        ${lastUpdated.getDate()}`}
                     </small>
                 </div>
                 <StarButton

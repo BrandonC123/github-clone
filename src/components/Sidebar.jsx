@@ -1,6 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
-import { getStorage, ref, listAll } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 import RepositoryService from "../services/RepositoryService";
 
@@ -11,7 +10,7 @@ const Sidebar = () => {
     useEffect(() => {
         RepositoryService.getRepoList(user.displayName).then(
             (serviceRepoList) => {
-                setRepoList(serviceRepoList);
+                setRepoList(serviceRepoList.slice(-7));
             }
         );
     }, [user]);
@@ -21,7 +20,7 @@ const Sidebar = () => {
                 <li key={repo.repoName}>
                     <Link
                         to={`/${user.displayName}/${repo.repoName}`}
-                        className="repo-item"
+                        className="repo-item hover-underline"
                     >
                         {user.displayName}/{repo.repoName}
                     </Link>
@@ -31,9 +30,16 @@ const Sidebar = () => {
     }
     return (
         <aside className="sidebar-container">
-            <p className="border-divider">{user.displayName}</p>
-            <div className="sidebar-repo-container border-divider">
-                <p className="row">
+            <p className="border-divider-dark vertical-center">
+                <img
+                    src={user.photoURL}
+                    alt="Profile icon"
+                    className="round-profile-img profile-icon"
+                />
+                {user.displayName}
+            </p>
+            <div className="sidebar-repo-container border-divider-dark">
+                <p className="vertical-center">
                     Recent Repositories{" "}
                     <button
                         onClick={() => {

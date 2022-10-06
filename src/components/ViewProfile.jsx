@@ -55,12 +55,12 @@ const ViewProfile = () => {
                         </svg>
                         <Link
                             to={`/${username}/${repo.repoName}`}
-                            className="repo-list-link"
+                            className="repo-list-link hover-underline"
                         >
                             {repo.repoName}
                         </Link>
                     </div>
-                    javascript
+                    <small className="secondary-text">JavaScript</small>
                 </div>
             );
         });
@@ -89,7 +89,7 @@ const ViewProfile = () => {
             return "#39d353";
         } else if (count >= 8) {
             return "#26a641";
-        } else if (count >= 6) {
+        } else if (count >= 5) {
             return "#006d32";
         } else if (count <= 4 && count >= 1) {
             return "#0e4429";

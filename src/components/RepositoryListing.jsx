@@ -43,7 +43,7 @@ const RepositoryListing = ({
             <div className="profile-repo-info column">
                 <Link
                     to={`/${username}/${repo.repoName}`}
-                    className="repo-list-link"
+                    className="repo-list-link hover-underline"
                 >
                     {repoTitle}
                 </Link>

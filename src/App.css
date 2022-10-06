@@ -319,10 +319,6 @@ h4 {
     padding: 0;
 }
 
-.signin-container-link:hover {
-    text-decoration: underline;
-}
-
 .signin-form {
     padding: 1em;
     background-color: rgb(22, 27, 34);
@@ -501,9 +497,8 @@ h4 {
     color: rgb(167, 167, 167);
 }
 
-.repo-item:hover,
-.repo-list-link:hover,
-.main-header-link:hover {
+.hover-underline:hover,
+.external-links > a:hover {
     text-decoration: underline;
 }
 

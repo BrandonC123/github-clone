@@ -78,7 +78,10 @@ const Signin = ({ signedIn }) => {
                             className="signin-page-label row space-between"
                         >
                             Password
-                            <Link to={"#"} className="signin-page-forget">
+                            <Link
+                                to={"#"}
+                                className="signin-page-forget hover-underline"
+                            >
                                 Forgot password?
                             </Link>
                         </div>
@@ -102,13 +105,16 @@ const Signin = ({ signedIn }) => {
                 </form>
                 <div className="create-account-container signin-page-container">
                     New to Github?{" "}
-                    <Link to={"/signup"} className="signin-container-link">
+                    <Link
+                        to={"/signup"}
+                        className="signin-container-link hover-underline"
+                    >
                         <small>Create an account</small>
                     </Link>{" "}
                     <br /> Or Login with{" "}
                     <button
                         onClick={() => loginWithDemo()}
-                        className="signin-container-link"
+                        className="signin-container-link hover-underline"
                     >
                         Demo Account
                     </button>
