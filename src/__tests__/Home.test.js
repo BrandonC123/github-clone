@@ -1,18 +1,29 @@
-import { cleanup, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
-import * as router from "react-router";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../components/Home";
-import Signin from "../components/Signin";
 import { UserContext } from "../components/UserContext";
+import UserService from "../services/UserService";
 
-const navigate = jest.fn();
+jest.mock("../services/UserService");
+
+const emptyUser = {
+    profileImgSrc: "../img/404.png",
+    username: "Brandon",
+    repoList: [
+        {
+            created: { seconds: 1664593773, nanoseconds: 247000000 },
+            lastUpdated: { seconds: 1664593773, nanoseconds: 247000000 },
+            repoName: "Battleship",
+            starCount: 0,
+        },
+    ],
+    followList: ["brandon"],
+    contributionArray: [],
+    starredRepoList: [],
+};
 
 describe("Home page", () => {
-    beforeEach(() => {
-        jest.spyOn(router, "useNavigate").mockImplementation(() => navigate);
-    });
     afterEach(() => {
         cleanup();
     });
@@ -39,5 +50,30 @@ describe("Home page", () => {
         );
         const sidebar = screen.getByTestId("sidebar");
         expect(sidebar).toBeInTheDocument();
+    });
+    test.only("Followed user repositories displays in home", async function () {
+        const mockUser = {
+            displayName: "Brandon",
+            photoURL: "../img/404.png",
+        };
+        const followList = jest.spyOn(UserService, "getFollowList");
+        followList.mockImplementation(() => Promise.resolve(["brandon"]));
+
+        const userDetails = jest.spyOn(UserService, "getUserDetails");
+        userDetails.mockImplementation(() => Promise.resolve(emptyUser));
+
+        render(
+            <UserContext.Provider value={mockUser}>
+                <Home />;
+            </UserContext.Provider>,
+            { wrapper: MemoryRouter }
+        );
+        await waitFor(() => {
+            const followContainer = screen.getByText("Following");
+            expect(
+                followContainer.querySelectorAll(".home-repo-card-container")
+                    .length
+            ).toBe(1);
+        });
     });
 });
