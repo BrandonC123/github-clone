@@ -6,8 +6,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import App from "./App";
-import Signup from "./components/Signup";
+import Signup from "../components/Signup";
 
 // TODO: tests
 describe("Signup page", () => {
