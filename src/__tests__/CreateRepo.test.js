@@ -46,10 +46,8 @@ describe("Create repository page", () => {
     });
     test("Detects when there is duplicate repository name", async function () {
         const repoList = jest.spyOn(RepositoryService, "getRepoList");
-        await waitFor(() => {
-            repoList.mockImplementation(() => {
-                return Promise.resolve([{ repoName: "testRepo" }]);
-            });
+        repoList.mockImplementation(() => {
+            return Promise.resolve([{ repoName: "testRepo" }]);
         });
         render(
             <UserContext.Provider value={mockUser}>
@@ -67,5 +65,24 @@ describe("Create repository page", () => {
             expect(errorText).toBeVisible();
         });
     });
-    test("Public and private radio buttons work", () => {});
+    test("Public and private radio buttons work", () => {
+        const repoList = jest.spyOn(RepositoryService, "getRepoList");
+        repoList.mockImplementation(() => {
+            return Promise.resolve([]);
+        });
+        render(
+            <UserContext.Provider value={mockUser}>
+                <CreateRepository />;
+            </UserContext.Provider>,
+            { wrapper: MemoryRouter }
+        );
+        const publicBtn = screen.getByLabelText("Public", { exact: false });
+        const privateBtn = screen.getByLabelText("Private", { exact: false });
+        // Repository is public by default
+        expect(publicBtn.checked).toBe(true);
+
+        userEvent.click(privateBtn);
+        expect(publicBtn.checked).toBe(false);
+        expect(privateBtn.checked).toBe(true);
+    });
 });
