@@ -6,7 +6,7 @@ import ProfileInformation from "./ProfileInformation";
 import ProfileNav from "./ProfileNav";
 import RepositoryService from "../services/RepositoryService";
 import ViewRepositoryListDropdown from "./ViewRepositoryListDropdown";
-import useDebounce from "./useDebounce";
+import { useDebounce } from "./useDebounce";
 import RepositoryListing from "./RepositoryListing";
 import db from "..";
 

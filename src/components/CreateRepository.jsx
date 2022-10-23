@@ -1,13 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserContext";
-import { getStorage } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import RepositoryService from "../services/RepositoryService";
-import useDebounce from "./useDebounce";
+import { useDebounce } from "./useDebounce";
 
 const CreateRepository = () => {
     const navigate = useNavigate();
-    const storage = getStorage();
     const user = useContext(UserContext);
     const [name, setName] = useState("");
     const debouncedSearch = useDebounce(name, 300);
@@ -17,17 +15,21 @@ const CreateRepository = () => {
 
     useEffect(() => {
         if (user) {
-            RepositoryService.getRepoList(user.displayName).then((list) => {
-                if (list) {
-                    setRepoList(list);
-                }
-            });
+            intializeRepoList();
         }
     }, [user]);
+    async function intializeRepoList() {
+        const tempRepoList = await RepositoryService.getRepoList(
+            user.displayName
+        );
+        // console.log(tempRepoList);
+        setRepoList(tempRepoList);
+    }
     useEffect(() => {
         if (name.length === 0) {
             document.getElementById("create-repo-btn").disabled = true;
         } else {
+            // console.log(repoList)
             if (repoList.map((repo) => repo.repoName).includes(name)) {
                 document
                     .getElementById("repo-name")
@@ -92,6 +94,7 @@ const CreateRepository = () => {
                                 }}
                                 className="vertical-center"
                             >
+                                {/* TODO: revise alt text */}
                                 <img
                                     src={user.photoURL}
                                     alt="Profile icon"
@@ -107,7 +110,10 @@ const CreateRepository = () => {
                             style={{ flexGrow: "1" }}
                             className="create-repo-input column repo-name"
                         >
-                            <label htmlFor="repo-name">
+                            <label
+                                htmlFor="repo-name"
+                                aria-label="Repository name"
+                            >
                                 Repository Name*{" "}
                                 <small className="repo-error-text">
                                     Already in use
@@ -236,7 +242,7 @@ const CreateRepository = () => {
                     </div>
                 </div>
                 <button
-                    disabled
+                    disabled={true}
                     id="create-repo-btn"
                     className="green-action-btn btn"
                 >
