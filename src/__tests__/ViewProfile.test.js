@@ -13,6 +13,8 @@ const mockUser = {
 const emptyUser = {
     profileImgSrc: "../img/404.png",
     username: "Brandon",
+    bio: "my name is brandon",
+    website: "google.com",
     repoList: [
         {
             created: { seconds: 1664593773, nanoseconds: 247000000 },
@@ -21,7 +23,6 @@ const emptyUser = {
             starCount: 0,
         },
     ],
-    followList: [""],
 };
 
 jest.mock("../services//RepositoryService.jsx");
@@ -35,35 +36,57 @@ jest.mock("react-router-dom", () => ({
     }),
 }));
 
+function intializeProfileMocks() {
+    const repoList = jest.spyOn(RepositoryService, "getRepoList");
+    repoList.mockImplementation(() =>
+        Promise.resolve([
+            {
+                created: { seconds: 1664593773, nanoseconds: 247000000 },
+                lastUpdated: { seconds: 1664593773, nanoseconds: 247000000 },
+                repoName: "Battleship",
+                starCount: 0,
+            },
+        ])
+    );
+
+    const contributionArray = jest.spyOn(
+        RepositoryService,
+        "getContributionArray"
+    );
+    contributionArray.mockImplementation(() => Promise.resolve([]));
+
+    const userDetails = jest.spyOn(UserService, "getUserDetails");
+    userDetails.mockImplementation(() => Promise.resolve(emptyUser));
+
+    const followList = jest.spyOn(UserService, "getFollowList");
+    followList.mockImplementation(() => Promise.resolve(["brandon"]));
+}
+
 describe("View profile route", () => {
     afterEach(() => {
         cleanup();
     });
     test("Profile information column loads", async function () {
-        const repoList = jest.spyOn(RepositoryService, "getRepoList");
-        repoList.mockImplementation(() => Promise.resolve([]));
-
-        const contributionArray = jest.spyOn(
-            RepositoryService,
-            "getContributionArray"
-        );
-        contributionArray.mockImplementation(() => Promise.resolve([]));
-
-        const userDetails = jest.spyOn(UserService, "getUserDetails");
-        userDetails.mockImplementation(() => Promise.resolve(emptyUser));
-
-        const followList = jest.spyOn(UserService, "getFollowList");
-        followList.mockImplementation(() => Promise.resolve(["brandon"]));
-
+        intializeProfileMocks();
         render(
             <UserContext.Provider value={mockUser}>
                 <ViewProfile />
             </UserContext.Provider>,
             { wrapper: MemoryRouter }
         );
-        await waitFor(() => {
-            const username = screen.getByText("Brandon");
-            expect(username).toBeInTheDocument();
-        });
+        expect(await screen.findByText("Brandon")).toBeInTheDocument();
+        expect(
+            await screen.findByText("my name is brandon")
+        ).toBeInTheDocument();
+    });
+    test("Repositories loads", async function () {
+        intializeProfileMocks();
+        render(
+            <UserContext.Provider value={mockUser}>
+                <ViewProfile />
+            </UserContext.Provider>,
+            { wrapper: MemoryRouter }
+        );
+        expect(await screen.findByText("Battleship")).toBeInTheDocument();
     });
 });
